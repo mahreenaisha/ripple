@@ -1,0 +1,6 @@
+@if (graph(); as graphData) {
+  <p>Loaded {{ graphData.nodes.length }} nodes and {{ graphData.edges.length }} edges</p>
+  @if (graphData.nodes.length > 0) {
+    <app-graph-view [graph]="graphData" />
+  }
+}
