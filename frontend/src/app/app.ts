@@ -1,11 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GraphData, GraphViewComponent } from './graph-view';
+import { SimulationViewComponent } from './simulation-view';
+import { SnapshotViewComponent } from './snapshot-view';
 
 export type AppTab = 'map' | 'snapshot' | 'simulate';
 
 @Component({
-  imports: [GraphViewComponent],
+  imports: [GraphViewComponent, SimulationViewComponent, SnapshotViewComponent],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="panel-body">
-          <div class="empty">Snapshot coming soon</div>
+          <app-snapshot-view />
         </div>
       </section>
     } @else {
@@ -97,7 +97,18 @@
           </div>
         </div>
         <div class="panel-body">
-          <div class="empty">Simulate coming soon</div>
+          @if (graph(); as graphData) {
+            @if (graphData.nodes.length > 0) {
+              <app-simulation-view [graph]="graphData" />
+            } @else {
+              <div class="empty">No services in this graph yet.</div>
+            }
+          } @else {
+            <div class="empty">
+              <span class="spinner" aria-hidden="true"></span>
+              Loading graph…
+            </div>
+          }
         </div>
       </section>
     }

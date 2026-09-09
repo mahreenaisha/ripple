@@ -1,0 +1,48 @@
+<div #cyContainer class="canvas"></div>
+
+<div class="toolbar">
+  @if (failedNode(); as nodeId) {
+    <p class="status">
+      Simulating failure of: <strong>{{ nodeId }}</strong>
+      @if (running()) {
+        <span class="progress">rippling outward… hop {{ currentHop() }} of {{ maxHop() }}</span>
+      } @else {
+        <span class="summary">
+          {{ affectedCount() }} downstream service{{ affectedCount() === 1 ? '' : 's' }} affected across
+          {{ maxHop() }} hop{{ maxHop() === 1 ? '' : 's' }}
+        </span>
+      }
+    </p>
+    <button type="button" class="reset" (click)="reset()">Reset</button>
+  } @else {
+    <p class="status">Click any service to knock it out and watch the failure ripple outward</p>
+  }
+</div>
+
+<aside class="legend">
+  <p class="legend-title">Reading this view</p>
+  <p class="legend-lead">Colour shows <strong>when</strong> a service is hit, not how risky it is. Each node is also labelled with its hop.</p>
+  <ul>
+    <li>
+      <span class="swatch" aria-hidden="true"><i class="dot hop0"></i></span>
+      <span><strong>hop 0</strong> — the service you knocked out</span>
+    </li>
+    <li>
+      <span class="swatch" aria-hidden="true"><i class="dot hop1"></i></span>
+      <span><strong>hop 1</strong> — depends directly on it, fails first</span>
+    </li>
+    <li>
+      <span class="swatch" aria-hidden="true"><i class="dot hop2"></i></span>
+      <span><strong>hop 2</strong> — knocked out one step later</span>
+    </li>
+    <li>
+      <span class="swatch" aria-hidden="true"><i class="dot hop3"></i></span>
+      <span><strong>hop 3+</strong> — the far edge of the blast radius</span>
+    </li>
+    <li>
+      <span class="swatch" aria-hidden="true"><i class="dot untouched"></i></span>
+      <span><strong>grey</strong> — unaffected, dimmed during a run</span>
+    </li>
+  </ul>
+  <p class="legend-hint">Node size is incoming call volume, so a large red node means a lot of traffic just died. Red links trace the path the failure travelled.</p>
+</aside>

@@ -22,11 +22,39 @@ def _load_graph():
     return build_graph(traces)
 
 
+def _tech_type(node_id: str) -> str:
+    name = node_id.lower()
+    if any(token in name for token in ("gateway", "web", "mobile")):
+        return "Frontend"
+    if any(token in name for token in ("auth", "database", "db")):
+        return "Infra"
+    return "Service"
+
+
+def _mermaid_id(node_id: str) -> str:
+    return node_id.replace("-", "_")
+
+
+def _graph_to_mermaid(G) -> str:
+    lines = ["graph TD"]
+    for node in G.nodes:
+        safe_id = _mermaid_id(node)
+        lines.append(f'  {safe_id}["{node} ({_tech_type(node)})"]')
+    for source, target in G.edges:
+        lines.append(f"  {_mermaid_id(source)} --> {_mermaid_id(target)}")
+    return "\n".join(lines)
+
+
 @app.get("/")
 def root():
     return {
         "service": "ripple",
-        "endpoints": ["/graph", "/simulate/failure/{node_id}", "/docs"],
+        "endpoints": [
+            "/graph",
+            "/graph/mermaid",
+            "/simulate/failure/{node_id}",
+            "/docs",
+        ],
     }
 
 
@@ -34,6 +62,12 @@ def root():
 def get_graph():
     G = _load_graph()
     return graph_to_json(G)
+
+
+@app.get("/graph/mermaid")
+def get_graph_mermaid():
+    G = _load_graph()
+    return {"mermaid": _graph_to_mermaid(G)}
 
 
 @app.post("/simulate/failure/{node_id}")

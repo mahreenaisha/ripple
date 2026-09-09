@@ -1,0 +1,24 @@
+<div class="toolbar">
+  <p>A paste-ready Mermaid diagram of the current dependency graph.</p>
+
+  <div class="actions">
+    <div class="segmented" role="group" aria-label="Diagram direction">
+      <button type="button" [class.active]="direction() === 'TD'" (click)="setDirection('TD')">Top-down</button>
+      <button type="button" [class.active]="direction() === 'LR'" (click)="setDirection('LR')">Left-right</button>
+    </div>
+    <button type="button" class="copy" [disabled]="!mermaidCode()" (click)="copyMermaid()">
+      {{ copied() ? 'Copied' : 'Copy Mermaid Code' }}
+    </button>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="empty">
+    <span class="spinner" aria-hidden="true"></span>
+    Loading snapshot…
+  </div>
+} @else if (error(); as message) {
+  <div class="empty">{{ message }}</div>
+}
+
+<div #diagram class="diagram" [class.hidden]="loading() || error()"></div>
