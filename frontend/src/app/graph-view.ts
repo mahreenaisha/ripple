@@ -90,7 +90,15 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
     this.cy = cytoscape({
       container: this.cyContainer.nativeElement,
       elements,
-      layout: { name: 'cose', animate: true },
+      layout: {
+        name: 'cose',
+        animate: true,
+        animationDuration: 900,
+        padding: 60,
+        idealEdgeLength: 130,
+        nodeOverlap: 24,
+        gravity: 0.5,
+      },
       style: [
         {
           selector: 'node',
@@ -98,12 +106,22 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
             label: 'data(id)',
             shape: 'ellipse',
             'background-color': `mapData(avgErrorRate, 0, ${errorRangeMax}, #4ade80, #ef4444)`,
-            color: '#111',
-            'text-valign': 'center',
+            'background-opacity': 0.92,
+            'border-width': 2,
+            'border-color': 'rgba(255, 255, 255, 0.22)',
+            color: '#e6ebf5',
+            'text-valign': 'bottom',
             'text-halign': 'center',
-            'font-size': 10,
+            'text-margin-y': 6,
+            'text-outline-width': 3,
+            'text-outline-color': '#0e1421',
+            'font-size': 11,
+            'font-weight': 600,
+            'min-zoomed-font-size': 7,
             width: `mapData(totalIncomingCalls, ${callRangeMin}, ${callRangeMax}, 30, 90)`,
             height: `mapData(totalIncomingCalls, ${callRangeMin}, ${callRangeMax}, 30, 90)`,
+            'transition-property': 'opacity, border-color, border-width',
+            'transition-duration': 200,
           },
         },
         {
@@ -117,11 +135,15 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
         {
           selector: 'edge',
           style: {
-            width: 2,
-            'line-color': '#999',
-            'target-arrow-color': '#999',
+            width: 1.6,
+            opacity: 0.75,
+            'line-color': '#41506d',
+            'target-arrow-color': '#41506d',
             'target-arrow-shape': 'triangle',
+            'arrow-scale': 0.9,
             'curve-style': 'bezier',
+            'transition-property': 'opacity, line-color, width',
+            'transition-duration': 200,
           },
         },
         {
@@ -132,9 +154,25 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
           },
         },
         {
+          selector: 'node.highlighted',
+          style: {
+            'overlay-color': '#818cf8',
+            'overlay-opacity': 0.2,
+            'overlay-padding': 7,
+          },
+        },
+        {
+          selector: 'edge.highlighted',
+          style: {
+            width: 3,
+            'line-color': '#818cf8',
+            'target-arrow-color': '#818cf8',
+          },
+        },
+        {
           selector: '.dimmed',
           style: {
-            opacity: 0.15,
+            opacity: 0.12,
           },
         },
       ],

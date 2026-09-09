@@ -33,7 +33,7 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should load graph counts from the API', async () => {
+  it('should show graph counts from the API', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
@@ -50,7 +50,8 @@ describe('App', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Loaded 2 nodes and 1 edges');
+    expect(compiled.textContent).toContain('2 services');
+    expect(compiled.textContent).toContain('1 dependencies');
     httpTesting.verify();
   });
 });

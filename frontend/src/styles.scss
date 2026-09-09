@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --bg: #0b0f1a;
+  --surface: #121826;
+  --surface-2: #182031;
+  --border: #253044;
+  --border-soft: #1c2536;
+  --text: #e6ebf5;
+  --text-muted: #93a1b8;
+  --accent: #6366f1;
+  --accent-soft: #818cf8;
+  --cyan: #22d3ee;
+  --healthy: #4ade80;
+  --risky: #ef4444;
+  --spof: #f97316;
+  --radius: 12px;
+  --shadow: 0 12px 32px rgb(3 7 18 / 45%);
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(900px 520px at 15% -10%, rgb(99 102 241 / 14%), transparent 60%),
+    radial-gradient(760px 460px at 90% 0%, rgb(34 211 238 / 10%), transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
