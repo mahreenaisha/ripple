@@ -1,29 +1,110 @@
 :host {
   display: block;
-  font-family: system-ui, sans-serif;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background:
+    radial-gradient(680px 420px at 50% 40%, rgb(99 102 241 / 8%), transparent 70%),
+    #0e1421;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
 }
 
 .legend {
-  margin: 0 1rem 0.75rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #f9fafb;
-  color: #111827;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  width: 250px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgb(18 24 38 / 88%);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgb(3 7 18 / 45%);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text);
 }
 
-.legend p {
-  margin: 0;
+.legend-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .legend ul {
-  margin: 0.5rem 0;
-  padding-left: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
 }
 
-.legend .hint {
-  color: #4b5563;
-  font-size: 0.8125rem;
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.legend strong {
+  font-weight: 600;
+}
+
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 34px;
+  flex-shrink: 0;
+}
+
+.dot {
+  display: block;
+  border-radius: 50%;
+  background: var(--accent-soft);
+}
+
+.dot.sm {
+  width: 8px;
+  height: 8px;
+}
+
+.dot.lg {
+  width: 15px;
+  height: 15px;
+}
+
+.dot.ring {
+  width: 13px;
+  height: 13px;
+  background: #4b5f7d;
+  border: 2px solid var(--spof);
+}
+
+.gradient {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--healthy), #facc15, var(--risky));
+}
+
+.legend-hint {
+  margin: 0.6rem 0 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+@media (max-height: 620px) {
+  .legend {
+    display: none;
+  }
 }
