@@ -1,63 +1,71 @@
 import json
 import random
 
+# Layered topology (source -> target means caller -> callee):
+#   edge        — entry points; nothing calls them (in-degree 0)
+#   mid-tier    — business logic; called by edge, calls shared infra
+#   shared infra — SPOFs with high in-degree
+#   leaves      — few callers, so failures have minimal blast radius
 SERVICES = [
+    # frontend / edge
+    "web-app",
+    "mobile-app",
     "api-gateway",
-    "auth-service",
+    # business logic mid-tier
+    "order-service",
     "payments-service",
     "inventory-service",
-    "notifications-service",
-    "billing-service",
     "user-service",
-    "order-service",
-    "shipping-service",
+    # shared infra (SPOFs)
+    "auth-service",
+    "database-service",
+    # leaves (low in-degree)
     "email-service",
     "analytics-service",
-    "search-service",
+    "notifications-service",
 ]
 
-# Directed call edges (source -> target). Hubs like auth-service and
-# payments-service receive many incoming edges. The last three edges form
-# a cycle: order-service -> billing-service -> inventory-service -> order-service.
+# Sparse edges: mid-tier services call only 1–2 infra targets, not a full mesh.
+# The last three edges form a cycle:
+#   order-service -> payments-service -> inventory-service -> order-service
 CALL_EDGES = [
-    ("api-gateway", "auth-service"),
-    ("api-gateway", "user-service"),
+    # Edge -> mid-tier (each edge fans into a subset of mid-tier)
+    ("web-app", "user-service"),
+    ("web-app", "order-service"),
+    ("mobile-app", "user-service"),
+    ("mobile-app", "order-service"),
     ("api-gateway", "order-service"),
-    ("api-gateway", "search-service"),
     ("api-gateway", "payments-service"),
-    ("user-service", "auth-service"),
+    ("api-gateway", "inventory-service"),
+    ("api-gateway", "user-service"),
+    # Edge -> auth (login / token checks boost auth in-degree)
+    ("web-app", "auth-service"),
+    ("mobile-app", "auth-service"),
+    ("api-gateway", "auth-service"),
+    # Mid-tier -> shared infra (1–2 each; not every mid-tier hits both)
     ("order-service", "auth-service"),
-    ("order-service", "payments-service"),
-    ("order-service", "inventory-service"),
-    ("order-service", "shipping-service"),
-    ("order-service", "notifications-service"),
-    ("billing-service", "auth-service"),
-    ("billing-service", "payments-service"),
-    ("billing-service", "user-service"),
+    ("order-service", "database-service"),
     ("payments-service", "auth-service"),
-    ("payments-service", "billing-service"),
-    ("inventory-service", "auth-service"),
-    ("shipping-service", "auth-service"),
-    ("shipping-service", "inventory-service"),
-    ("shipping-service", "notifications-service"),
-    ("notifications-service", "email-service"),
-    ("notifications-service", "auth-service"),
-    ("email-service", "auth-service"),
-    ("search-service", "auth-service"),
-    ("search-service", "inventory-service"),
-    ("analytics-service", "order-service"),
-    ("analytics-service", "user-service"),
-    ("analytics-service", "payments-service"),
+    ("payments-service", "database-service"),
+    ("inventory-service", "database-service"),
+    ("user-service", "auth-service"),
+    # Mid-tier -> leaves (hang off user-service, not the order cycle,
+    # so leaf failures stay small and don't fan through the SPOF cycle)
     ("user-service", "analytics-service"),
-    # Intentional circular dependency
-    ("order-service", "billing-service"),
-    ("billing-service", "inventory-service"),
+    ("user-service", "notifications-service"),
+    ("notifications-service", "email-service"),
+    # Leaves may touch infra lightly
+    ("email-service", "database-service"),
+    ("analytics-service", "database-service"),
+    # Intentional circular dependency among mid-tier
+    ("order-service", "payments-service"),
+    ("payments-service", "inventory-service"),
     ("inventory-service", "order-service"),
 ]
 
 
 def make_call_record(source, target):
-    hub_targets = {"auth-service", "payments-service"}
+    hub_targets = {"auth-service", "database-service"}
     if target in hub_targets:
         call_count = random.randint(800, 5000)
         avg_latency_ms = round(random.uniform(8.0, 45.0), 2)

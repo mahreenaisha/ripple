@@ -17,6 +17,7 @@
     "@angular/forms": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
     "@angular/router": "^22.1.0",
+    "@mermaid-js/layout-elk": "^0.2.3",
     "cytoscape": "^3.34.2",
     "mermaid": "^11.17.2",
     "rxjs": "~7.8.0",

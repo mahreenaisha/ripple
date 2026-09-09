@@ -1,226 +1,177 @@
 [
   {
-    "source": "api-gateway",
-    "target": "auth-service",
-    "call_count": 1712,
-    "avg_latency_ms": 8.93,
-    "error_rate": 0.0117
+    "source": "web-app",
+    "target": "user-service",
+    "call_count": 694,
+    "avg_latency_ms": 30.7,
+    "error_rate": 0.0593
   },
   {
-    "source": "api-gateway",
+    "source": "web-app",
+    "target": "order-service",
+    "call_count": 290,
+    "avg_latency_ms": 49.5,
+    "error_rate": 0.0589
+  },
+  {
+    "source": "mobile-app",
     "target": "user-service",
-    "call_count": 268,
-    "avg_latency_ms": 35.44,
-    "error_rate": 0.0082
+    "call_count": 732,
+    "avg_latency_ms": 136.43,
+    "error_rate": 0.0436
+  },
+  {
+    "source": "mobile-app",
+    "target": "order-service",
+    "call_count": 644,
+    "avg_latency_ms": 82.88,
+    "error_rate": 0.0024
   },
   {
     "source": "api-gateway",
     "target": "order-service",
-    "call_count": 798,
-    "avg_latency_ms": 161.89,
-    "error_rate": 0.007
-  },
-  {
-    "source": "api-gateway",
-    "target": "search-service",
-    "call_count": 472,
-    "avg_latency_ms": 17.34,
-    "error_rate": 0.0075
+    "call_count": 263,
+    "avg_latency_ms": 51.09,
+    "error_rate": 0.0482
   },
   {
     "source": "api-gateway",
     "target": "payments-service",
-    "call_count": 2705,
-    "avg_latency_ms": 26.7,
-    "error_rate": 0.002
+    "call_count": 614,
+    "avg_latency_ms": 45.4,
+    "error_rate": 0.052
   },
   {
-    "source": "user-service",
-    "target": "auth-service",
-    "call_count": 2428,
-    "avg_latency_ms": 34.49,
-    "error_rate": 0.0284
-  },
-  {
-    "source": "order-service",
-    "target": "auth-service",
-    "call_count": 4236,
-    "avg_latency_ms": 16.16,
-    "error_rate": 0.024
-  },
-  {
-    "source": "order-service",
-    "target": "payments-service",
-    "call_count": 853,
-    "avg_latency_ms": 36.08,
-    "error_rate": 0.0072
-  },
-  {
-    "source": "order-service",
+    "source": "api-gateway",
     "target": "inventory-service",
-    "call_count": 472,
-    "avg_latency_ms": 69.16,
-    "error_rate": 0.0124
+    "call_count": 598,
+    "avg_latency_ms": 82.48,
+    "error_rate": 0.0359
   },
   {
-    "source": "order-service",
-    "target": "shipping-service",
-    "call_count": 821,
-    "avg_latency_ms": 68.55,
-    "error_rate": 0.0074
-  },
-  {
-    "source": "order-service",
-    "target": "notifications-service",
-    "call_count": 139,
-    "avg_latency_ms": 72.31,
-    "error_rate": 0.0275
-  },
-  {
-    "source": "billing-service",
-    "target": "auth-service",
-    "call_count": 2966,
-    "avg_latency_ms": 37.86,
-    "error_rate": 0.0295
-  },
-  {
-    "source": "billing-service",
-    "target": "payments-service",
-    "call_count": 1822,
-    "avg_latency_ms": 44.01,
-    "error_rate": 0.0158
-  },
-  {
-    "source": "billing-service",
+    "source": "api-gateway",
     "target": "user-service",
-    "call_count": 605,
-    "avg_latency_ms": 61.25,
-    "error_rate": 0.0503
+    "call_count": 324,
+    "avg_latency_ms": 147.98,
+    "error_rate": 0.0005
+  },
+  {
+    "source": "web-app",
+    "target": "auth-service",
+    "call_count": 2107,
+    "avg_latency_ms": 33.83,
+    "error_rate": 0.0143
+  },
+  {
+    "source": "mobile-app",
+    "target": "auth-service",
+    "call_count": 2073,
+    "avg_latency_ms": 15.97,
+    "error_rate": 0.0308
+  },
+  {
+    "source": "api-gateway",
+    "target": "auth-service",
+    "call_count": 1637,
+    "avg_latency_ms": 11.43,
+    "error_rate": 0.0048
+  },
+  {
+    "source": "order-service",
+    "target": "auth-service",
+    "call_count": 3617,
+    "avg_latency_ms": 30.34,
+    "error_rate": 0.0325
+  },
+  {
+    "source": "order-service",
+    "target": "database-service",
+    "call_count": 4563,
+    "avg_latency_ms": 27.84,
+    "error_rate": 0.039
   },
   {
     "source": "payments-service",
     "target": "auth-service",
+    "call_count": 3900,
+    "avg_latency_ms": 10.92,
+    "error_rate": 0.0124
+  },
+  {
+    "source": "payments-service",
+    "target": "database-service",
     "call_count": 3762,
     "avg_latency_ms": 29.36,
     "error_rate": 0.0285
   },
   {
-    "source": "payments-service",
-    "target": "billing-service",
-    "call_count": 86,
-    "avg_latency_ms": 123.09,
-    "error_rate": 0.0618
+    "source": "inventory-service",
+    "target": "database-service",
+    "call_count": 1175,
+    "avg_latency_ms": 32.47,
+    "error_rate": 0.0311
   },
   {
-    "source": "inventory-service",
+    "source": "user-service",
     "target": "auth-service",
     "call_count": 1453,
     "avg_latency_ms": 39.65,
     "error_rate": 0.0348
   },
   {
-    "source": "shipping-service",
-    "target": "auth-service",
-    "call_count": 3913,
-    "avg_latency_ms": 18.29,
-    "error_rate": 0.0258
+    "source": "user-service",
+    "target": "analytics-service",
+    "call_count": 429,
+    "avg_latency_ms": 58.7,
+    "error_rate": 0.0509
   },
   {
-    "source": "shipping-service",
-    "target": "inventory-service",
+    "source": "user-service",
+    "target": "notifications-service",
     "call_count": 413,
     "avg_latency_ms": 39.33,
     "error_rate": 0.0284
   },
   {
-    "source": "shipping-service",
-    "target": "notifications-service",
+    "source": "notifications-service",
+    "target": "email-service",
     "call_count": 726,
     "avg_latency_ms": 56.85,
     "error_rate": 0.0749
   },
   {
-    "source": "notifications-service",
-    "target": "email-service",
-    "call_count": 703,
-    "avg_latency_ms": 24.0,
-    "error_rate": 0.0508
+    "source": "email-service",
+    "target": "database-service",
+    "call_count": 1384,
+    "avg_latency_ms": 30.54,
+    "error_rate": 0.0077
   },
   {
-    "source": "notifications-service",
-    "target": "auth-service",
+    "source": "analytics-service",
+    "target": "database-service",
     "call_count": 2805,
     "avg_latency_ms": 14.05,
     "error_rate": 0.0158
   },
   {
-    "source": "email-service",
-    "target": "auth-service",
-    "call_count": 2599,
-    "avg_latency_ms": 33.33,
-    "error_rate": 0.0339
-  },
-  {
-    "source": "search-service",
-    "target": "auth-service",
-    "call_count": 1258,
-    "avg_latency_ms": 16.47,
-    "error_rate": 0.0023
-  },
-  {
-    "source": "search-service",
-    "target": "inventory-service",
-    "call_count": 363,
-    "avg_latency_ms": 79.4,
-    "error_rate": 0.0053
-  },
-  {
-    "source": "analytics-service",
-    "target": "order-service",
-    "call_count": 620,
-    "avg_latency_ms": 159.23,
-    "error_rate": 0.0252
-  },
-  {
-    "source": "analytics-service",
-    "target": "user-service",
-    "call_count": 711,
-    "avg_latency_ms": 95.87,
-    "error_rate": 0.0708
-  },
-  {
-    "source": "analytics-service",
-    "target": "payments-service",
-    "call_count": 4558,
-    "avg_latency_ms": 13.29,
-    "error_rate": 0.0064
-  },
-  {
-    "source": "user-service",
-    "target": "analytics-service",
-    "call_count": 802,
-    "avg_latency_ms": 106.31,
-    "error_rate": 0.021
-  },
-  {
     "source": "order-service",
-    "target": "billing-service",
-    "call_count": 638,
-    "avg_latency_ms": 83.98,
-    "error_rate": 0.0467
+    "target": "payments-service",
+    "call_count": 695,
+    "avg_latency_ms": 127.61,
+    "error_rate": 0.0176
   },
   {
-    "source": "billing-service",
+    "source": "payments-service",
     "target": "inventory-service",
-    "call_count": 410,
-    "avg_latency_ms": 48.85,
-    "error_rate": 0.0798
+    "call_count": 372,
+    "avg_latency_ms": 153.6,
+    "error_rate": 0.0621
   },
   {
     "source": "inventory-service",
     "target": "order-service",
-    "call_count": 561,
-    "avg_latency_ms": 94.91,
-    "error_rate": 0.0605
+    "call_count": 274,
+    "avg_latency_ms": 150.06,
+    "error_rate": 0.0644
   }
 ]
