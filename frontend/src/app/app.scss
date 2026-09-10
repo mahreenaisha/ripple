@@ -205,7 +205,7 @@
 .chat {
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: 340px;
   flex-shrink: 0;
   border: 1px solid var(--border-soft);
   border-radius: var(--radius);
@@ -245,15 +245,7 @@
 .chat-body {
   display: flex;
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.chat-empty {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.88rem;
+  min-height: 0;
 }
 
 @media (max-width: 860px) {
@@ -262,6 +254,6 @@
   }
 
   .chat {
-    width: 260px;
+    width: 280px;
   }
 }
