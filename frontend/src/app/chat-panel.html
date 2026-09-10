@@ -1,0 +1,35 @@
+<div #messageList class="messages">
+  @if (messages().length === 0 && !thinking()) {
+    <p class="hint">Ask about services, risk, or blast radius.</p>
+  }
+
+  @for (message of messages(); track $index) {
+    <div class="row" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'" [class.error]="message.role === 'error'">
+      <div class="bubble">
+        @if (message.role !== 'user') {
+          <span class="who">Ripple</span>
+        }
+        <p>{{ message.text }}</p>
+      </div>
+    </div>
+  }
+
+  @if (thinking()) {
+    <div class="row assistant">
+      <div class="bubble thinking">Ripple is thinking...</div>
+    </div>
+  }
+</div>
+
+<form class="composer" (submit)="$event.preventDefault(); send()">
+  <textarea
+    rows="2"
+    [value]="draft()"
+    [disabled]="thinking()"
+    placeholder="Message Ripple…"
+    aria-label="Message Ripple"
+    (input)="onDraftInput($event)"
+    (keydown)="onKeydown($event)"
+  ></textarea>
+  <button type="submit" [disabled]="thinking() || !draft().trim()">Send</button>
+</form>

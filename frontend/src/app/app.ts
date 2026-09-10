@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { GraphData, GraphViewComponent } from './graph-view';
 import { SimulationViewComponent } from './simulation-view';
 import { SnapshotViewComponent } from './snapshot-view';
+import { ChatPanelComponent } from './chat-panel';
 
 export type AppTab = 'map' | 'snapshot' | 'simulate';
 
 @Component({
-  imports: [GraphViewComponent, SimulationViewComponent, SnapshotViewComponent],
+  imports: [GraphViewComponent, SimulationViewComponent, SnapshotViewComponent, ChatPanelComponent],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

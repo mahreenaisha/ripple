@@ -1,0 +1,5 @@
+fastapi>=0.141.0
+networkx>=3.6.0
+uvicorn>=0.52.0
+openai>=1.0.0
+python-dotenv>=1.0.0
