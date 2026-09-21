@@ -1,0 +1,485 @@
+{
+  "nodes": [
+    {
+      "id": "authorizationas-service",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS Cognito",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS EventBridge",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS Greengrass",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.IoTUtilities",
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS IoT",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.IoTUtilities",
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS SQS",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "complianceas-service",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "DynamoDB",
+      "type": "database",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "MQTT",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "OpenSearch",
+      "type": "database",
+      "confidence": "high",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.IoTUtilities",
+        "Waters.DeviceAS.Migration",
+        "Waters.DeviceAS.SchemaUtility",
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Scalars Access",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "tenancyas-service",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.DeviceAS.IoTUtilities",
+        "Waters.DeviceAS.Migration",
+        "Waters.DeviceAS.Server"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Waters.DeviceAS.IoTUtilities",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": "C#",
+      "entry_points_count": 3,
+      "databases": [
+        "OpenSearch"
+      ],
+      "dependencies_on": [
+        "AWS Greengrass",
+        "AWS IoT",
+        "OpenSearch",
+        "Waters.DeviceAS.Server",
+        "tenancyas-service"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-07-04T00:46:09+05:30",
+        "lines_of_code": 918
+      }
+    },
+    {
+      "id": "Waters.DeviceAS.Migration",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": "C#",
+      "entry_points_count": 1,
+      "databases": [
+        "OpenSearch"
+      ],
+      "dependencies_on": [
+        "OpenSearch",
+        "Waters.DeviceAS.Server",
+        "tenancyas-service"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-05-27T09:48:12-04:00",
+        "lines_of_code": 1636
+      }
+    },
+    {
+      "id": "Waters.DeviceAS.SchemaUtility",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": "C#",
+      "entry_points_count": 1,
+      "databases": [
+        "OpenSearch"
+      ],
+      "dependencies_on": [
+        "OpenSearch",
+        "Waters.DeviceAS.Server"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-08-24T08:39:14-04:00",
+        "lines_of_code": 111
+      }
+    },
+    {
+      "id": "Waters.DeviceAS.Server",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": "C#",
+      "entry_points_count": 94,
+      "databases": [
+        "DynamoDB",
+        "OpenSearch"
+      ],
+      "dependencies_on": [
+        "AWS Cognito",
+        "AWS EventBridge",
+        "AWS Greengrass",
+        "AWS IoT",
+        "AWS SQS",
+        "DynamoDB",
+        "MQTT",
+        "OpenSearch",
+        "Scalars Access",
+        "authorizationas-service",
+        "complianceas-service",
+        "tenancyas-service"
+      ],
+      "dependents": [
+        "Waters.DeviceAS.IoTUtilities",
+        "Waters.DeviceAS.Migration",
+        "Waters.DeviceAS.SchemaUtility"
+      ],
+      "metadata": {
+        "last_modified": "2026-08-28T13:20:26-06:00",
+        "lines_of_code": 4486
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "Waters.DeviceAS.IoTUtilities",
+      "to": "AWS Greengrass",
+      "type": "calls",
+      "count": 3,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.IoTUtilities",
+      "to": "AWS IoT",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.DeviceAS.IoTUtilities",
+      "to": "OpenSearch",
+      "type": "queries",
+      "count": 1,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.IoTUtilities",
+      "to": "tenancyas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.DeviceAS.IoTUtilities",
+      "to": "Waters.DeviceAS.Server",
+      "type": "imports",
+      "count": 2,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Migration",
+      "to": "OpenSearch",
+      "type": "queries",
+      "count": 1,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Migration",
+      "to": "tenancyas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.DeviceAS.Migration",
+      "to": "Waters.DeviceAS.Server",
+      "type": "imports",
+      "count": 1,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.SchemaUtility",
+      "to": "OpenSearch",
+      "type": "queries",
+      "count": 2,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.SchemaUtility",
+      "to": "Waters.DeviceAS.Server",
+      "type": "imports",
+      "count": 1,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "authorizationas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "AWS Cognito",
+      "type": "calls",
+      "count": 3,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "AWS EventBridge",
+      "type": "publishes",
+      "count": 5,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "AWS Greengrass",
+      "type": "calls",
+      "count": 14,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "AWS IoT",
+      "type": "calls",
+      "count": 7,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "AWS SQS",
+      "type": "publishes",
+      "count": 13,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "AWS SQS",
+      "type": "subscribes",
+      "count": 2,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "complianceas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "DynamoDB",
+      "type": "queries",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "MQTT",
+      "type": "publishes",
+      "count": 4,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "OpenSearch",
+      "type": "queries",
+      "count": 3,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "Scalars Access",
+      "type": "calls",
+      "count": 5,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.DeviceAS.Server",
+      "to": "tenancyas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-09-21T07:06:59.368Z",
+    "repo_url": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
+    "total_services": 4,
+    "total_nodes": 16,
+    "total_edges": 23,
+    "edge_count_semantics": "unique source operation/evidence locations"
+  }
+}

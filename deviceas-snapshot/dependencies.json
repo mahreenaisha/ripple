@@ -1,0 +1,2738 @@
+[
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/appsettings.Development.json:140: \"Default\": \"{\\\"Statement\\\":[{\\\"Action\\\":[\\\"iot:Connect\\\"],\\\"Effect\\\":\\\"Allow\\\",\\\"Resource\\\":[\\\"arn:aws:iot:us-east-1:992548356091:client/core-device-thing-name*\\\"]},{\\\"Action\\\":[\\\"iot:Receive\\\",\\\"iot:Publish\\\"],\\\"Effect\\"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/OrphanedThingCleanupHandler.cs:502: [LoggerMessage(Level = LogLevel.Debug, Message = \"Thing: {ThingName} - deleting Greengrass V2 Core\")]"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Program.cs:72: services.AddAWSService<IAmazonGreengrassV2>();"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Program.cs:71: services.AddAWSService<IAmazonIoT>();"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/appsettings.Development.json:147: \"Nodes\": [ \"http://localhost:9200\" ]"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Extensions/ServiceCollectionExtensions.cs:4: using Waters.AccessControl.OpenSearch.TenantData.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Extensions/ServiceCollectionExtensions.cs:6: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/OrphanedThingCleanupHandler.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/OrphanedThingCleanupHandler.cs:14: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/OrphanedThingCleanupHandler.cs:4: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/OrphanedThingCleanupHandler.cs:463: [LoggerMessage(Level = LogLevel.Information, Message = \"Thing: {ThingName} does not exist in OpenSearch and will be deleted\")]"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/OrphanedThingCleanupHandler.cs:70: logger.LogWarning(\"Unable to access OpenSearch for tenancy {TenantId} - skipping tenancy\", tenancy);"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/PerThingDevicePolicyHandler.cs:12: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/PerThingDevicePolicyHandler.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/PerThingDevicePolicyHandler.cs:14: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/PerThingDevicePolicyHandler.cs:2: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Handlers/PerThingDevicePolicyHandler.cs:80: logger.LogWarning(\"Unable to access OpenSearch for tenancy {TenantId} - skipping tenancy\", tenancy);"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Program.cs:26: using Waters.ODataOpenSearch.OpenSearch.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Program.cs:27: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Properties/launchSettings.json:14: \"IoT_Elasticsearch__Nodes__0\": \"http://localhost:9200\""
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "tenancyas-service",
+    "type": "http_call",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/appsettings.json:32: \"HostName\": \"tenancyas-service\","
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "Waters.DeviceAS.Server",
+    "type": "import",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Waters.DeviceAS.IoTUtilities.csproj:27: <ProjectReference Include=\"..\\..\\server\\Application\\Waters.DeviceAS.Core\\Waters.DeviceAS.Core.csproj\""
+  },
+  {
+    "from": "Waters.DeviceAS.IoTUtilities",
+    "to": "Waters.DeviceAS.Server",
+    "type": "import",
+    "evidence": "utilities/Waters.DeviceAS.IoTUtilities/Waters.DeviceAS.IoTUtilities.csproj:28: <ProjectReference Include=\"..\\..\\server\\Application\\Waters.DeviceAS.SecondaryAdapters\\Waters.DeviceAS.SecondaryAdapters.csproj\""
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/appsettings.Development.json:13: \"Nodes\": [ \"http://localhost:9200\" ]"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Extensions/ServiceCollectionExtensions.cs:4: using Waters.AccessControl.OpenSearch.TenantData.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Extensions/ServiceCollectionExtensions.cs:7: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/MigrationManager.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/MigrationManager.cs:5: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/MigrationManager.cs:6: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/MigrationManager.cs:7: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/BackfillMigration.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/BackfillMigration.cs:7: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/BackfillMigration.cs:8: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/CheckpointService.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/CheckpointServiceFactory.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/CleanupMigration.cs:5: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/CleanupMigration.cs:6: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/HistoryEventBackfillProvider.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/HistoryEventBackfillProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/HistoryEventBackfillProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/HistoryEventCleanupProvider.cs:3: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/HistoryEventCleanupProvider.cs:4: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/ICheckpointServiceFactory.cs:2: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/IHistoryEventBackfillProvider.cs:2: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/IHistoryEventCleanupProvider.cs:1: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/IMigration.cs:1: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/ISegmentedDataBackfillProvider.cs:2: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SampleMigration.cs:3: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SampleMigration.cs:4: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfill.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfill.cs:7: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfill.cs:8: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfillProvider.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfillProvider.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfillProvider.cs:12: using Waters.ODataOpenSearch.OpenSearch.Implementations;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfillProvider.cs:13: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Migrations/SegmentedDataBackfillProvider.cs:14: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Program.cs:17: using Waters.ODataOpenSearch.OpenSearch.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Program.cs:18: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "tenancyas-service",
+    "type": "http_call",
+    "evidence": "utilities/Waters.DeviceAS.Migration/appsettings.json:32: \"HostName\": \"tenancyas-service\","
+  },
+  {
+    "from": "Waters.DeviceAS.Migration",
+    "to": "Waters.DeviceAS.Server",
+    "type": "import",
+    "evidence": "utilities/Waters.DeviceAS.Migration/Waters.DeviceAS.Migration.csproj:27: <ProjectReference Include=\"..\\..\\server\\Application\\Waters.DeviceAS.SecondaryAdapters\\Waters.DeviceAS.SecondaryAdapters.csproj\""
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/appsettings.Development.json:23: \"Waters.DeviceAS.SecondaryAdapters.DeviceData.ElasticsearchClient\": \"Debug\""
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/appsettings.Development.json:32: \"IndexManagementPasswordSecretKey\": \"dev-us-wcc-deviceas-+-shared-opensearch-service-job-user-password\","
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/appsettings.Development.json:8: \"Nodes\": [ \"http://localhost:9200\" ]"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/SchemaSync.cs:1: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:11: using Waters.ODataOpenSearch.OpenSearch.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:12: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:51: services.AddSingleton<Nest.IElasticClient>(sp => sp.GetRequiredService<IElasticClient<IndexManagementUser>>().Client);"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:55: services.AddSingleton<IElasticClient>(sp => NestHelpers.DefaultElasticsearchClient(sp.GetService<ILoggerFactory>(), Configuration));"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:6: using Waters.AccessControl.OpenSearch.Common.OpenSearch;"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:7: using Waters.AccessControl.OpenSearch.IndexManagement.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Startup.cs:8: using Waters.AccessControl.OpenSearch.IndexManagement.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Waters.DeviceAS.SchemaUtility.csproj:24: <PackageReference Include=\"Waters.AccessControl.OpenSearch.IndexManagement\" Version=\"6.3.0\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.SchemaUtility",
+    "to": "Waters.DeviceAS.Server",
+    "type": "import",
+    "evidence": "utilities/Waters.DeviceAS.SchemaUtility/Waters.DeviceAS.SchemaUtility.csproj:32: <ProjectReference Include=\"..\\..\\server\\Application\\Waters.DeviceAS.SecondaryAdapters\\Waters.DeviceAS.SecondaryAdapters.csproj\""
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "authorizationas-service",
+    "type": "http_call",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.json:93: \"HostName\": \"authorizationas-service\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceEvents/DeviceEventingProvider.cs:30: internal const string MetricName = \"eventbridge.publish\";"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Waters.DeviceAS.SecondaryAdapters.csproj:14: <PackageReference Include=\"Waters.MessageQueues.Publishers.EventBridge\" Version=\"14.12.4\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Infrastructure/ServiceCollectionExtensions.cs:10: using Waters.NotificationPublisher.EventBridge;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Infrastructure/ServiceCollectionExtensions.cs:7: using Waters.MessageQueues.Publishers.EventBridge;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Infrastructure/ServiceCollectionExtensions.cs:8: using Waters.MessageQueues.Publishers.EventBridge.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.Core/Waters.DeviceAS.Core.csproj:11: <PackageReference Include=\"AWSSDK.GreenGrass\" Version=\"4.*\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Provisioning/IoTProvider.cs:330: logger.LogError(ex, \"'{Tenant}' '{InstrumentControllerId}' greengrass v2 core device cannot be deleted because of the exception:\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Provisioning/IoTProvider.cs:35: IAmazonGreengrassV2 ggV2Client,"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Waters.DeviceAS.SecondaryAdapters.csproj:11: <PackageReference Include=\"AWSSDK.GreenGrass\" Version=\"4.*\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:158: \"Default\": \"{\\\"Statement\\\":[{\\\"Action\\\":[\\\"iot:Connect\\\"],\\\"Effect\\\":\\\"Allow\\\",\\\"Resource\\\":[\\\"arn:aws:iot:us-east-1:992548356091:client/core-device-thing-name*\\\"]},{\\\"Action\\\":[\\\"iot:Receive\\\",\\\"iot:Publish\\\"],\\\"Effect\\"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentController.cs:63: _logger.LogInformation(\"{tenant} {instrumentControllerID} GreenGrass group registered - {groupID}\", tenant, instrumentControllerID, groupID);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Policies/greengrass_policy.json:12: \"arn:aws:greengrass:{awsRegion}:{accountID}:/greengrass/groups/{groupID}/deployments/*\""
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Policies/greengrass_policy.json:18: \"greengrass:UpdateConnectivityInfo\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Policies/greengrass_policy.json:19: \"greengrass:GetConnectivityInfo\""
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Policies/greengrass_policy.json:7: \"greengrass:GetDeployment\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Policies/greengrass_policy.json:8: \"greengrass:GetDeploymentArtifacts\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Policies/greengrass_policy.json:9: \"greengrass:UpdateCoreDeploymentStatus\""
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:234: services.AddAWSService<IAmazonGreengrassV2>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS Greengrass",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Waters.DeviceAS.Server.csproj:22: <PackageReference Include=\"AWSSDK.GreenGrass\" Version=\"4.*\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Provisioning/CARegistrationProvider.cs:37: IAmazonIoT _iotClient,"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.Core/Waters.DeviceAS.Core.csproj:12: <PackageReference Include=\"AWSSDK.IoT\" Version=\"4.*\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Provisioning/AwsIotHelper.cs:130: public class AwsIotHelper(IAmazonIoT iotClient, IWatersConnectCloudContextAccessor cloudContextAccessor) : IAwsIotHelper"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Provisioning/IoTProvider.cs:34: IAmazonIoT iotClient,"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:233: services.AddAWSService<IAmazonIoT>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:310: var iotService = intermediateServiceProvider.GetService<IAmazonIoT>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS IoT",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/Utils/MiscUtil.cs:21: public static async Task<string> GetCertificateArnAsync(string instrumentControllerID, IAmazonIoT iotClient)"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:9: \"ServiceUrl\": \"https://sqs.us-east-1.amazonaws.com\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Infrastructure/ServiceCollectionExtensions.cs:38: return services.AddSingleton<IAmazonSQS>(_ => new AmazonSQSClient(amazonSQSConfig));"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/ISqsFifoQueuePublisher.cs:8: public interface ISqsFifoQueuePublisher"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:16: public sealed class SqsFifoQueuePublisher : ISqsFifoQueuePublisher, IControllerHeartbeatErrorPublisher"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:20: private readonly IAmazonSQS _sqsClient;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:22: private readonly ILogger<SqsFifoQueuePublisher> _logger;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:24: public SqsFifoQueuePublisher("
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:25: IAmazonSQS sqsClient,"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:27: ILogger<SqsFifoQueuePublisher> logger)"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/SqsFifoQueuePublisher.cs:45: await _sqsClient.SendMessageAsync(request, cancellationToken);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:46: var queueSettings = configuration.GetSection(\"SQSQueueSettings\").Get<SqsQueueSettings>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:50: services.AddSingleton<SqsFifoQueuePublisher>(sp =>"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:52: var sqsClient = sp.GetRequiredService<IAmazonSQS>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:58: return new SqsFifoQueuePublisher("
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:61: sp.GetRequiredService<ILogger<SqsFifoQueuePublisher>>());"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:63: services.AddSingleton<ISqsFifoQueuePublisher>(sp => sp.GetRequiredService<SqsFifoQueuePublisher>());"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/ServiceCollectionExtensions.cs:64: services.AddSingleton<IControllerHeartbeatErrorPublisher>(sp => sp.GetRequiredService<SqsFifoQueuePublisher>());"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Settings/SqsQueueSettings.cs:28: public static SqsQueueSettings CreateFromConfig(IConfiguration config)"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Settings/SqsQueueSettings.cs:30: return GetConfigSection(config).Get<SqsQueueSettings>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Settings/SqsQueueSettings.cs:38: public static void BindFromConfig(IConfiguration config, SqsQueueSettings bindTarget)"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Settings/SqsQueueSettings.cs:45: return config.GetSection(\"SqsQueueSettings\");"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Settings/SqsQueueSettings.cs:9: public class SqsQueueSettings"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:237: services.AddAWSService<IAmazonSQS>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:239: var queueConfig = Configuration.GetSection(\"SQSQueueSettings\").Get<SqsQueueSettings>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:249: services.AddStandardSqsQueueListener<JobQueueMessageTypeDiscriminator>("
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:257: services.AddFifoSqsQueueListener<JobQueueMessageTypeDiscriminator>("
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "cognito-idp.eu-west-1.amazonaws.com",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/OpenAPIs/TenancyCatalog.yaml:854: example: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_WHPy7KntP"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "complianceas-service",
+    "type": "http_call",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/OpenAPIs/ComplianceAS/TeamsApi.yaml:9: - url: http://complianceas-service/api/v1"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/OpenAPIs/TenancyCatalog.yaml:859: example: https://dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com/login"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/OpenAPIs/TenancyCatalog.yaml:864: example: https://dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com/logout"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-eu.scalars-access.com",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/OpenAPIs/TenancyCatalog.yaml:869: example: https://dev-eu.scalars-access.com:443/hub"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-eu.scalars-access.com",
+    "type": "external_api",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/OpenAPIs/TenancyCatalog.yaml:874: example: https://dev-eu.scalars-access.com:443/hub/login"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-us.scalars-access.com",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:202: \"SystemDetailsUrlTemplate\": \"https://dev-us.scalars-access.com/labmonitor/devices/systems/details/{systemId}/overview\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-us.scalars-access.com",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:203: \"ControllerDetailsUrlTemplate\": \"https://dev-us.scalars-access.com/labmonitor/devices/laces/details/{controllerId}\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "dev-us.scalars-access.com",
+    "type": "external_api",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:204: \"ReservationDetailsUrlTemplate\": \"https://dev-us.scalars-access.com/labmonitor/devices/systems/details/{systemId}/schedule\""
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/Waters.DeviceAS.Core.csproj:15: <PackageReference Include=\"Waters.AccessControl.DynamoDB\" Version=\"3.3.0\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Provisioning/Database/DBRepository.cs:11: using Waters.AccessControl.DynamoDB.Interfaces;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:236: services.AddAWSService<IAmazonDynamoDB>();"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:29: using Waters.AccessControl.DynamoDB.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:394: throw new ArgumentException(\"DynamoDB table name prefix is required, please populate DEVICEAS_DB_TABLE_PREFIX configuration value with a valid prefix.\");"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "MQTT",
+    "type": "message_queue",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceMessaging/DeviceMqttPublisher.cs:62: _logger.LogDebug(\"Publishing to MQTT topic {Topic}...\", publishRequest.Topic);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "MQTT",
+    "type": "message_queue",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceMessaging/DeviceMqttPublisher.cs:67: throw new DeviceMessagingException($\"MQTT publish to topic \\\"{publishRequest.Topic}\\\" failed with HTTP status {publishResponse.HttpStatusCode}\");"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "MQTT",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Models/ODataModel.cs:67: deviceMessageAction.HasDescription().HasDescription(\"Publishes an MQTT message to the device\");"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "MQTT",
+    "type": "message_queue",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/MqttResponsePublisher.cs:65: _logger.LogInformation(\"Publishing MQTT message to topic {Topic}: {Message}\", topic, messageBody);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceAccessTokens/DeviceAccessTokenProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/AcquisitionControllerProvider.cs:26: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/AcquisitionControllerProvider.cs:27: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/AcquisitionControllerProvider.cs:28: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/AcquisitionControllerProvider.cs:29: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/InstrumentSystemComponentMetricDto.cs:2: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/InstrumentSystemComponentMetricDto.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/InstrumentSystemEventDto.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/InstrumentSystemHistorySegmentDto.cs:4: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/InstrumentSystemReservationDto.cs:4: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/InstrumentSystemTagDto.cs:4: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/IoTThingEntityDto.cs:5: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DataTransfer/SystemTagCommentDto.cs:3: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DeviceConnectivityProvider.cs:13: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DeviceConnectivityProvider.cs:14: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/DeviceConnectivityProvider.cs:15: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/HeartbeatErrorProvider.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/HeartbeatErrorProvider.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/HeartbeatErrorProvider.cs:12: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/HeartbeatErrorProvider.cs:13: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemComponentProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemComponentProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemComponentProvider.cs:9: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemHistorySegmentProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemHistorySegmentProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemHistorySegmentProvider.cs:9: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemProvider.cs:13: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemProvider.cs:14: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemProvider.cs:15: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemReservationProvider.cs:20: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemReservationProvider.cs:21: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemReservationProvider.cs:22: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemReservationProvider.cs:23: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemTagProvider.cs:10: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemTagProvider.cs:11: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemTagProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/InstrumentSystemTagProvider.cs:9: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/MetricsUpdateProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/StatusUpdateProvider.cs:14: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/StatusUpdateProvider.cs:15: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/StatusUpdateProvider.cs:16: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/StatusUpdateProvider.cs:17: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/SystemStatusUpdateHistoryLogger.cs:10: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/SystemStatusUpdateHistoryLogger.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyHelpers/TenancyValidationHelper.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyHelpers/TenancyValidationHelper.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/ConnectionNotificationValidator.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/EdgeApplicationTypeValidator.cs:12: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/EdgeApplicationTypeValidator.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/EdgeApplicationValidator.cs:14: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/EdgeApplicationValidator.cs:15: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/HeartbeatValidator.cs:13: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/HeartbeatValidator.cs:14: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/MultipleOpenSegmentValidator.cs:11: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/MultipleOpenSegmentValidator.cs:12: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/ReservationsValidator.cs:13: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/DeviceData/TenancyValidators/ReservationsValidator.cs:14: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Provisioning/GreenGrassProvider.cs:17: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Provisioning/PlatformIntegrationProvider.cs:21: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Provisioning/PlatformIntegrationProvider.cs:22: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Provisioning/PlatformIntegrationProvider.cs:23: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Provisioning/PlatformIntegrationProvider.cs:24: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Teams/LifecycleAndTeamAccessProvider.cs:14: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Teams/LifecycleAndTeamAccessProvider.cs:15: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/Teams/LifecycleAndTeamAccessProvider.cs:16: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/IInstrumentSystemAddTagUseCase.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/IInstrumentSystemModifyTagUseCase.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/IInstrumentSystemModifyTagUseCase.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/IInstrumentSystemRemoveTagUseCase.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/IInstrumentSystemRemoveTagUseCase.cs:6: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemAddTagUseCase.cs:17: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemModifyTagUseCase.cs:18: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemModifyTagUseCase.cs:19: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemRemoveTagUseCase.cs:16: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemRemoveTagUseCase.cs:17: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemTagComplianceUseCaseBase.cs:18: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemTagComplianceUseCaseBase.cs:19: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemTagComplianceUseCaseBase.cs:20: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemTagComplianceUseCaseBase.cs:279: ReconciliationMetaData: null, // we're storing the audit reference in OpenSearch - should be enough"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/BusinessLogic/UseCases/Implementation/InstrumentSystemTagComplianceUseCaseBase.cs:306: ReconciliationMetaData: null, // we're storing the audit reference in OpenSearch - should be enough"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IAcquisitionControllerProvider.cs:10: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IAcquisitionControllerProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IAcquisitionControllerProvider.cs:9: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemComponentProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemComponentProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemComponentProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemHistorySegmentProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemHistorySegmentProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemHistorySegmentProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemProvider.cs:9: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemReservationProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemReservationProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemReservationProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemTagProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemTagProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IInstrumentSystemTagProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/ILifecycleAndTeamAccessProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/ILifecycleAndTeamAccessProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IMetricsUpdateProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/IStatusUpdateProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IAcquisitionController.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IAcquisitionController.cs:7: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystem.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystem.cs:5: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemBase.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemBase.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemComponent.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemComponent.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemComponentMetric.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemEvent.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemEvent.cs:5: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemEvent.cs:6: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemHistorySegment.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemHistorySegment.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemHistorySegment.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemReservation.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemReservation.cs:6: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemReservation.cs:7: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IInstrumentSystemTag.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/PrimaryPorts/DeviceData/Models/IIotThingEntity.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/Results/CoreResults.cs:3: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/SecondaryPorts/Provisioning/Exceptions/DeploymentTypeNotFoundException.cs:2: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/Settings/CoreSettingsProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.Core/Settings/ICoreSettingsProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/AcquisitionControllers/AcquisitionControllerAdapter.cs:16: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/AcquisitionControllers/AcquisitionControllerAdapter.cs:17: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/AcquisitionControllers/IAcquisitionControllerAdapter.cs:8: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/AcquisitionControllers/IAcquisitionControllerAdapter.cs:9: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/AcquisitionControllerConverter.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/AcquisitionControllerConverter.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/EntityConverterProvider.cs:2: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemBaseConverter.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemComponentConverter.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemComponentConverter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemComponentMetricConverter.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemConverter.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemConverter.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemEventConverter.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemEventConverter.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemHistorySegmentConverter.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemHistorySegmentConverter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemReservationConverter.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemReservationConverter.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/InstrumentSystemTagConverter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/Converters/IoTThingEntityConverter.cs:5: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemComponents/IInstrumentSystemComponentAdapter.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemComponents/IInstrumentSystemComponentAdapter.cs:5: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemComponents/InstrumentSystemComponentAdapter.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemComponents/InstrumentSystemComponentAdapter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemHistorySegments/IInstrumentSystemHistorySegmentAdapter.cs:3: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemHistorySegments/IInstrumentSystemHistorySegmentAdapter.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemHistorySegments/IInstrumentSystemHistorySegmentAdapter.cs:5: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemHistorySegments/InstrumentSystemHistorySegmentAdapter.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemHistorySegments/InstrumentSystemHistorySegmentAdapter.cs:11: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemHistorySegments/InstrumentSystemHistorySegmentAdapter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemReservations/IInstrumentSystemReservationAdapter.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemReservations/IInstrumentSystemReservationAdapter.cs:5: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemReservations/IInstrumentSystemReservationAdapter.cs:6: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemReservations/InstrumentSystemReservationAdapter.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemReservations/InstrumentSystemReservationAdapter.cs:11: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemReservations/InstrumentSystemReservationAdapter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystems/IInstrumentSystemAdapter.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystems/IInstrumentSystemAdapter.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystems/InstrumentSystemAdapter.cs:15: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystems/InstrumentSystemAdapter.cs:16: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemTags/IInstrumentSystemTagAdapter.cs:6: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemTags/IInstrumentSystemTagAdapter.cs:7: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemTags/IInstrumentSystemTagAdapter.cs:8: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemTags/InstrumentSystemTagAdapter.cs:12: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemTags/InstrumentSystemTagAdapter.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.PrimaryAdapters/DeviceData/InstrumentSystemTags/InstrumentSystemTagAdapter.cs:14: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/DefaultEntityFactoryProvider.cs:4: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/DefaultEntityFactoryProvider.cs:5: using Waters.ODataOpenSearch.OpenSearch.Expanders;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/DefaultEntityFactoryProvider.cs:6: using Waters.ODataOpenSearch.OpenSearch.Implementations;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/DefaultEntityFactoryProvider.cs:7: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/DefaultEntityFactoryProvider.cs:8: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:10: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:11: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:12: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:13: using Waters.ODataOpenSearch.OpenSearch.Implementations;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:14: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:15: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/HistoryEventsEntityFactoryProxy.cs:9: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:12: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:14: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:15: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:16: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:17: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:18: using Waters.ODataOpenSearch.OpenSearch.QueryAdapter;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:21: using CanonicalQuery = Waters.ODataOpenSearch.OpenSearch.CanonicalQuery.Query;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:387: .Keyword(k => k.Name(locationNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:388: .Keyword(k => k.Name(locationLabNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/AcquisitionController.cs:395: .Keyword(k => k.Name(componentRefsRefIdProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/DeviceAsModelIndexes.cs:1: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/DisconnectReason.cs:2: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/EdgeApplicationDeployment.cs:5: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/HistoryTimelineType.cs:3: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IInstrumentSystemHistoryEvent.cs:2: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystem.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystem.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystem.cs:12: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystem.cs:13: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystem.cs:14: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystem.cs:17: using CanonicalQuery = Waters.ODataOpenSearch.OpenSearch.CanonicalQuery.Query;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:11: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:12: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:13: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:14: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:15: using Waters.ODataOpenSearch.OpenSearch.QueryAdapter;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:17: using CanonicalQuery = Waters.ODataOpenSearch.OpenSearch.CanonicalQuery.Query;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:291: .Keyword(k => k.Name(commentsProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:296: .Keyword(k => k.Name(sampleSetNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:297: .Keyword(k => k.Name(sampleSetProjectNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:304: .Keyword(k => k.Name(locationNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:305: .Keyword(k => k.Name(locationLabNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemBase.cs:312: .Keyword(k => k.Name(componentsRefsRefIdProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemChildEvent.cs:3: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemChildEvent.cs:4: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:11: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:12: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:13: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:14: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:16: using CanonicalQuery = Waters.ODataOpenSearch.OpenSearch.CanonicalQuery.Query;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:242: .Keyword(k => k.Name(serialNumberProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:243: .Keyword(k => k.Name(driverVersionProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:244: .Keyword(k => k.Name(firmwareVersionProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:245: .Keyword(k => k.Name(systemComponentTypeProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponent.cs:250: .Text(k => k.Name(alarmTextProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponentMetric.cs:10: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponentMetric.cs:11: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponentMetric.cs:8: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemComponentMetric.cs:9: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:10: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:11: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:12: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:13: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:14: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:15: using Waters.ODataOpenSearch.OpenSearch.QueryAdapter;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemEventBase.cs:5: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemHistoryEvent.cs:3: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemHistorySegment.cs:11: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemHistorySegment.cs:12: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemHistorySegment.cs:13: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemHistorySegment.cs:14: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemHistorySegment.cs:15: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:12: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:13: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:14: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:15: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:16: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:17: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:333: ps.Keyword(k => k.Name(commentsProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD))));"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemReservation.cs:7: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:10: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:11: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:223: .Keyword(k => k.Name(tagTypeProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:224: .Keyword(k => k.Name(systemIdProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:225: .Keyword(k => k.Name(taggingUserDisplayNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:226: .Keyword(k => k.Name(removerUserDisplayNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:231: .Text(k => k.Name(commentTextProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:232: .Keyword(k => k.Name(commentUserDisplayNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:7: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:8: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/InstrumentSystemTag.cs:9: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IoTThingEntity.cs:105: .Keyword(k => k.Name(nameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IoTThingEntity.cs:106: .Keyword(k => k.Name(controllerNameProperty).CopyTo(c => c.Field(ElasticsearchClient.SEARCH_FIELD)))"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IoTThingEntity.cs:6: using Waters.ODataOpenSearch.OpenSearch.DataTransfer;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IoTThingEntity.cs:7: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IoTThingEntity.cs:8: using Waters.ODataOpenSearch.OpenSearch.Internal;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/IoTThingEntity.cs:9: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/LifeCycleStates.cs:2: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/LossOfConnectivityNotificationStates.cs:2: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/SystemCategory.cs:2: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/SystemStatus.cs:3: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/SystemTagType.cs:7: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/Models/ValidationResultErrorLevels.cs:2: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:24: public static IElasticClient DefaultElasticsearchClient(ILoggerFactory loggerFactory, IConfiguration configuration)"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:26: var logger = loggerFactory.CreateLogger(typeof(ODataOpenSearch.OpenSearch.Internal.ElasticsearchClient).FullName!);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:32: logger.LogInformation(\"ElasticSearch URI is {elasticSearchUri}\", connectionPool.Nodes.FirstOrDefault()?.Uri);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:4: using Elasticsearch.Net;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:5: using Elasticsearch.Net.Aws;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:9: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/DeviceData/NestHelpers.cs:90: var logger = loggerFactory.CreateLogger(typeof(ODataOpenSearch.OpenSearch.Internal.ElasticsearchClient).FullName!);"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Waters.DeviceAS.SecondaryAdapters.csproj:12: <PackageReference Include=\"Elasticsearch.Net.Aws\" Version=\"7.1.0\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Application/Waters.DeviceAS.SecondaryAdapters/Waters.DeviceAS.SecondaryAdapters.csproj:18: <PackageReference Include=\"Waters.ODataOpenSearch.OpenSearch\" Version=\"10.5.0\" />"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:164: \"Nodes\": [ \"http://localhost:9200\" ],"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:184: \"Waters.ODataOpenSearch.OpenSearch.Internal.ElasticsearchClient\": \"Warning\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.Development.json:185: \"Waters.AccessControl.OpenSearch.Common.Http.OpenSearchHttpMessageHandler\": \"Warning\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.json:56: \"Waters.ODataOpenSearch.OpenSearch.Internal.ElasticsearchClient\": \"Debug\","
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.json:57: \"Waters.AccessControl.OpenSearch.Common.Http.OpenSearchHttpMessageHandler\": \"Warning\""
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemComponentMetricsController.cs:15: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemComponentMetricsController.cs:16: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemEventsController.cs:16: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemEventsController.cs:17: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemHistorySegmentsController.cs:11: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemReservationsController.cs:12: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemsController.cs:18: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/InstrumentSystemTagsController.cs:16: using Waters.ODataOpenSearch.OpenSearch.Models;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/ODataBaseController.cs:15: using Waters.ODataOpenSearch.OpenSearch.Abstractions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Controllers/ODataBaseController.cs:16: using Waters.ODataOpenSearch.OpenSearch.CanonicalQuery;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Middlewares/ExceptionHandlingMiddleware.cs:10: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/MultiStatusUpdateRequestHandler.cs:13: using Waters.ODataOpenSearch.OpenSearch.Exceptions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Settings/ConfigurationExtensions.cs:9: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:30: using Waters.AccessControl.OpenSearch.TenantData.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:412: services.AddSingleton<IElasticClient>(sp => NestHelpers.DefaultElasticsearchClient(sp.GetService<ILoggerFactory>(), Configuration));"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:56: using Waters.ODataOpenSearch.OpenSearch.Extensions;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "server/Waters.DeviceAS.Server/Startup.cs:57: using Waters.ODataOpenSearch.OpenSearch.Settings;"
+  },
+  {
+    "from": "Waters.DeviceAS.Server",
+    "to": "tenancyas-service",
+    "type": "http_call",
+    "evidence": "server/Waters.DeviceAS.Server/appsettings.json:82: \"HostName\": \"tenancyas-service\","
+  }
+]

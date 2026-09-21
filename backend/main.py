@@ -212,16 +212,31 @@ def _chat_system_prompt(G) -> str:
     )
 
 
-def _openai_client() -> OpenAI:
+def _openai_client() -> tuple[OpenAI, str]:
+    # Switch providers in .env without code changes:
+    #   LLM_PROVIDER=ollama      -> local Ollama (llama3.1 at localhost:11434)
+    #   LLM_PROVIDER=openrouter  -> OpenRouter (default if unset)
+    provider = os.environ.get("LLM_PROVIDER", "openrouter").strip().lower()
+    if provider == "ollama":
+        return (
+            OpenAI(
+                base_url="http://localhost:11434/v1",
+                api_key="ollama",
+            ),
+            "llama3.1",
+        )
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
         raise HTTPException(
             status_code=500,
             detail="OPENROUTER_API_KEY is not set",
         )
-    return OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=api_key,
+    return (
+        OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        ),
+        "openrouter/free",
     )
 
 
@@ -310,7 +325,7 @@ def simulate_failure(node_id: str):
 @app.post("/chat")
 def chat(body: ChatRequest):
     G = _load_graph()
-    client = _openai_client()
+    client, model = _openai_client()
 
     messages = [
         {"role": "system", "content": _chat_system_prompt(G)},
@@ -321,7 +336,7 @@ def chat(body: ChatRequest):
         # Allow a couple of tool rounds, then return the final text.
         for _ in range(3):
             completion = client.chat.completions.create(
-                model="openrouter/free",
+                model=model,
                 messages=messages,
                 tools=CHAT_TOOLS,
             )

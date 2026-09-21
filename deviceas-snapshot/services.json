@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Waters.DeviceAS.Server",
+    "path": "server/Waters.DeviceAS.Server",
+    "language": "C#",
+    "entry_file": "server/Waters.DeviceAS.Server/Program.cs",
+    "kind": "api-service",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.DeviceAS.Server.csproj",
+      "entrypoint: Program.cs",
+      "project SDK: Microsoft.NET.Sdk.Web"
+    ]
+  },
+  {
+    "name": "Waters.DeviceAS.IoTUtilities",
+    "path": "utilities/Waters.DeviceAS.IoTUtilities",
+    "language": "C#",
+    "entry_file": "utilities/Waters.DeviceAS.IoTUtilities/Program.cs",
+    "kind": "job",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.DeviceAS.IoTUtilities.csproj",
+      "entrypoint: Program.cs",
+      "project output: Exe",
+      "framework: System.CommandLine",
+      "documentation: Kubernetes job"
+    ]
+  },
+  {
+    "name": "Waters.DeviceAS.Migration",
+    "path": "utilities/Waters.DeviceAS.Migration",
+    "language": "C#",
+    "entry_file": "utilities/Waters.DeviceAS.Migration/Program.cs",
+    "kind": "cli",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.DeviceAS.Migration.csproj",
+      "entrypoint: Program.cs",
+      "project output: Exe",
+      "framework: System.CommandLine"
+    ]
+  },
+  {
+    "name": "Waters.DeviceAS.SchemaUtility",
+    "path": "utilities/Waters.DeviceAS.SchemaUtility",
+    "language": "C#",
+    "entry_file": "utilities/Waters.DeviceAS.SchemaUtility/Program.cs",
+    "kind": "init-container",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.DeviceAS.SchemaUtility.csproj",
+      "entrypoint: Program.cs",
+      "project output: Exe",
+      "deployment: Terraform init container"
+    ]
+  }
+]

@@ -1,0 +1,66 @@
+flowchart LR
+  subgraph service [Services]
+    node12["Waters.DeviceAS.IoTUtilities<br/>3 entry points"]
+    node13["Waters.DeviceAS.Migration<br/>1 entry points"]
+    node14["Waters.DeviceAS.SchemaUtility<br/>1 entry points"]
+    node15["Waters.DeviceAS.Server<br/>94 entry points"]
+  end
+  subgraph database [Databases]
+    node7[("DynamoDB")]
+    node9[("OpenSearch")]
+  end
+  subgraph externalapi [External systems]
+    node0["authorizationas-service"]
+    node1["AWS Cognito"]
+    node2["AWS EventBridge"]
+    node3["AWS Greengrass"]
+    node4["AWS IoT"]
+    node5["AWS SQS"]
+    node6["complianceas-service"]
+    node8["MQTT"]
+    node10["Scalars Access"]
+    node11["tenancyas-service"]
+  end
+  node12 -->|"calls ×3 (high)"| node3
+  node12 -->|"calls ×1 (medium)"| node4
+  node12 -->|"queries ×1 (high)"| node9
+  node12 -->|"calls ×1 (medium)"| node11
+  node12 -.->|"imports ×2 (high)"| node15
+  node13 -->|"queries ×1 (high)"| node9
+  node13 -->|"calls ×1 (medium)"| node11
+  node13 -.->|"imports ×1 (high)"| node15
+  node14 -->|"queries ×2 (high)"| node9
+  node14 -.->|"imports ×1 (high)"| node15
+  node15 -->|"calls ×1 (medium)"| node0
+  node15 -->|"calls ×3 (high)"| node1
+  node15 -->|"publishes ×5 (high)"| node2
+  node15 -->|"calls ×14 (high)"| node3
+  node15 -->|"calls ×7 (high)"| node4
+  node15 -->|"publishes ×13 (high)"| node5
+  node15 -->|"subscribes ×2 (high)"| node5
+  node15 -->|"calls ×1 (medium)"| node6
+  node15 -->|"queries ×1 (medium)"| node7
+  node15 -->|"publishes ×4 (high)"| node8
+  node15 -->|"queries ×3 (high)"| node9
+  node15 -->|"calls ×5 (high)"| node10
+  node15 -->|"calls ×1 (medium)"| node11
+  classDef service fill:#dbeafe,stroke:#2563eb,color:#172554
+  classDef database fill:#d1fae5,stroke:#059669,color:#064e3b
+  classDef external fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef danger fill:#fecaca,stroke:#dc2626,color:#7f1d1d,stroke-width:3px
+  class node0 external
+  class node1 external
+  class node2 external
+  class node3 external
+  class node4 external
+  class node5 external
+  class node6 external
+  class node7 database
+  class node8 external
+  class node9 database
+  class node10 external
+  class node11 external
+  class node12 service
+  class node13 service
+  class node14 service
+  class node15 service

@@ -282,7 +282,7 @@ function extractRuby(text, file, entries, includeExports) {
 function csharpODataPrefix(allFiles) {
   for (const filePath of allFiles) {
     const text = readText(filePath);
-    const match = text.match(/AddWatersOData\([\s\S]{0,300}?["']([^"']+)["']/);
+    const match = text.match(/Add\w*OData\([\s\S]{0,300}?["']([^"']+)["']/);
     if (match) {
       return match[1];
     }

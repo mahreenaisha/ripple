@@ -1,0 +1,103 @@
+You are surveying THIS workspace to reconstruct a microservice/service dependency graph from ground truth in the repo(s). Do not invent services. Every node and edge must be backed by a file path. If unsure, mark confidence low and say why.
+
+## Design questions (answer first, with evidence)
+
+Q1. Repo shape
+- Is this a monorepo, a polyrepo (this folder is one service), or a mix?
+- List top-level service/app/package directories.
+- Evidence: paths (e.g. services/, apps/, cmd/, docker-compose.yml).
+
+Q2. How is a "service" defined here?
+- One deployable? One repo? One Helm chart? One package.json?
+- Name the rule you will use, then list service ids (stable kebab-case).
+
+Q3. Languages and frameworks
+- For each service: language, framework (Spring, Nest, FastAPI, Go chi, etc.).
+- Evidence: package.json, go.mod, pom.xml, pyproject.toml, *.csproj.
+
+Q4. How do services call each other?
+For each mechanism found, give examples with file paths:
+- HTTP/REST (base URLs, service names in env, OpenAPI/Swagger)
+- gRPC (.proto, generated clients)
+- GraphQL
+- Message buses (Kafka/SQS/SNS/Rabbit/NATS topic names)
+- DB/cache (Postgres, Redis) — these are infra nodes
+- Mesh/ingress (Istio, NGINX, API gateway, BFF)
+
+Q5. Entry points
+- Web apps, mobile backends, API gateways, cron/workers.
+- What nothing else calls (likely edge).
+
+Q6. Infra / shared platforms
+- Auth, identity, databases, queues, object storage, third-party APIs.
+- Treat these as nodes if multiple services depend on them.
+
+Q7. Ownership and docs
+- CODEOWNERS, CODEOWNERS-like files, catalog (catalog-info.yaml, service.yaml), README architecture sections.
+- For each service: owner team or "unknown".
+- List architecture docs/wikis in-repo that claim dependencies.
+
+Q8. Resilience in code
+- Circuit breakers, retries, timeouts, bulkheads (Resilience4j, Polly, opossum, Istio DestinationRule, etc.).
+- File paths. Which edge they protect.
+
+Q9. Cycles
+- Any A→B→C→A in declared calls? List them. Do not force a cycle.
+
+Q10. What NOT to include
+- Dev-only tools, one-off scripts, generated node_modules, vendored code, test fakes unless they are real prod services.
+
+## Then produce TWO artifacts
+
+### 1. Markdown answers
+Short answers to Q1–Q10 with file paths. No fluff.
+
+### 2. File: architecture-graph.json
+Valid JSON only, this schema (extend existing Ripple graph: nodes + directed caller→callee edges).
+
+{
+  "meta": {
+    "source": "github",
+    "repo_shape": "monorepo | polyrepo | mix",
+    "notes": "one paragraph on how you inferred services"
+  },
+  "nodes": [
+    {
+      "id": "payments-service",
+      "name": "Payments Service",
+      "layer": "edge | mid_tier | shared_infra | leaf",
+      "tech": ["Go", "PostgreSQL", "SQS"],
+      "language": "go",
+      "owners": ["team-payments"],
+      "documented": true,
+      "resilience": ["retries"],
+      "evidence": ["services/payments/README.md"]
+    }
+  ],
+  "edges": [
+    {
+      "source": "checkout-service",
+      "target": "payments-service",
+      "kind": "http | grpc | queue | db | import | other",
+      "label": "HTTP POST /v1/charges",
+      "confidence": "high | medium | low",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": ["services/checkout/internal/payments/client.go:41"]
+    }
+  ]
+}
+
+Rules for JSON:
+- source = caller, target = callee.
+- call_count: use number of distinct call sites if unknown (not fake traffic).
+- avg_latency_ms and error_rate: 0 unless you have real metrics (do not invent).
+- confidence high = explicit client/URL/proto; medium = env name / helm; low = string match on service name.
+- Prefer fewer high-confidence edges over a hairball of low-confidence ones.
+- layer must be inferred from the graph (edge = nothing calls it, infra = many callers or db/auth, etc.), not from a generic template.
+- If this workspace is one service, still list outbound dependencies as targets (other services/infra), and say in meta that other repos were not in the workspace.
+
+If multiple services are missing because they live in other repos, list those repo names under meta.notes so we can clone them next.
+
+Do not use placeholder names like web-app or order-service unless those strings exist in THIS repo.

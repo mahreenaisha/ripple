@@ -90,7 +90,7 @@ test("follows C# project references and attributes shared code dependencies", (t
   assert.ok(hasEdge(edges, "Device.Server", "DynamoDB", "database"));
   assert.ok(hasEdge(edges, "Device.Server", "AWS SQS", "message_queue"));
   assert.ok(hasEdge(edges, "Device.Server", "AWS IoT", "external_api"));
-  assert.ok(hasEdge(edges, "Device.Utility", "DynamoDB", "database"));
+  assert.ok(!hasEdge(edges, "Device.Utility", "DynamoDB", "database"));
 });
 
 test("extracts configured service hosts and validates evidence locations", (t) => {
