@@ -1,0 +1,604 @@
+{
+  "nodes": [
+    {
+      "id": "angular.dev",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "backend",
+      "type": "service",
+      "language": "Python",
+      "entry_points_count": 5,
+      "databases": [
+        "MongoDB",
+        "Redis"
+      ],
+      "dependencies_on": [
+        "MongoDB",
+        "Redis",
+        "github.com",
+        "openrouter.ai"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-09-10T12:23:54Z",
+        "lines_of_code": 445
+      }
+    },
+    {
+      "id": "chevrotain.io",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "eev.ee",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "en.wikipedia.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "engelschall.com",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "github.com",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "backend",
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "jquery.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "langium.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "mathiasbynens.be",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "MongoDB",
+      "type": "database",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "backend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "opencollective.com",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "openrouter.ai",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "backend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "opensource.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "paulmillr.com",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Redis",
+      "type": "database",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "backend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "registry.npmjs.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "relational_database",
+      "type": "database",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "ripple-frontend",
+      "type": "service",
+      "language": "Node.js",
+      "entry_points_count": 0,
+      "databases": [
+        "relational_database"
+      ],
+      "dependencies_on": [
+        "Stripe",
+        "angular.dev",
+        "chevrotain.io",
+        "eev.ee",
+        "en.wikipedia.org",
+        "engelschall.com",
+        "github.com",
+        "jquery.org",
+        "langium.org",
+        "mathiasbynens.be",
+        "opencollective.com",
+        "opensource.org",
+        "paulmillr.com",
+        "registry.npmjs.org",
+        "relational_database",
+        "rolldown.rs",
+        "tidelift.com",
+        "tldrlegal.com",
+        "web.dev",
+        "www.eclipse.org",
+        "www.typescriptlang.org",
+        "www.w3.org"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-09-10T12:23:54Z",
+        "lines_of_code": 508086
+      }
+    },
+    {
+      "id": "rolldown.rs",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Stripe",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "tidelift.com",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "tldrlegal.com",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "web.dev",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "www.eclipse.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "www.typescriptlang.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "www.w3.org",
+      "type": "external_api",
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "ripple-frontend"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "backend",
+      "to": "github.com",
+      "type": "calls",
+      "count": 1
+    },
+    {
+      "from": "backend",
+      "to": "MongoDB",
+      "type": "queries",
+      "count": 3
+    },
+    {
+      "from": "backend",
+      "to": "openrouter.ai",
+      "type": "calls",
+      "count": 1
+    },
+    {
+      "from": "backend",
+      "to": "Redis",
+      "type": "queries",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "angular.dev",
+      "type": "calls",
+      "count": 10
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "chevrotain.io",
+      "type": "calls",
+      "count": 40
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "eev.ee",
+      "type": "calls",
+      "count": 1
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "en.wikipedia.org",
+      "type": "calls",
+      "count": 6
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "engelschall.com",
+      "type": "calls",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "github.com",
+      "type": "calls",
+      "count": 109
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "jquery.org",
+      "type": "calls",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "langium.org",
+      "type": "calls",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "mathiasbynens.be",
+      "type": "calls",
+      "count": 1
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "opencollective.com",
+      "type": "calls",
+      "count": 66
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "opensource.org",
+      "type": "calls",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "paulmillr.com",
+      "type": "calls",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "registry.npmjs.org",
+      "type": "calls",
+      "count": 613
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "relational_database",
+      "type": "queries",
+      "count": 1
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "rolldown.rs",
+      "type": "calls",
+      "count": 1
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "Stripe",
+      "type": "calls",
+      "count": 54
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "tidelift.com",
+      "type": "calls",
+      "count": 5
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "tldrlegal.com",
+      "type": "calls",
+      "count": 2
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "web.dev",
+      "type": "calls",
+      "count": 1
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "www.eclipse.org",
+      "type": "calls",
+      "count": 3
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "www.typescriptlang.org",
+      "type": "calls",
+      "count": 3
+    },
+    {
+      "from": "ripple-frontend",
+      "to": "www.w3.org",
+      "type": "calls",
+      "count": 82
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-09-21T06:55:06.962Z",
+    "repo_url": "git@github.com:mahreenaisha/ripple.git",
+    "total_services": 2,
+    "total_nodes": 27,
+    "total_edges": 26
+  }
+}

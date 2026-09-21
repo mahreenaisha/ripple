@@ -1,0 +1,547 @@
+{
+  "meta": {
+    "source": "github:https://github.com/microservices-demo/microservices-demo",
+    "repo_name": "microservices-demo",
+    "repo_shape": "monorepo",
+    "technologies": [
+      "Docker",
+      "Helm",
+      "Java",
+      "MongoDB",
+      "Node.js",
+      "RabbitMQ",
+      "Redis",
+      "Terraform"
+    ],
+    "notes": "Generated deterministically from repository manifests, deployment files, contracts, and explicit service references. Runtime traffic is not inferred."
+  },
+  "nodes": [
+    {
+      "id": "carts",
+      "name": "Carts",
+      "layer": "mid_tier",
+      "tech": [
+        "Java",
+        "Docker"
+      ],
+      "language": "Java",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/01-carts-dep.yaml"
+      ]
+    },
+    {
+      "id": "carts-db",
+      "name": "Carts Db",
+      "layer": "shared_infra",
+      "tech": [
+        "MongoDB"
+      ],
+      "language": "",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/03-carts-db-dep.yaml"
+      ]
+    },
+    {
+      "id": "catalogue",
+      "name": "Catalogue",
+      "layer": "mid_tier",
+      "tech": [
+        "Node.js",
+        "Docker"
+      ],
+      "language": "Node.js",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/05-catalogue-dep.yaml"
+      ]
+    },
+    {
+      "id": "catalogue-db",
+      "name": "Catalogue Db",
+      "layer": "shared_infra",
+      "tech": [
+        "Node.js",
+        "Docker"
+      ],
+      "language": "Node.js",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/07-catalogue-db-dep.yaml"
+      ]
+    },
+    {
+      "id": "edge-router",
+      "name": "Edge Router",
+      "layer": "edge",
+      "tech": [
+        "Docker"
+      ],
+      "language": "",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml"
+      ]
+    },
+    {
+      "id": "front-end",
+      "name": "Front End",
+      "layer": "edge",
+      "tech": [
+        "Node.js",
+        "Docker"
+      ],
+      "language": "Node.js",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/09-front-end-dep.yaml"
+      ]
+    },
+    {
+      "id": "orders",
+      "name": "Orders",
+      "layer": "mid_tier",
+      "tech": [
+        "Java",
+        "Docker"
+      ],
+      "language": "Java",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/11-orders-dep.yaml"
+      ]
+    },
+    {
+      "id": "orders-db",
+      "name": "Orders Db",
+      "layer": "shared_infra",
+      "tech": [
+        "MongoDB"
+      ],
+      "language": "",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/13-orders-db-dep.yaml"
+      ]
+    },
+    {
+      "id": "payment",
+      "name": "Payment",
+      "layer": "leaf",
+      "tech": [
+        "Node.js",
+        "Docker"
+      ],
+      "language": "Node.js",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/15-payment-dep.yaml"
+      ]
+    },
+    {
+      "id": "queue-master",
+      "name": "Queue Master",
+      "layer": "edge",
+      "tech": [
+        "Java",
+        "Docker"
+      ],
+      "language": "Java",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/17-queue-master-dep.yaml"
+      ]
+    },
+    {
+      "id": "rabbitmq",
+      "name": "Rabbitmq",
+      "layer": "shared_infra",
+      "tech": [
+        "RabbitMQ"
+      ],
+      "language": "",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/19-rabbitmq-dep.yaml"
+      ]
+    },
+    {
+      "id": "session-db",
+      "name": "Session Db",
+      "layer": "shared_infra",
+      "tech": [
+        "Redis"
+      ],
+      "language": "",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/21-session-db-dep.yaml"
+      ]
+    },
+    {
+      "id": "shipping",
+      "name": "Shipping",
+      "layer": "mid_tier",
+      "tech": [
+        "Java",
+        "Docker"
+      ],
+      "language": "Java",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/23-shipping-dep.yaml"
+      ]
+    },
+    {
+      "id": "user",
+      "name": "User",
+      "layer": "mid_tier",
+      "tech": [
+        "Node.js",
+        "Docker"
+      ],
+      "language": "Node.js",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/25-user-dep.yaml"
+      ]
+    },
+    {
+      "id": "user-db",
+      "name": "User Db",
+      "layer": "shared_infra",
+      "tech": [
+        "Node.js",
+        "Docker"
+      ],
+      "language": "Node.js",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml",
+        "deploy/kubernetes/complete-demo.yaml",
+        "deploy/kubernetes/manifests/27-user-db-dep.yaml"
+      ]
+    },
+    {
+      "id": "user-sim",
+      "name": "User Sim",
+      "layer": "edge",
+      "tech": [
+        "Docker"
+      ],
+      "language": "",
+      "owners": [],
+      "documented": true,
+      "resilience": [],
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "carts",
+      "target": "carts-db",
+      "kind": "db",
+      "label": "uses carts-db",
+      "confidence": "medium",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "heuristic:service-db-pair"
+      ]
+    },
+    {
+      "source": "carts",
+      "target": "carts-db",
+      "kind": "http",
+      "label": "allowed \u2192 carts-db",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-cart-db-access.yaml:1"
+      ]
+    },
+    {
+      "source": "catalogue",
+      "target": "catalogue-db",
+      "kind": "db",
+      "label": "uses catalogue-db",
+      "confidence": "medium",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "heuristic:service-db-pair"
+      ]
+    },
+    {
+      "source": "catalogue",
+      "target": "catalogue-db",
+      "kind": "http",
+      "label": "allowed \u2192 catalogue-db",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-catalogue-db-access.yaml:1"
+      ]
+    },
+    {
+      "source": "front-end",
+      "target": "carts",
+      "kind": "http",
+      "label": "allowed \u2192 carts",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-cart-access.yaml:1"
+      ]
+    },
+    {
+      "source": "front-end",
+      "target": "catalogue",
+      "kind": "http",
+      "label": "allowed \u2192 catalogue",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-catalogue-access.yaml:1"
+      ]
+    },
+    {
+      "source": "front-end",
+      "target": "orders",
+      "kind": "http",
+      "label": "allowed \u2192 orders",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-orders-access.yaml:1"
+      ]
+    },
+    {
+      "source": "front-end",
+      "target": "user",
+      "kind": "http",
+      "label": "allowed \u2192 user",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-user-access.yaml:1"
+      ]
+    },
+    {
+      "source": "orders",
+      "target": "carts",
+      "kind": "http",
+      "label": "allowed \u2192 carts",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-cart-access.yaml:1"
+      ]
+    },
+    {
+      "source": "orders",
+      "target": "orders-db",
+      "kind": "db",
+      "label": "uses orders-db",
+      "confidence": "medium",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "heuristic:service-db-pair"
+      ]
+    },
+    {
+      "source": "orders",
+      "target": "orders-db",
+      "kind": "http",
+      "label": "allowed \u2192 orders-db",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-orders-db-access.yaml:1"
+      ]
+    },
+    {
+      "source": "orders",
+      "target": "payment",
+      "kind": "http",
+      "label": "allowed \u2192 payment",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-payment-access.yaml:1"
+      ]
+    },
+    {
+      "source": "orders",
+      "target": "shipping",
+      "kind": "http",
+      "label": "allowed \u2192 shipping",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-shipping-access.yaml:1"
+      ]
+    },
+    {
+      "source": "orders",
+      "target": "user",
+      "kind": "http",
+      "label": "allowed \u2192 user",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-user-access.yaml:1"
+      ]
+    },
+    {
+      "source": "queue-master",
+      "target": "rabbitmq",
+      "kind": "http",
+      "label": "allowed \u2192 rabbitmq",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-rabbitmq-access.yaml:1"
+      ]
+    },
+    {
+      "source": "shipping",
+      "target": "rabbitmq",
+      "kind": "http",
+      "label": "allowed \u2192 rabbitmq",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-rabbitmq-access.yaml:1"
+      ]
+    },
+    {
+      "source": "user",
+      "target": "user-db",
+      "kind": "db",
+      "label": "uses user-db",
+      "confidence": "medium",
+      "call_count": 2,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml:1",
+        "heuristic:service-db-pair"
+      ]
+    },
+    {
+      "source": "user",
+      "target": "user-db",
+      "kind": "http",
+      "label": "allowed \u2192 user-db",
+      "confidence": "high",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/kubernetes/manifests-policy/netpol-user-db-access.yaml:1"
+      ]
+    },
+    {
+      "source": "user-sim",
+      "target": "edge-router",
+      "kind": "http",
+      "label": "host \u2192 edge-router",
+      "confidence": "medium",
+      "call_count": 1,
+      "avg_latency_ms": 0,
+      "error_rate": 0,
+      "evidence": [
+        "deploy/docker-compose/docker-compose.yml:1"
+      ]
+    }
+  ]
+}

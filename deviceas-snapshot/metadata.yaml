@@ -1,0 +1,25 @@
+# Human-maintained architecture metadata.
+# Edit this file and commit it; scanner regeneration preserves your values.
+services:
+  "Waters.DeviceAS.IoTUtilities":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+  "Waters.DeviceAS.Migration":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+  "Waters.DeviceAS.SchemaUtility":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+  "Waters.DeviceAS.Server":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+deployment_order: []
+known_issues: []

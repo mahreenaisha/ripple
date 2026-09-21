@@ -64,7 +64,7 @@ const DATABASE_PATTERNS = [
 ];
 
 const QUEUE_PATTERNS = [
-  ["AWS SQS", /\b(?:IAmazonSQS|AmazonSQS|SQSQueue|SqsQueue|SendMessageAsync)\b/],
+  ["AWS SQS", /\b(?:IAmazonSQS|AmazonSQS|SQSQueue|\w*Sqs\w*Queue\w*|QueueListener|SendMessageAsync)\b/],
   ["AWS EventBridge", /\b(?:EventBridge|AddEventBridge|IEventBridge)\b/i],
   ["MQTT", /\b(?:MQTT|Mqtt|AmazonIotData)\b/],
   ["Kafka", /\b(?:Kafka|KafkaProducer|KafkaConsumer|kafkajs)\b/i],
@@ -251,7 +251,9 @@ function resolveProjectReferences(
           match[0],
         ),
       );
-      queue.push(referencedPath);
+      if (!targetService || targetService.name === service.name) {
+        queue.push(referencedPath);
+      }
     }
   }
   return directories;
@@ -375,26 +377,6 @@ function scanTextFile(
       }
     }
 
-    const client = line.match(
-      /\b(TenancyCatalog|AuthAS|AuthorizationAS|ComplianceAS|ComplianceAs)\w*Client\b/,
-    );
-    if (client) {
-      const targets = {
-        TenancyCatalog: "tenancyas-service",
-        AuthAS: "authorizationas-service",
-        AuthorizationAS: "authorizationas-service",
-        ComplianceAS: "complianceas-service",
-        ComplianceAs: "complianceas-service",
-      };
-      addDependency(
-        dependencies,
-        seen,
-        service.name,
-        targets[client[1]],
-        "http_call",
-        proof,
-      );
-    }
   });
 }
 
