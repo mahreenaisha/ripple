@@ -1,0 +1,34 @@
+# Access metadata for services discovered in ../services.json.
+# Empty lists and null deployment values mean "not documented yet".
+schema_version: 1
+services:
+  - id: backend
+    name: backend
+    path: backend
+    language: Python
+    entry_file: backend/main.py
+    kind: api-service
+    confidence: high
+    repos:
+      - https://github.com/mahreenaisha/ripple
+    confluence: []
+    databases: []
+    external_services: []
+    deployment:
+      environment: null
+      region: null
+  - id: ripple-frontend
+    name: ripple-frontend
+    path: frontend
+    language: Node.js
+    entry_file: frontend/src/main.ts
+    kind: web-app
+    confidence: high
+    repos:
+      - https://github.com/mahreenaisha/ripple
+    confluence: []
+    databases: []
+    external_services: []
+    deployment:
+      environment: null
+      region: null
