@@ -73,8 +73,14 @@
 
 .tab.active {
   color: #fff;
-  background: linear-gradient(135deg, var(--accent), #4f46e5);
-  box-shadow: 0 4px 14px rgb(99 102 241 / 35%);
+  background: linear-gradient(135deg, var(--accent), #155a96);
+  box-shadow: 0 4px 16px rgb(29 111 184 / 35%);
+}
+
+.chip.accent {
+  border-color: rgb(61 187 154 / 35%);
+  color: var(--teal);
+  background: rgb(61 187 154 / 10%);
 }
 
 .chat-toggle {
@@ -255,5 +261,29 @@
 
   .chat {
     width: 280px;
+  }
+}
+
+@media (max-width: 700px) {
+  .nav {
+    gap: 0.5rem;
+    padding-inline: 0.75rem;
+  }
+
+  .brand-text,
+  .chat-toggle span {
+    display: none;
+  }
+
+  .tab {
+    padding-inline: 0.65rem;
+  }
+
+  .chat-toggle {
+    padding-inline: 0.6rem;
+  }
+
+  .body {
+    padding: 0.6rem;
   }
 }

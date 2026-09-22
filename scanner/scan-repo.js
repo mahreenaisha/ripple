@@ -8,6 +8,7 @@ const path = require("node:path");
 const { identifyServices } = require("./identify-services");
 const { extractEntryPoints } = require("./extract-entry-points");
 const { extractDependencies } = require("./extract-dependencies");
+const { extractRequestFlows } = require("./extract-request-flows");
 const { buildDependencyGraph } = require("./build-dependency-graph");
 const { generateDiagram } = require("./generate-diagram");
 const {
@@ -37,6 +38,7 @@ function scanRepository(
   const metadata = loadAndMergeMetadata(resolvedMetadataPath, services);
   const entryPoints = extractEntryPoints(repoPath, services);
   const dependencies = extractDependencies(repoPath, services);
+  const requestFlows = extractRequestFlows(repoPath, services, entryPoints);
   const graph = buildDependencyGraph(
     repoPath,
     services,
@@ -49,6 +51,7 @@ function scanRepository(
   writeJson(outputDirectory, "services.json", services);
   writeJson(outputDirectory, "entry-points.json", entryPoints);
   writeJson(outputDirectory, "dependencies.json", dependencies);
+  writeJson(outputDirectory, "request-flows.json", requestFlows);
   writeJson(outputDirectory, "graph.json", graph);
   fs.mkdirSync(path.dirname(resolvedMetadataPath), { recursive: true });
   fs.writeFileSync(resolvedMetadataPath, metadataToYaml(metadata));
@@ -63,6 +66,7 @@ function scanRepository(
       0,
     ),
     dependencies: dependencies.length,
+    flows: requestFlows.flows.length,
     nodes: graph.nodes.length,
     edges: graph.edges.length,
   };
@@ -80,7 +84,7 @@ function runCli(argv) {
   try {
     const result = scanRepository(argv[2], argv[3], argv[4]);
     console.log(
-      `Scan complete: ${result.services} service(s), ${result.nodes} node(s), ${result.edges} edge(s)`,
+      `Scan complete: ${result.services} service(s), ${result.nodes} node(s), ${result.edges} edge(s), ${result.flows} request flow(s)`,
     );
     console.log(`Output: ${result.outputDirectory}`);
     console.log(`Metadata: ${result.metadataPath}`);

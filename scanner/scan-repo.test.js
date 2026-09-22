@@ -21,12 +21,18 @@ test("one-command scan preserves metadata edits and feeds diagrams", (t) => {
   );
   fs.writeFileSync(
     path.join(repository, "api", "index.js"),
-    'app.get("/health", health);\n',
+    'app.get("/health", health);\nfunction health() { return "ok"; }\n',
   );
 
-  scanRepository(repository, output);
+  const firstScan = scanRepository(repository, output);
   const metadataPath = path.join(output, "metadata.yaml");
   assert.ok(fs.existsSync(metadataPath));
+  assert.equal(firstScan.flows, 1);
+  const requestFlows = JSON.parse(
+    fs.readFileSync(path.join(output, "request-flows.json"), "utf8"),
+  );
+  assert.equal(requestFlows.schema_version, "1.0.0");
+  assert.equal(requestFlows.flows[0].trigger.label, "GET /health");
   fs.writeFileSync(
     metadataPath,
     `services:

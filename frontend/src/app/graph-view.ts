@@ -1,8 +1,35 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  ViewChild,
+  inject,
+  signal,
+} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import cytoscape, { Core } from 'cytoscape';
+
+export type NodeKind = 'service' | 'database' | 'external_api' | string;
+export type EdgeKind = 'calls' | 'queries' | 'imports' | 'publishes' | 'subscribes' | string;
 
 export interface GraphNode {
   id: string;
+  type?: NodeKind;
+  language?: string | null;
+  entry_points_count?: number;
+  databases?: string[];
+  dependencies_on?: string[];
+  dependents?: string[];
+  confidence?: string;
+  spof_candidate?: boolean;
+  spof_source?: string | null;
+  status?: string | null;
+  owner?: string | null;
+  gotchas?: string[];
+  last_modified?: string | null;
+  lines_of_code?: number;
 }
 
 export interface GraphEdge {
@@ -11,12 +38,32 @@ export interface GraphEdge {
   call_count: number;
   avg_latency_ms: number;
   error_rate: number;
+  type?: EdgeKind;
+  confidence?: string;
 }
 
 export interface GraphData {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  metadata?: Record<string, unknown>;
+  source?: string;
 }
+
+interface EntryPoint {
+  type: string;
+  endpoint: string;
+  file: string;
+  line: number;
+  description?: string;
+}
+
+const EDGE_COLORS: Record<string, string> = {
+  calls: '#2f6fed',
+  queries: '#1f8a5b',
+  imports: '#8a734b',
+  publishes: '#c45c26',
+  subscribes: '#7c3aed',
+};
 
 @Component({
   selector: 'app-graph-view',
@@ -28,61 +75,59 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('cyContainer') private readonly cyContainer!: ElementRef<HTMLDivElement>;
 
+  private readonly http = inject(HttpClient);
   private cy?: Core;
+
+  protected readonly selected = signal<GraphNode | null>(null);
+  protected readonly entryPoints = signal<EntryPoint[]>([]);
+  protected readonly loadingEntries = signal(false);
 
   ngAfterViewInit(): void {
     if (!this.graph?.nodes?.length) {
       return;
     }
 
-    const statsByNode = new Map<
-      string,
-      { inDegree: number; totalIncomingCalls: number; errorRateSum: number }
-    >();
-
+    const nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
+    const incoming = new Map<string, number>();
     for (const node of this.graph.nodes) {
-      statsByNode.set(node.id, { inDegree: 0, totalIncomingCalls: 0, errorRateSum: 0 });
+      incoming.set(node.id, 0);
     }
-
     for (const edge of this.graph.edges) {
-      const stats = statsByNode.get(edge.target);
-      if (!stats) {
-        continue;
-      }
-      stats.inDegree += 1;
-      stats.totalIncomingCalls += edge.call_count;
-      stats.errorRateSum += edge.error_rate;
+      incoming.set(edge.target, (incoming.get(edge.target) ?? 0) + edge.call_count);
     }
 
-    const nodeElements = this.graph.nodes.map((node) => {
-      const stats = statsByNode.get(node.id)!;
-      const avgErrorRate = stats.inDegree === 0 ? 0 : stats.errorRateSum / stats.inDegree;
-      return {
-        data: {
-          id: node.id,
-          inDegree: stats.inDegree,
-          totalIncomingCalls: stats.totalIncomingCalls,
-          avgErrorRate,
-        },
-      };
-    });
-
-    const callCounts = nodeElements.map((node) => node.data.totalIncomingCalls);
-    const errorRates = nodeElements.map((node) => node.data.avgErrorRate);
-    const minCalls = Math.min(...callCounts);
-    const maxCalls = Math.max(...callCounts);
-    const maxErrorRate = Math.max(...errorRates);
+    const volumes = [...incoming.values()];
+    const minCalls = Math.min(...volumes);
+    const maxCalls = Math.max(...volumes);
     const callRangeMin = minCalls === maxCalls ? 0 : minCalls;
     const callRangeMax = minCalls === maxCalls ? minCalls + 1 : maxCalls;
-    const errorRangeMax = maxErrorRate === 0 ? 1 : maxErrorRate;
 
     const elements = [
-      ...nodeElements,
+      ...this.graph.nodes.map((node) => {
+        const kind = node.type || 'service';
+        const short =
+          node.id.includes('.') ? node.id.split('.').pop()! : node.id;
+        return {
+          data: {
+            id: node.id,
+            label: short,
+            fullId: node.id,
+            kind,
+            spof: node.spof_candidate ? 1 : 0,
+            entries: node.entry_points_count || 0,
+            volume: incoming.get(node.id) ?? 0,
+          },
+        };
+      }),
       ...this.graph.edges.map((edge, index) => ({
         data: {
           id: `${edge.source}->${edge.target}-${index}`,
           source: edge.source,
           target: edge.target,
+          edgeType: edge.type || 'calls',
+          weight: edge.call_count || 1,
+          confidence: edge.confidence || 'medium',
+          color: EDGE_COLORS[edge.type || 'calls'] || '#5b6b82',
         },
       })),
     ];
@@ -93,57 +138,88 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
       layout: {
         name: 'cose',
         animate: true,
-        animationDuration: 900,
-        padding: 60,
-        idealEdgeLength: 130,
-        nodeOverlap: 24,
-        gravity: 0.5,
+        animationDuration: 1100,
+        padding: 72,
+        idealEdgeLength: 150,
+        nodeOverlap: 28,
+        gravity: 0.35,
+        nestingFactor: 1.2,
       },
       style: [
         {
           selector: 'node',
           style: {
-            label: 'data(id)',
-            shape: 'ellipse',
-            'background-color': `mapData(avgErrorRate, 0, ${errorRangeMax}, #4ade80, #ef4444)`,
-            'background-opacity': 0.92,
+            label: 'data(label)',
+            'background-opacity': 0.95,
             'border-width': 2,
-            'border-color': 'rgba(255, 255, 255, 0.22)',
-            color: '#e6ebf5',
+            color: '#f4efe6',
             'text-valign': 'bottom',
             'text-halign': 'center',
-            'text-margin-y': 6,
+            'text-margin-y': 8,
             'text-outline-width': 3,
-            'text-outline-color': '#0e1421',
+            'text-outline-color': '#101820',
             'font-size': 11,
             'font-weight': 600,
-            'min-zoomed-font-size': 7,
-            width: `mapData(totalIncomingCalls, ${callRangeMin}, ${callRangeMax}, 30, 90)`,
-            height: `mapData(totalIncomingCalls, ${callRangeMin}, ${callRangeMax}, 30, 90)`,
-            'transition-property': 'opacity, border-color, border-width',
-            'transition-duration': 200,
+            'font-family': 'Sora, sans-serif',
+            'min-zoomed-font-size': 8,
+            width: `mapData(volume, ${callRangeMin}, ${callRangeMax}, 34, 88)`,
+            height: `mapData(volume, ${callRangeMin}, ${callRangeMax}, 34, 88)`,
+            'transition-property': 'opacity, border-color, border-width, overlay-opacity',
+            'transition-duration': 220,
           },
         },
         {
-          selector: 'node[inDegree >= 4]',
+          selector: 'node[kind = "service"]',
+          style: {
+            shape: 'round-rectangle',
+            'background-color': '#1d6fb8',
+            'border-color': '#7eb6e8',
+          },
+        },
+        {
+          selector: 'node[kind = "database"]',
+          style: {
+            shape: 'barrel',
+            'background-color': '#1f8a5b',
+            'border-color': '#7ad0a8',
+          },
+        },
+        {
+          selector: 'node[kind = "external_api"]',
+          style: {
+            shape: 'hexagon',
+            'background-color': '#8a734b',
+            'border-color': '#d2bf95',
+          },
+        },
+        {
+          selector: 'node[spof = 1]',
           style: {
             'border-width': 4,
-            'border-color': '#f97316',
-            'border-style': 'solid',
+            'border-color': '#e85d04',
+            'overlay-color': '#e85d04',
+            'overlay-opacity': 0.12,
+            'overlay-padding': 6,
           },
         },
         {
           selector: 'edge',
           style: {
-            width: 1.6,
-            opacity: 0.75,
-            'line-color': '#41506d',
-            'target-arrow-color': '#41506d',
+            width: 'mapData(weight, 1, 14, 1.4, 4.5)',
+            opacity: 0.82,
+            'line-color': 'data(color)',
+            'target-arrow-color': 'data(color)',
             'target-arrow-shape': 'triangle',
-            'arrow-scale': 0.9,
+            'arrow-scale': 0.85,
             'curve-style': 'bezier',
             'transition-property': 'opacity, line-color, width',
             'transition-duration': 200,
+          },
+        },
+        {
+          selector: 'edge[edgeType = "imports"]',
+          style: {
+            'line-style': 'dashed',
           },
         },
         {
@@ -156,17 +232,16 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
         {
           selector: 'node.highlighted',
           style: {
-            'overlay-color': '#818cf8',
-            'overlay-opacity': 0.2,
-            'overlay-padding': 7,
+            'overlay-color': '#3dbb9a',
+            'overlay-opacity': 0.22,
+            'overlay-padding': 8,
           },
         },
         {
           selector: 'edge.highlighted',
           style: {
-            width: 3,
-            'line-color': '#818cf8',
-            'target-arrow-color': '#818cf8',
+            width: 4,
+            opacity: 1,
           },
         },
         {
@@ -181,16 +256,54 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
     this.cy.on('tap', 'node', (evt) => {
       const node = evt.target;
       const neighborhood = node.closedNeighborhood();
-
       this.cy!.elements().addClass('dimmed').removeClass('highlighted');
       neighborhood.removeClass('dimmed').addClass('highlighted');
+
+      const full = nodeById.get(node.id());
+      this.selected.set(full ?? { id: node.id() });
+      this.loadEntryPoints(node.id());
     });
 
     this.cy.on('tap', (evt) => {
       if (evt.target === this.cy) {
         this.cy!.elements().removeClass('highlighted').removeClass('dimmed');
+        this.selected.set(null);
+        this.entryPoints.set([]);
       }
     });
+  }
+
+  protected clearSelection(): void {
+    this.selected.set(null);
+    this.entryPoints.set([]);
+    this.cy?.elements().removeClass('highlighted').removeClass('dimmed');
+  }
+
+  protected apiEntries(): EntryPoint[] {
+    return this.entryPoints().filter((entry) => entry.type === 'API').slice(0, 12);
+  }
+
+  protected cliEntries(): EntryPoint[] {
+    return this.entryPoints().filter((entry) => entry.type === 'CLI').slice(0, 8);
+  }
+
+  private loadEntryPoints(serviceId: string): void {
+    this.loadingEntries.set(true);
+    this.entryPoints.set([]);
+    this.http
+      .get<{ entries?: EntryPoint[] }>(
+        `http://localhost:8000/entry-points/${encodeURIComponent(serviceId)}`,
+      )
+      .subscribe({
+        next: (body) => {
+          this.entryPoints.set(body.entries ?? []);
+          this.loadingEntries.set(false);
+        },
+        error: () => {
+          this.entryPoints.set([]);
+          this.loadingEntries.set(false);
+        },
+      });
   }
 
   ngOnDestroy(): void {

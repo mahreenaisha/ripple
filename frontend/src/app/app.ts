@@ -4,11 +4,19 @@ import { GraphData, GraphViewComponent } from './graph-view';
 import { SimulationViewComponent } from './simulation-view';
 import { SnapshotViewComponent } from './snapshot-view';
 import { ChatPanelComponent } from './chat-panel';
+import { RequestFlowsViewComponent } from './request-flows-view';
+import { RequestFlowSelectionContext } from './request-flow.types';
 
-export type AppTab = 'map' | 'snapshot' | 'simulate';
+export type AppTab = 'map' | 'flows' | 'snapshot' | 'simulate';
 
 @Component({
-  imports: [GraphViewComponent, SimulationViewComponent, SnapshotViewComponent, ChatPanelComponent],
+  imports: [
+    GraphViewComponent,
+    RequestFlowsViewComponent,
+    SimulationViewComponent,
+    SnapshotViewComponent,
+    ChatPanelComponent,
+  ],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -19,6 +27,7 @@ export class App implements OnInit {
   protected readonly graph = signal<GraphData | null>(null);
   protected readonly activeTab = signal<AppTab>('map');
   protected readonly chatOpen = signal(false);
+  protected readonly flowSelectionContext = signal<RequestFlowSelectionContext | null>(null);
 
   ngOnInit(): void {
     this.http.get<GraphData>('http://localhost:8000/graph').subscribe((graph) => {
@@ -28,7 +37,14 @@ export class App implements OnInit {
   }
 
   protected setTab(tab: AppTab): void {
+    if (tab !== 'flows') {
+      this.flowSelectionContext.set(null);
+    }
     this.activeTab.set(tab);
+  }
+
+  protected setFlowSelectionContext(context: RequestFlowSelectionContext | null): void {
+    this.flowSelectionContext.set(context);
   }
 
   protected toggleChat(): void {

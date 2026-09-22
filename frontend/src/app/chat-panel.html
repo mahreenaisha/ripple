@@ -1,13 +1,60 @@
+<div class="chat-meta" aria-live="polite">
+  <div class="provider-status" [class.offline]="!statusLoading() && !providerStatus()?.available">
+    @if (statusLoading()) {
+      Checking LLM provider…
+    } @else if (providerStatus()?.available) {
+      <strong>LLM:</strong> {{ providerStatus()?.provider }} · {{ providerStatus()?.model }}
+    } @else {
+      <strong>Offline guide</strong>
+      <span>Evidence-based answers without an LLM</span>
+      @if (providerStatus()?.reason; as reason) {
+        <small>{{ reason }}</small>
+      }
+    }
+  </div>
+
+  @if (isFlowMode()) {
+    <div class="selected-context" title="{{ contextSummary() }}">{{ contextSummary() }}</div>
+    <div class="quick-prompts" aria-label="Flow guide suggestions">
+      <button type="button" [disabled]="thinking()" (click)="sendQuickPrompt('Explain this like I’m new')">
+        Explain this like I’m new
+      </button>
+      <button type="button" [disabled]="thinking()" (click)="sendQuickPrompt('What can fail here?')">
+        What can fail here?
+      </button>
+      <button type="button" [disabled]="thinking()" (click)="sendQuickPrompt('Why does this step exist?')">
+        Why does this step exist?
+      </button>
+      @if (context?.term; as term) {
+        <button type="button" [disabled]="thinking()" (click)="sendQuickPrompt('Define ' + term)">
+          Define {{ term }}
+        </button>
+      }
+    </div>
+  }
+</div>
+
 <div #messageList class="messages">
   @if (messages().length === 0 && !thinking()) {
-    <p class="hint">Ask about services, risk, or blast radius.</p>
+    <p class="hint">
+      {{ isFlowMode() ? 'Ask about the selected request flow or step.' : 'Ask about services, risk, or blast radius.' }}
+    </p>
   }
 
   @for (message of messages(); track $index) {
-    <div class="row" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'" [class.error]="message.role === 'error'">
+    <div
+      class="row"
+      [class.user]="message.role === 'user'"
+      [class.assistant]="message.role === 'assistant'"
+      [class.error]="message.role === 'error'"
+      [class.offline]="message.offline"
+    >
       <div class="bubble">
         @if (message.role !== 'user') {
           <span class="who">Ripple</span>
+        }
+        @if (message.offline) {
+          <span class="offline-label">Offline evidence guide</span>
         }
         <p>{{ message.text }}</p>
       </div>

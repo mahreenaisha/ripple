@@ -22,12 +22,12 @@ mermaid.initialize({
     useMaxWidth: true,
   },
   themeVariables: {
-    background: '#0e1421',
-    primaryColor: '#1c2637',
-    primaryTextColor: '#e6ebf5',
-    primaryBorderColor: '#3c4c66',
-    lineColor: '#64748b',
-    fontFamily: 'Inter, system-ui, sans-serif',
+    background: '#101820',
+    primaryColor: '#1a2430',
+    primaryTextColor: '#eef3f8',
+    primaryBorderColor: '#2a3948',
+    lineColor: '#6f8499',
+    fontFamily: 'Sora, sans-serif',
     fontSize: '14px',
   },
 });
