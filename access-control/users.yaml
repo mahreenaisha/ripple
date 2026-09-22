@@ -1,0 +1,22 @@
+# Human-maintained user-to-service assignments.
+# Replace these example profiles with your directory data.
+schema_version: 1
+users:
+  - id: alice
+    name: Alice Example
+    team: Platform
+    role: Software Engineer
+    access_level: admin
+    services:
+      - service_id: backend
+        role: core
+      - service_id: ripple-frontend
+        role: on-call
+  - id: bob
+    name: Bob Example
+    team: Product
+    role: Frontend Engineer
+    access_level: standard
+    services:
+      - service_id: ripple-frontend
+        role: core
