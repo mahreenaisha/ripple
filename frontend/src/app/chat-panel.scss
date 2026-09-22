@@ -6,6 +6,71 @@
   min-width: 0;
 }
 
+.chat-meta {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.provider-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.provider-status strong {
+  color: var(--text);
+}
+
+.provider-status.offline {
+  color: #fbbf24;
+}
+
+.provider-status.offline span,
+.provider-status small {
+  flex-basis: 100%;
+  color: var(--text-muted);
+}
+
+.selected-context {
+  margin-top: 0.55rem;
+  overflow: hidden;
+  color: var(--accent-soft);
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.quick-prompts button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.68rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.quick-prompts button:hover:not(:disabled),
+.quick-prompts button:focus-visible {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.quick-prompts button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
 .messages {
   flex: 1;
   min-height: 0;
@@ -70,6 +135,18 @@
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-bottom-left-radius: 4px;
+}
+
+.row.offline .bubble {
+  border-color: rgb(251 191 36 / 35%);
+}
+
+.offline-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #fbbf24;
+  font-size: 0.67rem;
+  font-weight: 600;
 }
 
 .row.error .bubble {

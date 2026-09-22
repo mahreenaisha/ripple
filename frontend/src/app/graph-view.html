@@ -1,20 +1,91 @@
 <div #cyContainer class="canvas"></div>
 
 <aside class="legend">
-  <p class="legend-title">How to read this</p>
+  <p class="legend-title">Read the map</p>
   <ul>
     <li>
+      <span class="swatch"><i class="shape service"></i></span>
+      <span><strong>Service</strong> — runnable code in the repo</span>
+    </li>
+    <li>
+      <span class="swatch"><i class="shape database"></i></span>
+      <span><strong>Database</strong> — stores the system queries</span>
+    </li>
+    <li>
+      <span class="swatch"><i class="shape external"></i></span>
+      <span><strong>External</strong> — AWS / SaaS / other APIs</span>
+    </li>
+    <li>
+      <span class="swatch"><i class="shape spof"></i></span>
+      <span><strong>Amber ring</strong> — single point of failure risk</span>
+    </li>
+    <li>
       <span class="swatch sizes" aria-hidden="true"><i class="dot sm"></i><i class="dot lg"></i></span>
-      <span><strong>Size</strong> — incoming call volume</span>
-    </li>
-    <li>
-      <span class="swatch gradient" aria-hidden="true"></span>
-      <span><strong>Colour</strong> — average error rate, green to red</span>
-    </li>
-    <li>
-      <span class="swatch" aria-hidden="true"><i class="dot ring"></i></span>
-      <span><strong>Orange ring</strong> — 4+ callers, a likely single point of failure</span>
+      <span><strong>Size</strong> — how many things depend on it</span>
     </li>
   </ul>
-  <p class="legend-hint">Click a node to focus its neighbours, click the background to reset. Drag to move, scroll to zoom.</p>
+  <p class="legend-hint">Click a node for entry points. Background click clears focus. Drag · scroll · zoom.</p>
 </aside>
+
+@if (selected(); as node) {
+  <aside class="detail" aria-live="polite">
+    <header class="detail-head">
+      <div>
+        <p class="detail-kind">{{ node.type || 'service' }}</p>
+        <h3>{{ node.id }}</h3>
+      </div>
+      <button type="button" class="detail-close" aria-label="Close details" (click)="clearSelection()">×</button>
+    </header>
+
+    <div class="detail-meta">
+      @if (node.language) {
+        <span class="pill">{{ node.language }}</span>
+      }
+      <span class="pill">{{ node.entry_points_count || 0 }} entries</span>
+      @if (node.spof_candidate) {
+        <span class="pill danger">SPOF</span>
+      }
+      @if (node.confidence) {
+        <span class="pill soft">{{ node.confidence }} confidence</span>
+      }
+    </div>
+
+    @if (node.dependents?.length) {
+      <section class="detail-section">
+        <h4>Called by</h4>
+        <p>{{ node.dependents!.join(', ') }}</p>
+      </section>
+    }
+
+    @if (node.dependencies_on?.length) {
+      <section class="detail-section">
+        <h4>Depends on</h4>
+        <p>{{ node.dependencies_on!.join(', ') }}</p>
+      </section>
+    }
+
+    <section class="detail-section">
+      <h4>Entry points</h4>
+      @if (loadingEntries()) {
+        <p class="muted">Loading…</p>
+      } @else if (!apiEntries().length && !cliEntries().length) {
+        <p class="muted">No API/CLI routes found for this node.</p>
+      } @else {
+        <ul class="entry-list">
+          @for (entry of apiEntries(); track entry.endpoint + entry.line) {
+            <li>
+              <span class="entry-type">API</span>
+              <code>{{ entry.endpoint }}</code>
+            </li>
+          }
+          @for (entry of cliEntries(); track entry.endpoint + entry.line) {
+            <li>
+              <span class="entry-type cli">CLI</span>
+              <code>{{ entry.endpoint }}</code>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </aside>
+}

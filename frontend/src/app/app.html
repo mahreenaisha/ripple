@@ -3,8 +3,8 @@
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
       <defs>
         <linearGradient id="rippleMark" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#22d3ee" />
-          <stop offset="1" stop-color="#6366f1" />
+          <stop offset="0" stop-color="#3dbb9a" />
+          <stop offset="1" stop-color="#1d6fb8" />
         </linearGradient>
       </defs>
       <circle cx="16" cy="16" r="3.5" fill="url(#rippleMark)" />
@@ -13,13 +13,16 @@
     </svg>
     <div class="brand-text">
       <h1>Ripple</h1>
-      <p>service dependency intelligence</p>
+      <p>architecture from the source of truth</p>
     </div>
   </div>
 
   <nav class="tabs" aria-label="Main">
     <button type="button" class="tab" [class.active]="activeTab() === 'map'" (click)="setTab('map')">
       Map
+    </button>
+    <button type="button" class="tab" [class.active]="activeTab() === 'flows'" (click)="setTab('flows')">
+      Flows
     </button>
     <button type="button" class="tab" [class.active]="activeTab() === 'snapshot'" (click)="setTab('snapshot')">
       Snapshot
@@ -50,13 +53,16 @@
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Dependency map</h2>
-            <p>Service-to-service traffic, sized and coloured by risk</p>
+            <h2>Architecture map</h2>
+            <p>Services, databases, and external systems scanned from the repo</p>
           </div>
           @if (graph(); as graphData) {
             <div class="chips">
-              <span class="chip">{{ graphData.nodes.length }} services</span>
+              <span class="chip">{{ graphData.nodes.length }} nodes</span>
               <span class="chip">{{ graphData.edges.length }} dependencies</span>
+              @if (graphData.source) {
+                <span class="chip accent">{{ graphData.source }}</span>
+              }
             </div>
           }
         </div>
@@ -76,12 +82,24 @@
           }
         </div>
       </section>
+    } @else if (activeTab() === 'flows') {
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Request flows</h2>
+            <p>Follow API, CLI, and queue requests from trigger to boundary</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <app-request-flows-view (selectionContext)="setFlowSelectionContext($event)" />
+        </div>
+      </section>
     } @else if (activeTab() === 'snapshot') {
       <section class="panel">
         <div class="panel-head">
           <div>
             <h2>Snapshot</h2>
-            <p>A point-in-time health summary of the system</p>
+            <p>Grouped Mermaid view of services, data stores, and externals</p>
           </div>
         </div>
         <div class="panel-body">
@@ -115,13 +133,16 @@
   </main>
 
   @if (chatOpen()) {
-    <aside class="chat" aria-label="Chat">
+    <aside class="chat" [attr.aria-label]="activeTab() === 'flows' ? 'Flow guide' : 'Assistant'">
       <div class="chat-head">
-        <h2>Assistant</h2>
+        <h2>{{ activeTab() === 'flows' ? 'Flow guide' : 'Assistant' }}</h2>
         <button type="button" class="chat-close" aria-label="Close chat" (click)="toggleChat()">×</button>
       </div>
       <div class="chat-body">
-        <app-chat-panel />
+        <app-chat-panel
+          [mode]="activeTab() === 'flows' ? 'flow' : 'architecture'"
+          [context]="activeTab() === 'flows' ? flowSelectionContext() : null"
+        />
       </div>
     </aside>
   }
