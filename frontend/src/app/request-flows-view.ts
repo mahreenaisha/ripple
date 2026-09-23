@@ -15,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import mermaid from 'mermaid';
 import {
+  FlowKnowledgeFact,
+  FlowStoryFanOutMember,
   RequestFlow,
   RequestFlowCatalog,
   RequestFlowMermaid,
@@ -76,13 +78,21 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
         flow.trigger.label,
         flow.trigger.kind,
         flow.confidence,
+        flow.story?.category ?? '',
+        flow.story?.summary ?? '',
         ...flow.steps.flatMap((step) => [step.label, step.symbol, step.kind, step.file]),
       ].some((value) => value.toLocaleLowerCase().includes(query));
     });
   });
+  protected readonly backgroundFlows = computed(() =>
+    this.filteredFlows().filter((flow) => this.isBackground(flow)),
+  );
   protected readonly groupedFlows = computed(() => {
     const groups = new Map<string, RequestFlow[]>();
     for (const flow of this.filteredFlows()) {
+      if (this.isBackground(flow)) {
+        continue;
+      }
       const group = groups.get(flow.service) ?? [];
       group.push(flow);
       groups.set(flow.service, group);
@@ -119,8 +129,10 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
         const safeCatalog = { ...catalog, flows: catalog.flows ?? [] };
         this.catalog.set(safeCatalog);
         this.loading.set(false);
-        if (safeCatalog.flows.length) {
-          this.selectFlow(safeCatalog.flows[0]);
+        const first =
+          safeCatalog.flows.find((flow) => this.isBackground(flow)) ?? safeCatalog.flows[0];
+        if (first) {
+          this.selectFlow(first);
         }
       },
       error: () => {
@@ -184,6 +196,58 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
       context.stepId = stepId;
     }
     this.selectionContext.emit(context);
+  }
+
+  protected isBackground(flow: RequestFlow): boolean {
+    return flow.story?.category === 'background-job';
+  }
+
+  protected flowSummary(flow: RequestFlow): string {
+    return flow.story?.summary || flow.story?.purpose?.text || this.beginnerSummary(flow);
+  }
+
+  protected categoryLabel(flow: RequestFlow): string {
+    return (
+      {
+        'user-request': 'User request',
+        'cli-tool': 'Command-line tool',
+        'background-job': 'Background job',
+        'device-event': 'Device event',
+        'platform-event': 'Platform event',
+      }[flow.story?.category ?? ''] ?? flow.trigger.kind
+    );
+  }
+
+  protected storyChecks(flow: RequestFlow): FlowStoryFanOutMember[] {
+    const members = (flow.story?.fanOut ?? []).flatMap((group) => group.members);
+    return this.isBackground(flow) || members.some((member) => member.touches.length)
+      ? members
+      : [];
+  }
+
+  protected touchList(member: FlowStoryFanOutMember): string {
+    return member.touches.map((touch) => touch.system).join(', ');
+  }
+
+  protected accessLabel(access: string): string {
+    return (
+      { write: 'writes to', read: 'reads from', send: 'sends to', check: 'checks' }[access] ?? access
+    );
+  }
+
+  protected factSource(fact: FlowKnowledgeFact): string {
+    const source = fact.source;
+    if (source.type === 'person') {
+      return [source.name, source.role].filter(Boolean).join(', ');
+    }
+    if (source.path) {
+      return source.line ? `${source.path}:${source.line}` : source.path;
+    }
+    return source.url ?? source.type;
+  }
+
+  protected factKindLabel(fact: FlowKnowledgeFact): string {
+    return { tribal: 'Team knowledge', doc: 'Design doc', rule: 'Rule' }[fact.kind] ?? fact.kind;
   }
 
   protected beginnerSummary(flow: RequestFlow): string {
