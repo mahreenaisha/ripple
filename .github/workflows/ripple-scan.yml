@@ -1,0 +1,80 @@
+name: Ripple scan
+
+# Keeps the Ripple snapshot of a target repo in step with its latest commit.
+# Runs on a schedule, on demand for any repo, or when the target repo sends a
+# repository_dispatch event from its own push-to-main workflow.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: "Repo to scan (owner/name)"
+        default: "WatersConnectCloud/wcc-deviceas"
+        required: true
+      target_ref:
+        description: "Branch, tag, or commit"
+        default: "main"
+        required: true
+      name:
+        description: "Display name in Ripple (blank = infer from the repo)"
+        required: false
+  repository_dispatch:
+    types: [target-pushed]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TARGET_REPO: ${{ github.event.inputs.target_repo || github.event.client_payload.repo || 'WatersConnectCloud/wcc-deviceas' }}
+      TARGET_REF: ${{ github.event.inputs.target_ref || github.event.client_payload.ref || 'main' }}
+      TARGET_NAME: ${{ github.event.inputs.name || github.event.client_payload.name || '' }}
+    steps:
+      - name: Check out Ripple
+        uses: actions/checkout@v4
+
+      - name: Check out target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.TARGET_REPO }}
+          ref: ${{ env.TARGET_REF }}
+          token: ${{ secrets.RIPPLE_TARGET_TOKEN }}
+          path: target
+          fetch-depth: 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Test the scanner
+        run: node --test scanner/*.test.js
+
+      - name: Scan
+        id: summary
+        run: |
+          args=(target)
+          if [ -n "$TARGET_NAME" ]; then args+=(--name "$TARGET_NAME"); fi
+          node scanner/scan-repo.js "${args[@]}" | tee scan.log
+          output=$(sed -n 's/^Output: //p' scan.log)
+          manifest="$output/snapshot.json"
+          echo "slug=$(basename "$output")" >> "$GITHUB_OUTPUT"
+          node -e '
+            const m = require(process.argv[1]);
+            const c = m.counts;
+            console.log(`### Ripple scanned ${m.name} @ ${(m.source.commit || "").slice(0, 7)}`);
+            console.log(`Branch ${m.source.branch}, scanned ${m.source.scannedAt} in ${Math.round(m.durationMs / 1000)}s.`);
+            console.log(`${c.services} services, ${c.nodes} nodes, ${c.edges} edges, ${c.flows} request flows.`);
+          ' "$manifest" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: ripple-snapshot-${{ steps.summary.outputs.slug }}
+          path: snapshots/${{ steps.summary.outputs.slug }}
+          retention-days: 30

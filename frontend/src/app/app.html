@@ -28,7 +28,7 @@
         </select>
       </label>
       @if (freshness(); as fresh) {
-        <span class="freshness" [attr.title]="fresh.detail">{{ fresh.label }}</span>
+        <span class="freshness" [class.stale]="fresh.stale" [attr.title]="fresh.detail">{{ fresh.label }}</span>
       }
       <button type="button" class="add-repo" aria-label="Add a repo" (click)="showAddRepo.set(!showAddRepo())">+</button>
       @if (showAddRepo()) {
