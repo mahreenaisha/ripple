@@ -12,7 +12,13 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 from graph_builder import build_graph, graph_to_json, load_architecture_graph
-from knowledge import KnowledgeError, attach_knowledge, load_knowledge
+from knowledge import (
+    KnowledgeError,
+    add_fact,
+    attach_knowledge,
+    load_knowledge,
+    read_repo_line,
+)
 from request_flows import (
     RequestFlowError,
     flow_to_mermaid,
@@ -792,6 +798,77 @@ def get_request_flow_catalog():
 @app.get("/knowledge")
 def get_knowledge():
     return _load_knowledge()
+
+
+def _repo_root() -> Path:
+    manifest_path = _snapshot_file("snapshot.json")
+    manifest = {}
+    if manifest_path.is_file():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    raw = os.environ.get("RIPPLE_REPO_PATH", "").strip() or (manifest.get("source") or {}).get("localPath")
+    if not raw or not Path(raw).is_dir():
+        raise HTTPException(
+            status_code=409,
+            detail="Ripple does not know where this repo is on disk. Re-scan it with scanner/scan-repo.js.",
+        )
+    return Path(raw)
+
+
+def _check_repo_file(path: str, line: int | None) -> dict:
+    try:
+        return read_repo_line(_repo_root(), path, line)
+    except KnowledgeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+class NewFactRequest(BaseModel):
+    title: str
+    text: str
+    kind: Literal["doc", "rule"] = "doc"
+    path: str
+    line: int | None = None
+    triggers: list[str] = []
+    boundaries: list[str] = []
+
+
+@app.get("/repo-file")
+def get_repo_file(path: str, line: int | None = None):
+    return _check_repo_file(path, line)
+
+
+@app.post("/knowledge/facts")
+def post_knowledge_fact(request: NewFactRequest):
+    if not request.title.strip() or not request.text.strip():
+        raise HTTPException(status_code=400, detail="Give the fact a title and a description")
+    applies_to = {
+        key: [value for value in values if value.strip()]
+        for key, values in (("triggers", request.triggers), ("boundaries", request.boundaries))
+    }
+    applies_to = {key: values for key, values in applies_to.items() if values}
+    if not applies_to:
+        raise HTTPException(status_code=400, detail="Pick at least one flow trigger or system it applies to")
+    checked = _check_repo_file(request.path, request.line)
+    source = {"type": "doc" if checked["path"].endswith((".md", ".txt", ".adoc")) else "code", "path": checked["path"]}
+    if request.line is not None:
+        source["line"] = request.line
+    fact = {
+        "kind": request.kind,
+        "title": request.title.strip(),
+        "text": request.text.strip(),
+        "applies_to": applies_to,
+        "source": source,
+        "verified": True,
+    }
+    current = next((item for item in _list_snapshots() if item["slug"] == _active_snapshot_name()), None)
+    try:
+        saved = add_fact(
+            _resolve_path("KNOWLEDGE_PATH", KNOWLEDGE_DIR / f"{_active_snapshot_name()}.yaml"),
+            (current or {}).get("name") or _active_snapshot_name(),
+            fact,
+        )
+    except KnowledgeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {**saved, "excerpt": checked.get("excerpt")}
 
 
 @app.get("/team-diagrams")

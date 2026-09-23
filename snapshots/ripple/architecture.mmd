@@ -1,6 +1,6 @@
 flowchart LR
   subgraph service [Services]
-    node1["backend<br/>15 entry points"]
+    node1["backend<br/>17 entry points"]
     node10["ripple-frontend<br/>0 entry points"]
   end
   subgraph database [Databases]
@@ -26,7 +26,7 @@ flowchart LR
   node10 -->|"calls ×3 (high)"| node0
   node10 -->|"calls ×88 (high)"| node2
   node10 -->|"calls ×66 (high)"| node4
-  node10 -->|"queries ×1 (high)"| node6
+  node10 -->|"queries ×2 (high)"| node6
   node10 -->|"calls ×2 (high)"| node7
   node10 -->|"calls ×613 (high)"| node9
   node10 -->|"calls ×5 (high)"| node11

@@ -342,6 +342,14 @@
                       </li>
                     }
                   </ul>
+                  @if (!(flow.knowledge ?? []).length && !addingFact()) {
+                    <p class="empty-facts">Nothing recorded for this flow yet.</p>
+                  }
+                  @if (addingFact()) {
+                    <app-knowledge-form [flow]="flow" (saved)="factSaved()" (cancelled)="addingFact.set(false)" />
+                  } @else {
+                    <button type="button" class="add-fact" (click)="addingFact.set(true)">+ Add a fact</button>
+                  }
                 }
                 @case ('why') {
                   <p>{{ flowSummary(flow) }}</p>

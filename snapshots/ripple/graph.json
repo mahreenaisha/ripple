@@ -24,7 +24,7 @@
       "spof_candidate": false,
       "spof_source": null,
       "language": "Python",
-      "entry_points_count": 15,
+      "entry_points_count": 17,
       "databases": [
         "MongoDB",
         "OpenSearch",
@@ -39,8 +39,8 @@
       ],
       "dependents": [],
       "metadata": {
-        "last_modified": "2026-09-23T08:17:42Z",
-        "lines_of_code": 1714,
+        "last_modified": "2026-09-23T10:25:21Z",
+        "lines_of_code": 1854,
         "status": "active",
         "is_spof": false,
         "gotchas": null,
@@ -208,8 +208,8 @@
       ],
       "dependents": [],
       "metadata": {
-        "last_modified": "2026-09-23T08:17:42Z",
-        "lines_of_code": 2358,
+        "last_modified": "2026-09-23T10:25:21Z",
+        "lines_of_code": 2687,
         "status": "active",
         "is_spof": false,
         "gotchas": null,
@@ -312,7 +312,7 @@
       "from": "ripple-frontend",
       "to": "OpenSearch",
       "type": "queries",
-      "count": 1,
+      "count": 2,
       "confidence": "high"
     },
     {
@@ -345,7 +345,7 @@
     }
   ],
   "metadata": {
-    "generated_at": "2026-09-23T08:18:20.973Z",
+    "generated_at": "2026-09-23T10:55:17.622Z",
     "repo_url": "git@github.com:mahreenaisha/ripple.git",
     "total_services": 2,
     "total_nodes": 13,

@@ -1,0 +1,81 @@
+@if (currentFlow(); as flow) {
+  <form class="knowledge-form" (submit)="$event.preventDefault(); save()">
+    <label>
+      <span>Title</span>
+      <input
+        name="title"
+        placeholder="Heartbeat notifications wait 2 minutes"
+        [value]="title()"
+        (input)="title.set(value($event))"
+      />
+    </label>
+
+    <label>
+      <span>What should a new engineer know?</span>
+      <textarea
+        name="text"
+        rows="3"
+        placeholder="Say it in plain words. Stick to what the file shows."
+        [value]="text()"
+        (input)="text.set(value($event))"
+      ></textarea>
+    </label>
+
+    <fieldset class="kind">
+      <legend>Type</legend>
+      <label><input type="radio" name="kind" [checked]="kind() === 'doc'" (change)="kind.set('doc')" /> Good to know</label>
+      <label><input type="radio" name="kind" [checked]="kind() === 'rule'" (change)="kind.set('rule')" /> Rule to follow</label>
+    </fieldset>
+
+    <div class="source">
+      <label class="path">
+        <span>File in the repo</span>
+        <input
+          name="path"
+          placeholder="docs/design/opensearch-data-model-design.md"
+          [value]="path()"
+          (input)="setPath(value($event))"
+        />
+      </label>
+      <label class="line">
+        <span>Line</span>
+        <input name="line" type="number" min="1" placeholder="optional" [value]="line()" (input)="setLine(value($event))" />
+      </label>
+      <button type="button" class="check" [disabled]="!path().trim() || checking()" (click)="checkFile()">
+        {{ checking() ? 'Checking…' : 'Check file' }}
+      </button>
+    </div>
+    <small class="hint">Path relative to the repo root. Ripple reads it from your machine to confirm it exists.</small>
+    @if (check(); as found) {
+      <div class="found">
+        <b>Found {{ found.path }}</b> ({{ found.lines }} lines)
+        @if (found.excerpt !== undefined) {
+          <code>{{ found.line }}: {{ found.excerpt || '(blank line)' }}</code>
+        }
+      </div>
+    }
+
+    <fieldset class="applies">
+      <legend>Show it on</legend>
+      <label>
+        <input type="checkbox" [checked]="appliesToTrigger()" (change)="appliesToTrigger.set(!appliesToTrigger())" />
+        flows started by <code>{{ flow.trigger.label }}</code>
+      </label>
+      @for (system of systems(); track system) {
+        <label>
+          <input type="checkbox" [checked]="selectedSystems().has(system)" (change)="toggleSystem(system)" />
+          every flow that touches <code>{{ system }}</code>
+        </label>
+      }
+    </fieldset>
+
+    @if (error(); as message) {
+      <p class="error" role="alert">{{ message }}</p>
+    }
+
+    <div class="actions">
+      <button type="button" class="ghost" (click)="cancelled.emit()">Cancel</button>
+      <button type="submit" class="primary" [disabled]="!canSave()">{{ saving() ? 'Saving…' : 'Save fact' }}</button>
+    </div>
+  </form>
+}

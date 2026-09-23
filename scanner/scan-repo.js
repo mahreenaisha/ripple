@@ -99,7 +99,11 @@ function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
     { metadata },
   );
   const teamDiagrams = collectTeamDiagrams(repoPath);
-  const source = { ...readGitSource(repoPath), scannedAt: new Date().toISOString() };
+  const source = {
+    ...readGitSource(repoPath),
+    localPath: path.resolve(repoPath),
+    scannedAt: new Date().toISOString(),
+  };
 
   const counts = {
     services: services.length,

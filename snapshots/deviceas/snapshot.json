@@ -7,7 +7,8 @@
     "branch": "main",
     "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
     "committedAt": "2026-09-15T11:41:42-04:00",
-    "scannedAt": "2026-09-23T08:19:17.744Z"
+    "localPath": "/mnt/c/Users/conmais/git/company/wcc-deviceas",
+    "scannedAt": "2026-09-23T10:55:17.245Z"
   },
   "counts": {
     "services": 4,
@@ -17,5 +18,5 @@
     "nodes": 16,
     "edges": 23
   },
-  "durationMs": 18176
+  "durationMs": 20384
 }

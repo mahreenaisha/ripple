@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import re
 from pathlib import Path
 from typing import Any
 
@@ -122,6 +123,61 @@ def facts_for_flow(knowledge: dict, flow: dict) -> list[dict]:
             matched.append({**copy.deepcopy(fact), "matched_by": reason})
     order = {"rule": 0, "tribal": 1, "doc": 2}
     return sorted(matched, key=lambda fact: (order.get(fact["kind"], 3), fact["id"]))
+
+
+MAX_SOURCE_BYTES = 2_000_000
+
+
+def read_repo_line(repo_root: str | Path, relative_path: str, line: int | None = None) -> dict:
+    """Confirm a file (and optional line) exists inside the scanned repo and return an excerpt."""
+    root = Path(repo_root).resolve()
+    cleaned = relative_path.strip().replace("\\", "/").lstrip("/")
+    if not cleaned:
+        raise KnowledgeError("Give a file path inside the repo")
+    target = (root / cleaned).resolve()
+    if not target.is_relative_to(root):
+        raise KnowledgeError("The file must be inside the repo")
+    if not target.is_file():
+        raise KnowledgeError(f"No file at {cleaned} in the repo")
+    if target.stat().st_size > MAX_SOURCE_BYTES:
+        raise KnowledgeError(f"{cleaned} is too large to cite")
+    lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+    result: dict[str, Any] = {"path": target.relative_to(root).as_posix(), "lines": len(lines)}
+    if line is not None:
+        if line < 1 or line > len(lines):
+            raise KnowledgeError(f"{cleaned} has {len(lines)} lines; line {line} does not exist")
+        result["line"] = line
+        result["excerpt"] = lines[line - 1].strip()
+    return result
+
+
+def _fact_id(title: str, existing: set[str]) -> str:
+    base = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:48] or "fact"
+    candidate, suffix = base, 2
+    while candidate in existing:
+        candidate, suffix = f"{base}-{suffix}", suffix + 1
+    return candidate
+
+
+def add_fact(knowledge_path: str | Path, repo_name: str, fact: dict) -> dict:
+    """Append a fact to the knowledge file, creating it when the repo has none yet."""
+    path = Path(knowledge_path)
+    header = ""
+    if path.is_file():
+        raw = path.read_text(encoding="utf-8")
+        for line in raw.splitlines(keepends=True):
+            if not line.startswith("#"):
+                break
+            header += line
+        data = validate_knowledge(yaml.safe_load(raw))
+    else:
+        data = {"schema_version": 1, "repo": repo_name, "facts": [], "terms": {}}
+    new_fact = {"id": _fact_id(fact["title"], {item["id"] for item in data["facts"]}), **fact}
+    updated = validate_knowledge({**data, "facts": [*data["facts"], new_fact]})
+    body = yaml.safe_dump(updated, sort_keys=False, allow_unicode=True, width=88)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(header + body, encoding="utf-8")
+    return new_fact
 
 
 def attach_knowledge(flows: dict, knowledge: dict) -> dict:

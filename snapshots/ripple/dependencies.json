@@ -27,7 +27,7 @@
     "from": "backend",
     "to": "openrouter.ai",
     "type": "external_api",
-    "evidence": "backend/main.py:568: base_url=\"https://openrouter.ai/api/v1\","
+    "evidence": "backend/main.py:574: base_url=\"https://openrouter.ai/api/v1\","
   },
   {
     "from": "backend",
@@ -1077,6 +1077,24 @@
     "from": "ripple-frontend",
     "to": "OpenSearch",
     "type": "database",
+    "evidence": "frontend/src/app/knowledge-form.spec.ts:17: label: 'OpenSearch',"
+  },
+  {
+    "from": "ripple-frontend",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "frontend/src/app/knowledge-form.spec.ts:63: .find((label) => label.textContent?.includes('OpenSearch'))!"
+  },
+  {
+    "from": "ripple-frontend",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "frontend/src/app/knowledge-form.spec.ts:77: boundaries: ['OpenSearch'],"
+  },
+  {
+    "from": "ripple-frontend",
+    "to": "OpenSearch",
+    "type": "database",
     "evidence": "frontend/src/app/request-flows-view.spec.ts:134: members: [{ name: 'HeartbeatValidator', label: 'Heartbeat', summary: 'Checks heartbeats.', touches: [{ kind: 'database', system: 'OpenSearch' }], file: 'H.cs', line: 1 }],"
   },
   {
@@ -1084,12 +1102,6 @@
     "to": "OpenSearch",
     "type": "database",
     "evidence": "frontend/src/app/request-flows-view.spec.ts:138: boundaries: [{ kind: 'database', system: 'OpenSearch', access: 'check' }],"
-  },
-  {
-    "from": "ripple-frontend",
-    "to": "OpenSearch",
-    "type": "database",
-    "evidence": "frontend/src/app/request-flows-view.spec.ts:171: expect(story).toContain('checks OpenSearch');"
   },
   {
     "from": "ripple-frontend",
