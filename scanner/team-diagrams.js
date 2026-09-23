@@ -6,6 +6,9 @@ const path = require("node:path");
 const SKIP_DIRECTORIES = new Set([
   ".git",
   "node_modules",
+  ".angular",
+  ".next",
+  ".cache",
   "bin",
   "obj",
   "dist",
@@ -21,6 +24,9 @@ const MAX_ITEMS = 40;
 const MERMAID_BLOCK = /```mermaid\s*\n([\s\S]*?)```/g;
 
 function walk(rootPath, directory = rootPath, files = []) {
+  if (fs.existsSync(path.join(directory, "snapshot.json"))) {
+    return files;
+  }
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     if (entry.isDirectory()) {
       if (!SKIP_DIRECTORIES.has(entry.name) && !entry.name.startsWith(".")) {

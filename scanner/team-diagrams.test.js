@@ -21,6 +21,8 @@ test("collects mermaid files, plantuml files, design docs and their embedded dia
   write(root, "docs/design/store.md", "# OpenSearch data model\n\nText\n\n```mermaid\ngraph TD\nA-->B\n```\n");
   write(root, "README.md", "# Not a design doc\n");
   write(root, "node_modules/pkg/x.mmd", "graph TD\n");
+  write(root, "snapshots/other/architecture.mmd", "graph TD\n");
+  write(root, "snapshots/other/snapshot.json", "{}");
 
   const result = collectTeamDiagrams(root);
 

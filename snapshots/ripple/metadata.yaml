@@ -1,0 +1,15 @@
+# Human-maintained architecture metadata.
+# Edit this file and commit it; scanner regeneration preserves your values.
+services:
+  "backend":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+  "ripple-frontend":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+deployment_order: []
+known_issues: []

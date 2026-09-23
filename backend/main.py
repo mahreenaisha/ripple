@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from collections import defaultdict, deque
 from pathlib import Path
 from typing import Literal
@@ -36,12 +37,58 @@ app.add_middleware(
 
 BACKEND_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BACKEND_DIR.parent
-DEFAULT_GRAPH = REPO_ROOT / "deviceas-snapshot" / "graph.json"
-DEFAULT_MERMAID = REPO_ROOT / "deviceas-snapshot" / "architecture.mmd"
-DEFAULT_ENTRY_POINTS = REPO_ROOT / "deviceas-snapshot" / "entry-points.json"
-DEFAULT_REQUEST_FLOWS = REPO_ROOT / "deviceas-snapshot" / "request-flows.json"
-DEFAULT_KNOWLEDGE = REPO_ROOT / "knowledge" / "deviceas.yaml"
-DEFAULT_TEAM_DIAGRAMS = REPO_ROOT / "deviceas-snapshot" / "team-diagrams.json"
+SNAPSHOTS_DIR = REPO_ROOT / "snapshots"
+KNOWLEDGE_DIR = REPO_ROOT / "knowledge"
+DEFAULT_SNAPSHOT = "deviceas"
+DEFAULT_KNOWLEDGE = KNOWLEDGE_DIR / f"{DEFAULT_SNAPSHOT}.yaml"
+SNAPSHOT_SLUG = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
+
+_active_snapshot: str | None = None
+
+
+def _snapshots_dir() -> Path:
+    return _resolve_path("RIPPLE_SNAPSHOTS_DIR", SNAPSHOTS_DIR)
+
+
+def _active_snapshot_name() -> str:
+    return (
+        _active_snapshot
+        or os.environ.get("RIPPLE_SNAPSHOT", "").strip()
+        or DEFAULT_SNAPSHOT
+    )
+
+
+def _snapshot_file(name: str) -> Path:
+    return _snapshots_dir() / _active_snapshot_name() / name
+
+
+def _snapshot_summary(directory: Path) -> dict:
+    manifest_path = directory / "snapshot.json"
+    manifest = {}
+    if manifest_path.is_file():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            manifest = {}
+    return {
+        "slug": directory.name,
+        "name": manifest.get("name") or directory.name,
+        "source": manifest.get("source"),
+        "counts": manifest.get("counts"),
+        "durationMs": manifest.get("durationMs"),
+        "has_knowledge": (KNOWLEDGE_DIR / f"{directory.name}.yaml").is_file(),
+    }
+
+
+def _list_snapshots() -> list[dict]:
+    root = _snapshots_dir()
+    if not root.is_dir():
+        return []
+    return [
+        _snapshot_summary(directory)
+        for directory in sorted(root.iterdir())
+        if directory.is_dir() and (directory / "graph.json").is_file()
+    ]
 
 
 class ChatContext(BaseModel):
@@ -193,7 +240,7 @@ def _resolve_path(env_name: str, default: Path) -> Path:
 
 
 def _load_graph():
-    graph_path = _resolve_path("GRAPH_PATH", DEFAULT_GRAPH)
+    graph_path = _resolve_path("GRAPH_PATH", _snapshot_file("graph.json"))
     if graph_path.is_file():
         return load_architecture_graph(graph_path)
 
@@ -206,7 +253,7 @@ def _load_graph():
 
 
 def _load_entry_points() -> dict:
-    path = _resolve_path("ENTRY_POINTS_PATH", DEFAULT_ENTRY_POINTS)
+    path = _resolve_path("ENTRY_POINTS_PATH", _snapshot_file("entry-points.json"))
     if not path.is_file():
         return {}
     return json.loads(path.read_text())
@@ -214,13 +261,17 @@ def _load_entry_points() -> dict:
 
 def _load_knowledge() -> dict:
     try:
-        return load_knowledge(_resolve_path("KNOWLEDGE_PATH", DEFAULT_KNOWLEDGE))
+        return load_knowledge(
+            _resolve_path(
+                "KNOWLEDGE_PATH", KNOWLEDGE_DIR / f"{_active_snapshot_name()}.yaml"
+            )
+        )
     except KnowledgeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 def _load_request_flows() -> dict:
-    path = _resolve_path("REQUEST_FLOWS_PATH", DEFAULT_REQUEST_FLOWS)
+    path = _resolve_path("REQUEST_FLOWS_PATH", _snapshot_file("request-flows.json"))
     try:
         flows = load_request_flows(path)
     except RequestFlowError as exc:
@@ -675,7 +726,7 @@ def _graph_to_mermaid(G) -> str:
 
 
 def _load_mermaid(G) -> str:
-    mermaid_path = _resolve_path("MERMAID_PATH", DEFAULT_MERMAID)
+    mermaid_path = _resolve_path("MERMAID_PATH", _snapshot_file("architecture.mmd"))
     if mermaid_path.is_file() and G.graph.get("source") == "architecture":
         return mermaid_path.read_text().strip()
     return _graph_to_mermaid(G)
@@ -695,6 +746,8 @@ def root():
             "/request-flows/{flow_id}/mermaid",
             "/knowledge",
             "/team-diagrams",
+            "/snapshots",
+            "/snapshots/active",
             "/simulate/failure/{node_id}",
             "/chat",
             "/chat/status",
@@ -743,10 +796,32 @@ def get_knowledge():
 
 @app.get("/team-diagrams")
 def get_team_diagrams():
-    path = _resolve_path("TEAM_DIAGRAMS_PATH", DEFAULT_TEAM_DIAGRAMS)
+    path = _resolve_path("TEAM_DIAGRAMS_PATH", _snapshot_file("team-diagrams.json"))
     if not path.is_file():
         return {"diagrams": [], "docs": []}
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+class ActiveSnapshotRequest(BaseModel):
+    slug: str
+
+
+@app.get("/snapshots")
+def get_snapshots():
+    snapshots = _list_snapshots()
+    active = _active_snapshot_name()
+    current = next((item for item in snapshots if item["slug"] == active), None)
+    return {"active": active, "current": current, "snapshots": snapshots}
+
+
+@app.post("/snapshots/active")
+def set_active_snapshot(request: ActiveSnapshotRequest):
+    global _active_snapshot
+    slug = request.slug.strip().lower()
+    if not SNAPSHOT_SLUG.match(slug) or not (_snapshots_dir() / slug / "graph.json").is_file():
+        raise HTTPException(status_code=404, detail=f"No scanned snapshot named '{slug}'")
+    _active_snapshot = slug
+    return get_snapshots()
 
 
 @app.get("/request-flows/{flow_id}")
