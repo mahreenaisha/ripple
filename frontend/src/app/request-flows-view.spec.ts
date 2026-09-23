@@ -120,6 +120,59 @@ describe('RequestFlowsViewComponent', () => {
     httpTesting.verify();
   });
 
+  it('pins background jobs and tells their story with team knowledge', async () => {
+    const heartbeat = {
+      ...catalog.flows[1],
+      id: 'flow-heartbeat',
+      trigger: { kind: 'queue', label: 'TenancyDevicesHeartbeat' },
+      story: {
+        category: 'background-job',
+        purpose: { text: 'Validates device health.', source: 'P.Validate', file: 'P.cs', line: 3 },
+        triggeredBy: { kind: 'message', label: 'Sent by TenancyAS, outside this repo', outsideRepo: true, ownerHint: 'TenancyAS' },
+        fanOut: [{
+          via: 'P', interface: 'IValidator', label: 'P runs every IValidator',
+          members: [{ name: 'HeartbeatValidator', label: 'Heartbeat', summary: 'Checks heartbeats.', touches: [{ kind: 'database', system: 'OpenSearch' }], file: 'H.cs', line: 1 }],
+        }],
+        produces: {
+          metrics: [{ name: 'queue.tenancy_devices_heartbeat', type: 'histogram', file: 'H.cs', line: 2 }],
+          boundaries: [{ kind: 'database', system: 'OpenSearch', access: 'check' }],
+        },
+        timing: [{ key: 'NotificationSettings:HeartbeatDelay', value: '00:02:00', human: '2 minutes', file: 'a.json', line: 1 }],
+        summary: 'Runs when TenancyAS sends a heartbeat. It runs 1 check.',
+      },
+      knowledge: [{
+        id: 'cadence', kind: 'tribal', title: 'Runs every 5 minutes', text: 'TenancyAS sends it every 5 minutes.',
+        source: { type: 'person', name: 'Kevin Farrington', role: 'DeviceAS lead' }, verified: false,
+        verify_hint: 'Check the scheduler.', matched_by: 'trigger TenancyDevicesHeartbeat',
+      }],
+    };
+    const fixture = TestBed.createComponent(RequestFlowsViewComponent);
+    const httpTesting = TestBed.inject(HttpTestingController);
+
+    fixture.detectChanges();
+    httpTesting
+      .expectOne('http://localhost:8000/request-flows')
+      .flush({ ...catalog, flows: [catalog.flows[0], heartbeat] });
+    fixture.detectChanges();
+    httpTesting
+      .expectOne('http://localhost:8000/request-flows/flow-heartbeat/mermaid')
+      .flush({ flow_id: 'flow-heartbeat', mermaid: 'sequenceDiagram\nA->>B: beat' });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('.pinned-group')?.textContent).toContain('TenancyDevicesHeartbeat');
+    expect(host.querySelector('.hero-summary')?.textContent).toContain('Runs when TenancyAS sends a heartbeat');
+    expect(host.querySelector('.outside-chip')?.textContent).toContain('outside this repo');
+    const story = host.querySelector('.story-card')!.textContent!;
+    expect(story).toContain('Kevin Farrington, DeviceAS lead');
+    expect(story).toContain('Not yet verified');
+    expect(story).toContain('queue.tenancy_devices_heartbeat');
+    expect(story).toContain('checks OpenSearch');
+    expect(story).toContain('2 minutes');
+    httpTesting.verify();
+  });
+
   it('shows a useful state when the artifact API is unavailable', () => {
     const fixture = TestBed.createComponent(RequestFlowsViewComponent);
     const httpTesting = TestBed.inject(HttpTestingController);
