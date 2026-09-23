@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "DeviceAS",
+  "slug": "deviceas",
+  "source": {
+    "commit": "5cf83f5ce9279640e0eaac634264e52cedcc2edc",
+    "branch": "main",
+    "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
+    "committedAt": "2026-09-15T11:41:42-04:00",
+    "scannedAt": "2026-09-23T08:11:33.568Z"
+  },
+  "counts": {
+    "services": 4,
+    "entryPoints": 459,
+    "dependencies": 456,
+    "flows": 114,
+    "nodes": 16,
+    "edges": 23
+  },
+  "durationMs": 16697
+}

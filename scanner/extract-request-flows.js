@@ -14,7 +14,7 @@ const SOURCE_EXTENSIONS = new Set([
 ]);
 const IGNORED_DIRECTORIES = new Set([
   ".git", ".hg", ".svn", ".idea", ".vscode", ".venv", "venv",
-  "__pycache__", "node_modules", "vendor", "generated", "dist", "build",
+  "__pycache__", "node_modules", ".angular", ".next", ".nuxt", ".cache", ".turbo", ".parcel-cache", ".terraform", "vendor", "generated", "dist", "build",
   "bin", "obj", "out", "target", "coverage", "test", "tests", "__tests__",
 ]);
 const CALL_NOISE = new Set([

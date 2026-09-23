@@ -1,0 +1,28 @@
+[
+  {
+    "name": "backend",
+    "path": "backend",
+    "language": "Python",
+    "entry_file": "backend/main.py",
+    "kind": "api-service",
+    "confidence": "high",
+    "evidence": [
+      "manifest: requirements.txt",
+      "entrypoint: main.py",
+      "framework: Python web framework"
+    ]
+  },
+  {
+    "name": "ripple-frontend",
+    "path": "frontend",
+    "language": "Node.js",
+    "entry_file": "frontend/src/main.ts",
+    "kind": "web-app",
+    "confidence": "high",
+    "evidence": [
+      "manifest: package.json",
+      "entrypoint: src/main.ts",
+      "framework: browser application"
+    ]
+  }
+]

@@ -3,7 +3,14 @@
   "generator": {
     "name": "ripple-request-flow-scanner",
     "deterministic": true,
-    "strategy": "static-evidence-heuristics"
+    "strategy": "static-evidence-heuristics",
+    "source": {
+      "commit": "5cf83f5ce9279640e0eaac634264e52cedcc2edc",
+      "branch": "main",
+      "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
+      "committedAt": "2026-09-15T11:41:42-04:00",
+      "scannedAt": "2026-09-23T08:11:33.568Z"
+    }
   },
   "limits": {
     "max_depth": 6,

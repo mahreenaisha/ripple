@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { App } from './app';
+import { App, SnapshotList, timeAgo } from './app';
 import { GraphViewComponent } from './graph-view';
 import { Component, Input } from '@angular/core';
 import { GraphData } from './graph-view';
@@ -16,6 +16,34 @@ import { RequestFlowsViewComponent } from './request-flows-view';
 class GraphViewStubComponent {
   @Input() graph!: GraphData;
 }
+
+const snapshotList: SnapshotList = {
+  active: 'deviceas',
+  current: {
+    slug: 'deviceas',
+    name: 'DeviceAS',
+    source: { commit: '5cf83f5ce92796', branch: 'main', scannedAt: new Date(Date.now() - 2 * 3600000).toISOString() },
+  },
+  snapshots: [
+    { slug: 'deviceas', name: 'DeviceAS' },
+    { slug: 'tenancyas', name: 'TenancyAS' },
+  ],
+};
+
+function flushSnapshots(httpTesting: HttpTestingController, list: SnapshotList = snapshotList): void {
+  httpTesting.expectOne('http://localhost:8000/snapshots').flush(list);
+}
+
+describe('timeAgo', () => {
+  it('describes scan age in short human units', () => {
+    const now = Date.parse('2026-09-23T10:00:00Z');
+    expect(timeAgo('2026-09-23T09:59:50Z', now)).toBe('just now');
+    expect(timeAgo('2026-09-23T09:15:00Z', now)).toBe('45m ago');
+    expect(timeAgo('2026-09-23T08:00:00Z', now)).toBe('2h ago');
+    expect(timeAgo('2026-09-19T10:00:00Z', now)).toBe('4d ago');
+    expect(timeAgo(null, now)).toBe('unknown');
+  });
+});
 
 describe('App', () => {
   beforeEach(async () => {
@@ -42,6 +70,7 @@ describe('App', () => {
 
     fixture.detectChanges();
 
+    flushSnapshots(httpTesting);
     const req = httpTesting.expectOne('http://localhost:8000/graph');
     expect(req.request.method).toBe('GET');
     req.flush({
@@ -58,12 +87,47 @@ describe('App', () => {
     httpTesting.verify();
   });
 
+  it('shows the scanned commit and reloads data when switching repos', async () => {
+    const fixture = TestBed.createComponent(App);
+    const httpTesting = TestBed.inject(HttpTestingController);
+
+    fixture.detectChanges();
+    httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [{ id: 'a' }], edges: [] });
+    flushSnapshots(httpTesting);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('.freshness')?.textContent).toContain('DeviceAS @ 5cf83f5 · scanned 2h ago');
+
+    const select = host.querySelector<HTMLSelectElement>('.repo-switch select')!;
+    select.value = 'tenancyas';
+    select.dispatchEvent(new Event('change'));
+    const post = httpTesting.expectOne('http://localhost:8000/snapshots/active');
+    expect(post.request.body).toEqual({ slug: 'tenancyas' });
+    const tenancy: SnapshotList = {
+      ...snapshotList,
+      active: 'tenancyas',
+      current: { slug: 'tenancyas', name: 'TenancyAS', source: { commit: 'abcdef1234', scannedAt: new Date().toISOString() } },
+    };
+    post.flush(tenancy);
+    httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [{ id: 'x' }, { id: 'y' }], edges: [] });
+    flushSnapshots(httpTesting, tenancy);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(host.querySelector('.freshness')?.textContent).toContain('TenancyAS @ abcdef1');
+    expect(host.textContent).toContain('2 nodes');
+    httpTesting.verify();
+  });
+
   it('should place the Flows tab between Map and Snapshot and open it', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
     fixture.detectChanges();
     httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [], edges: [] });
+    flushSnapshots(httpTesting);
     await fixture.whenStable();
     fixture.detectChanges();
 
@@ -99,6 +163,7 @@ describe('App', () => {
 
     fixture.detectChanges();
     httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [], edges: [] });
+    flushSnapshots(httpTesting);
     await fixture.whenStable();
     fixture.detectChanges();
 

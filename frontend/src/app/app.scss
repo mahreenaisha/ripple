@@ -83,6 +83,90 @@
   background: rgb(61 187 154 / 10%);
 }
 
+.repo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.repo-switch select {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.freshness {
+  overflow: hidden;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgb(61 187 154 / 30%);
+  border-radius: 999px;
+  background: rgb(61 187 154 / 8%);
+  color: #87dcc7;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.68rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.add-repo {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1px dashed var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.add-repo:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.add-repo-pop {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 40;
+  display: grid;
+  gap: 0.45rem;
+  width: 340px;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #111925;
+  box-shadow: var(--shadow);
+  font-size: 0.74rem;
+}
+
+.add-repo-pop code {
+  color: #89a8c2;
+  font-size: 0.7rem;
+  overflow-wrap: anywhere;
+}
+
+.add-repo-pop p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
 .chat-toggle {
   display: flex;
   align-items: center;
@@ -254,8 +338,15 @@
   min-height: 0;
 }
 
+@media (max-width: 1180px) {
+  .freshness {
+    max-width: 180px;
+  }
+}
+
 @media (max-width: 860px) {
-  .brand-text p {
+  .brand-text p,
+  .freshness {
     display: none;
   }
 

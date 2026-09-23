@@ -17,6 +17,30 @@
     </div>
   </div>
 
+  @if (snapshots(); as list) {
+    <div class="repo">
+      <label class="repo-switch">
+        <span class="sr-only">Repository</span>
+        <select [value]="list.active" [disabled]="switching()" (change)="switchSnapshot($event)" aria-label="Repository">
+          @for (snapshot of list.snapshots; track snapshot.slug) {
+            <option [value]="snapshot.slug" [selected]="snapshot.slug === list.active">{{ snapshot.name }}</option>
+          }
+        </select>
+      </label>
+      @if (freshness(); as fresh) {
+        <span class="freshness" [attr.title]="fresh.detail">{{ fresh.label }}</span>
+      }
+      <button type="button" class="add-repo" aria-label="Add a repo" (click)="showAddRepo.set(!showAddRepo())">+</button>
+      @if (showAddRepo()) {
+        <div class="add-repo-pop" role="dialog" aria-label="Add a repo">
+          <strong>Add any repo in about 2 minutes</strong>
+          <code>node scanner/scan-repo.js /path/to/wcc-tenancyas</code>
+          <p>It writes <code>snapshots/tenancyas/</code>. Refresh and pick it here. Add <code>knowledge/tenancyas.yaml</code> for team facts.</p>
+        </div>
+      }
+    </div>
+  }
+
   <nav class="tabs" aria-label="Main">
     <button type="button" class="tab" [class.active]="activeTab() === 'map'" (click)="setTab('map')">
       Map
@@ -48,6 +72,7 @@
 </header>
 
 <div class="body">
+  @for (version of [dataVersion()]; track version) {
   <main class="content">
     @if (activeTab() === 'map') {
       <section class="panel">
@@ -148,5 +173,6 @@
         />
       </div>
     </aside>
+  }
   }
 </div>
