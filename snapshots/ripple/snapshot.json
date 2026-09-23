@@ -1,21 +1,22 @@
 {
   "schema_version": 1,
-  "name": "Ripple",
+  "name": "ripple",
   "slug": "ripple",
   "source": {
-    "commit": "5cb24729b0ac936cf601639abc4b89f5ac192567",
+    "commit": "49db2f3254e559123c0622c7321e9dfabefe6549",
     "branch": "using-repo",
     "remote": "git@github.com:mahreenaisha/ripple.git",
-    "committedAt": "2026-09-23T08:17:42Z",
-    "scannedAt": "2026-09-23T08:18:21.059Z"
+    "committedAt": "2026-09-23T10:25:21Z",
+    "localPath": "/home/conmais/ripple",
+    "scannedAt": "2026-09-23T10:55:17.720Z"
   },
   "counts": {
     "services": 2,
-    "entryPoints": 122,
-    "dependencies": 809,
-    "flows": 24,
+    "entryPoints": 140,
+    "dependencies": 811,
+    "flows": 26,
     "nodes": 13,
     "edges": 13
   },
-  "durationMs": 351
+  "durationMs": 398
 }

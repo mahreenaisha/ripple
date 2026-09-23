@@ -176,6 +176,33 @@ class KnowledgeApiTests(unittest.TestCase):
         self.assertIn("Runs when TenancyAS sends a heartbeat", body["response"])
         self.assertIn("server/appsettings.json:63, not yet verified", body["response"])
 
+    def test_add_fact_checks_the_file_and_attaches_to_the_flow(self):
+        repo = Path(self.directory.name) / "repo"
+        (repo / "docs").mkdir(parents=True)
+        (repo / "docs" / "health.md").write_text("# Health\nHealth checks skip auth.\n", encoding="utf-8")
+        (Path(self.directory.name) / "secret.txt").write_text("outside", encoding="utf-8")
+        with patch.dict(os.environ, {"RIPPLE_REPO_PATH": str(repo)}):
+            checked = self.client.get("/repo-file", params={"path": "docs/health.md", "line": 2}).json()
+            self.assertEqual(checked["excerpt"], "Health checks skip auth.")
+            self.assertEqual(self.client.get("/repo-file", params={"path": "../secret.txt"}).status_code, 400)
+            self.assertEqual(self.client.get("/repo-file", params={"path": "docs/health.md", "line": 9}).status_code, 400)
+
+            bad = self.client.post("/knowledge/facts", json={
+                "title": "Health skips auth", "text": "No token needed.", "path": "docs/missing.md",
+                "triggers": ["GET /health"],
+            })
+            self.assertEqual(bad.status_code, 400)
+            saved = self.client.post("/knowledge/facts", json={
+                "title": "Health skips auth", "text": "No token needed.", "kind": "rule",
+                "path": "docs/health.md", "line": 2, "triggers": ["GET /health"],
+            }).json()
+
+        self.assertEqual(saved["id"], "health-skips-auth")
+        self.assertEqual(saved["source"], {"type": "doc", "path": "docs/health.md", "line": 2})
+        flow = self.client.get("/request-flows/flow-health").json()
+        self.assertEqual([fact["id"] for fact in flow["knowledge"]], ["health-skips-auth"])
+        self.assertTrue(Path(os.environ["KNOWLEDGE_PATH"]).read_text().startswith("schema_version"))
+
     def test_flow_prompt_carries_story_and_team_knowledge(self):
         flows = main._load_request_flows()
         prompt = main._flow_chat_prompt(main.ChatContext(type="flow", flow_id="flow-heartbeat"), flows)

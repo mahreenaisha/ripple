@@ -1148,3 +1148,20 @@ input {
   opacity: 0.4;
   cursor: default;
 }
+
+.empty-facts {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.add-fact {
+  margin-top: 12px;
+  padding: 7px 14px;
+  border: 1px dashed rgb(61 187 154 / 50%);
+  border-radius: 8px;
+  background: transparent;
+  color: #94e3cf;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}

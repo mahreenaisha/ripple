@@ -5,11 +5,12 @@
     "deterministic": true,
     "strategy": "static-evidence-heuristics",
     "source": {
-      "commit": "5cb24729b0ac936cf601639abc4b89f5ac192567",
+      "commit": "49db2f3254e559123c0622c7321e9dfabefe6549",
       "branch": "using-repo",
       "remote": "git@github.com:mahreenaisha/ripple.git",
-      "committedAt": "2026-09-23T08:17:42Z",
-      "scannedAt": "2026-09-23T08:18:21.059Z"
+      "committedAt": "2026-09-23T10:25:21Z",
+      "localPath": "/home/conmais/ripple",
+      "scannedAt": "2026-09-23T10:55:17.720Z"
     }
   },
   "limits": {
@@ -19,7 +20,7 @@
   },
   "flows": [
     {
-      "id": "flow-35050e8007e1",
+      "id": "flow-7a16a3614bf3",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -32,7 +33,7 @@
           "symbol": "GET /",
           "label": "GET /",
           "file": "backend/main.py",
-          "line": 735,
+          "line": 741,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -43,7 +44,7 @@
           "symbol": "ChatContext.root",
           "label": "ChatContext.root",
           "file": "backend/main.py",
-          "line": 736,
+          "line": 742,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -69,7 +70,7 @@
       }
     },
     {
-      "id": "flow-c25390543ce3",
+      "id": "flow-3933bb2d9ad6",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -82,7 +83,7 @@
           "symbol": "GET /graph",
           "label": "GET /graph",
           "file": "backend/main.py",
-          "line": 759,
+          "line": 765,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -93,7 +94,7 @@
           "symbol": "ChatContext.get_graph",
           "label": "ChatContext.get_graph",
           "file": "backend/main.py",
-          "line": 760,
+          "line": 766,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -104,7 +105,7 @@
           "symbol": "ChatContext._load_graph",
           "label": "ChatContext._load_graph",
           "file": "backend/main.py",
-          "line": 240,
+          "line": 246,
           "confidence": "high",
           "evidence": [
             "Unqualified call resolves uniquely within the class"
@@ -130,7 +131,7 @@
       }
     },
     {
-      "id": "flow-0aec53f81169",
+      "id": "flow-c86094342b4a",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -143,7 +144,7 @@
           "symbol": "GET /graph/mermaid",
           "label": "GET /graph/mermaid",
           "file": "backend/main.py",
-          "line": 765,
+          "line": 771,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -154,7 +155,7 @@
           "symbol": "ChatContext.get_graph_mermaid",
           "label": "ChatContext.get_graph_mermaid",
           "file": "backend/main.py",
-          "line": 766,
+          "line": 772,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -165,7 +166,7 @@
           "symbol": "ChatContext._load_graph",
           "label": "ChatContext._load_graph",
           "file": "backend/main.py",
-          "line": 240,
+          "line": 246,
           "confidence": "high",
           "evidence": [
             "Unqualified call resolves uniquely within the class"
@@ -191,7 +192,7 @@
       }
     },
     {
-      "id": "flow-7f1d3445dd0a",
+      "id": "flow-a0829a836e94",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -204,7 +205,7 @@
           "symbol": "GET /entry-points",
           "label": "GET /entry-points",
           "file": "backend/main.py",
-          "line": 771,
+          "line": 777,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -215,7 +216,7 @@
           "symbol": "ChatContext.get_all_entry_points",
           "label": "ChatContext.get_all_entry_points",
           "file": "backend/main.py",
-          "line": 772,
+          "line": 778,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -241,7 +242,7 @@
       }
     },
     {
-      "id": "flow-c15f0ba22706",
+      "id": "flow-05bd038832ac",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -254,7 +255,7 @@
           "symbol": "GET /entry-points/{service_id}",
           "label": "GET /entry-points/{service_id}",
           "file": "backend/main.py",
-          "line": 776,
+          "line": 782,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -265,7 +266,7 @@
           "symbol": "ChatContext.get_service_entry_points",
           "label": "ChatContext.get_service_entry_points",
           "file": "backend/main.py",
-          "line": 777,
+          "line": 783,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -291,7 +292,7 @@
       }
     },
     {
-      "id": "flow-7bfdb14993f6",
+      "id": "flow-990509d5feb6",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -304,7 +305,7 @@
           "symbol": "GET /request-flows",
           "label": "GET /request-flows",
           "file": "backend/main.py",
-          "line": 787,
+          "line": 793,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -315,7 +316,7 @@
           "symbol": "ChatContext.get_request_flow_catalog",
           "label": "ChatContext.get_request_flow_catalog",
           "file": "backend/main.py",
-          "line": 788,
+          "line": 794,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -341,7 +342,7 @@
       }
     },
     {
-      "id": "flow-730b576e4045",
+      "id": "flow-174f8c5db3dc",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -354,7 +355,7 @@
           "symbol": "GET /knowledge",
           "label": "GET /knowledge",
           "file": "backend/main.py",
-          "line": 792,
+          "line": 798,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -365,7 +366,7 @@
           "symbol": "ChatContext.get_knowledge",
           "label": "ChatContext.get_knowledge",
           "file": "backend/main.py",
-          "line": 793,
+          "line": 799,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -391,7 +392,118 @@
       }
     },
     {
-      "id": "flow-45308be027c9",
+      "id": "flow-869ea97b3e28",
+      "service": "backend",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /repo-file"
+      },
+      "confidence": "high",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /repo-file",
+          "label": "GET /repo-file",
+          "file": "backend/main.py",
+          "line": 834,
+          "confidence": "high",
+          "evidence": [
+            "FastAPI/Flask decorator is directly attached to the handler"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "ChatContext.get_repo_file",
+          "label": "ChatContext.get_repo_file",
+          "file": "backend/main.py",
+          "line": 835,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ]
+        }
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": null,
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /repo-file"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /repo-file."
+      }
+    },
+    {
+      "id": "flow-dd2527914d00",
+      "service": "backend",
+      "trigger": {
+        "kind": "api",
+        "label": "POST /knowledge/facts"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "POST /knowledge/facts",
+          "label": "POST /knowledge/facts",
+          "file": "backend/main.py",
+          "line": 839,
+          "confidence": "high",
+          "evidence": [
+            "FastAPI/Flask decorator is directly attached to the handler"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "ChatContext.post_knowledge_fact",
+          "label": "ChatContext.post_knowledge_fact",
+          "file": "backend/main.py",
+          "line": 840,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ]
+        },
+        {
+          "kind": "call",
+          "symbol": "next",
+          "label": "next",
+          "file": "scanner/extract-request-flows.test.js",
+          "line": 285,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ]
+        }
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": null,
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route POST /knowledge/facts"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls POST /knowledge/facts."
+      }
+    },
+    {
+      "id": "flow-5400c13f83a5",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -404,7 +516,7 @@
           "symbol": "GET /team-diagrams",
           "label": "GET /team-diagrams",
           "file": "backend/main.py",
-          "line": 797,
+          "line": 874,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -415,7 +527,7 @@
           "symbol": "ChatContext.get_team_diagrams",
           "label": "ChatContext.get_team_diagrams",
           "file": "backend/main.py",
-          "line": 798,
+          "line": 875,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -441,7 +553,7 @@
       }
     },
     {
-      "id": "flow-87b23865ff04",
+      "id": "flow-607aadf2548b",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -454,7 +566,7 @@
           "symbol": "GET /snapshots",
           "label": "GET /snapshots",
           "file": "backend/main.py",
-          "line": 809,
+          "line": 886,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -465,7 +577,7 @@
           "symbol": "ChatContext.get_snapshots",
           "label": "ChatContext.get_snapshots",
           "file": "backend/main.py",
-          "line": 810,
+          "line": 887,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -502,7 +614,7 @@
       }
     },
     {
-      "id": "flow-cc2c99569dce",
+      "id": "flow-d7910a2ce673",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -515,7 +627,7 @@
           "symbol": "POST /snapshots/active",
           "label": "POST /snapshots/active",
           "file": "backend/main.py",
-          "line": 817,
+          "line": 894,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -526,7 +638,7 @@
           "symbol": "ChatContext.set_active_snapshot",
           "label": "ChatContext.set_active_snapshot",
           "file": "backend/main.py",
-          "line": 818,
+          "line": 895,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -552,7 +664,7 @@
       }
     },
     {
-      "id": "flow-959eef7420a8",
+      "id": "flow-dfd915388b78",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -565,7 +677,7 @@
           "symbol": "GET /request-flows/{flow_id}",
           "label": "GET /request-flows/{flow_id}",
           "file": "backend/main.py",
-          "line": 827,
+          "line": 904,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -576,7 +688,7 @@
           "symbol": "ChatContext.get_request_flow",
           "label": "ChatContext.get_request_flow",
           "file": "backend/main.py",
-          "line": 828,
+          "line": 905,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -602,7 +714,7 @@
       }
     },
     {
-      "id": "flow-cb6fa334c9cf",
+      "id": "flow-e93642e4fa9c",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -615,7 +727,7 @@
           "symbol": "GET /request-flows/{flow_id}/mermaid",
           "label": "GET /request-flows/{flow_id}/mermaid",
           "file": "backend/main.py",
-          "line": 838,
+          "line": 915,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -626,7 +738,7 @@
           "symbol": "ChatContext.get_request_flow_mermaid",
           "label": "ChatContext.get_request_flow_mermaid",
           "file": "backend/main.py",
-          "line": 839,
+          "line": 916,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -652,7 +764,7 @@
       }
     },
     {
-      "id": "flow-626ac00071d4",
+      "id": "flow-37a49f1acc60",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -665,7 +777,7 @@
           "symbol": "POST /simulate/failure/{node_id}",
           "label": "POST /simulate/failure/{node_id}",
           "file": "backend/main.py",
-          "line": 849,
+          "line": 926,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -676,7 +788,7 @@
           "symbol": "ChatContext.simulate_failure",
           "label": "ChatContext.simulate_failure",
           "file": "backend/main.py",
-          "line": 850,
+          "line": 927,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -712,7 +824,7 @@
             "symbol": "POST /simulate/failure/{node_id}",
             "label": "POST /simulate/failure/{node_id}",
             "file": "backend/main.py",
-            "line": 849,
+            "line": 926,
             "confidence": "high",
             "evidence": [
               "FastAPI/Flask decorator is directly attached to the handler"
@@ -723,7 +835,7 @@
             "symbol": "ChatContext.simulate_failure",
             "label": "ChatContext.simulate_failure",
             "file": "backend/main.py",
-            "line": 850,
+            "line": 927,
             "confidence": "high",
             "evidence": [
               "Route registration or controller annotation binds this handler"
@@ -734,7 +846,7 @@
             "symbol": "ChatContext._load_graph",
             "label": "ChatContext._load_graph",
             "file": "backend/main.py",
-            "line": 240,
+            "line": 246,
             "confidence": "high",
             "evidence": [
               "Unqualified call resolves uniquely within the class"
@@ -761,7 +873,7 @@
       }
     },
     {
-      "id": "flow-f7a4fde7f7af",
+      "id": "flow-b9703429b235",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -774,7 +886,7 @@
           "symbol": "GET /chat/status",
           "label": "GET /chat/status",
           "file": "backend/main.py",
-          "line": 880,
+          "line": 957,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -785,7 +897,7 @@
           "symbol": "ChatContext.chat_status",
           "label": "ChatContext.chat_status",
           "file": "backend/main.py",
-          "line": 881,
+          "line": 958,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -811,7 +923,7 @@
       }
     },
     {
-      "id": "flow-082b21e7e837",
+      "id": "flow-5ed13461fdaa",
       "service": "backend",
       "trigger": {
         "kind": "api",
@@ -824,7 +936,7 @@
           "symbol": "POST /chat",
           "label": "POST /chat",
           "file": "backend/main.py",
-          "line": 885,
+          "line": 962,
           "confidence": "high",
           "evidence": [
             "FastAPI/Flask decorator is directly attached to the handler"
@@ -835,7 +947,7 @@
           "symbol": "ChatContext.chat",
           "label": "ChatContext.chat",
           "file": "backend/main.py",
-          "line": 886,
+          "line": 963,
           "confidence": "high",
           "evidence": [
             "Route registration or controller annotation binds this handler"
@@ -846,7 +958,7 @@
           "symbol": "ChatContext._execute_tool",
           "label": "ChatContext._execute_tool",
           "file": "backend/main.py",
-          "line": 352,
+          "line": 358,
           "confidence": "high",
           "evidence": [
             "Unqualified call resolves uniquely within the class"
@@ -860,7 +972,7 @@
             "symbol": "POST /chat",
             "label": "POST /chat",
             "file": "backend/main.py",
-            "line": 885,
+            "line": 962,
             "confidence": "high",
             "evidence": [
               "FastAPI/Flask decorator is directly attached to the handler"
@@ -871,7 +983,7 @@
             "symbol": "ChatContext.chat",
             "label": "ChatContext.chat",
             "file": "backend/main.py",
-            "line": 886,
+            "line": 963,
             "confidence": "high",
             "evidence": [
               "Route registration or controller annotation binds this handler"
@@ -882,7 +994,7 @@
             "symbol": "ChatContext._load_graph",
             "label": "ChatContext._load_graph",
             "file": "backend/main.py",
-            "line": 240,
+            "line": 246,
             "confidence": "high",
             "evidence": [
               "Unqualified call resolves uniquely within the class"
@@ -895,7 +1007,7 @@
             "symbol": "POST /chat",
             "label": "POST /chat",
             "file": "backend/main.py",
-            "line": 885,
+            "line": 962,
             "confidence": "high",
             "evidence": [
               "FastAPI/Flask decorator is directly attached to the handler"
@@ -906,7 +1018,7 @@
             "symbol": "ChatContext.chat",
             "label": "ChatContext.chat",
             "file": "backend/main.py",
-            "line": 886,
+            "line": 963,
             "confidence": "high",
             "evidence": [
               "Route registration or controller annotation binds this handler"

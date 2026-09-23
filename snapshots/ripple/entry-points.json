@@ -41,421 +41,481 @@
         "type": "export",
         "endpoint": "KnowledgeError",
         "file": "backend/knowledge.py",
-        "line": 15
+        "line": 16
       },
       {
         "type": "export",
         "endpoint": "_string_list",
         "file": "backend/knowledge.py",
-        "line": 19
+        "line": 20
       },
       {
         "type": "export",
         "endpoint": "validate_knowledge",
         "file": "backend/knowledge.py",
-        "line": 27
+        "line": 28
       },
       {
         "type": "export",
         "endpoint": "load_knowledge",
         "file": "backend/knowledge.py",
-        "line": 65
+        "line": 66
       },
       {
         "type": "export",
         "endpoint": "_class_of",
         "file": "backend/knowledge.py",
-        "line": 77
+        "line": 78
       },
       {
         "type": "export",
         "endpoint": "_flow_boundaries",
         "file": "backend/knowledge.py",
-        "line": 81
+        "line": 82
       },
       {
         "type": "export",
         "endpoint": "match_reason",
         "file": "backend/knowledge.py",
-        "line": 93
+        "line": 94
       },
       {
         "type": "export",
         "endpoint": "facts_for_flow",
         "file": "backend/knowledge.py",
-        "line": 117
+        "line": 118
+      },
+      {
+        "type": "export",
+        "endpoint": "read_repo_line",
+        "file": "backend/knowledge.py",
+        "line": 131
+      },
+      {
+        "type": "export",
+        "endpoint": "_fact_id",
+        "file": "backend/knowledge.py",
+        "line": 154
+      },
+      {
+        "type": "export",
+        "endpoint": "add_fact",
+        "file": "backend/knowledge.py",
+        "line": 162
       },
       {
         "type": "export",
         "endpoint": "attach_knowledge",
         "file": "backend/knowledge.py",
-        "line": 127
+        "line": 183
       },
       {
         "type": "export",
         "endpoint": "_snapshots_dir",
         "file": "backend/main.py",
-        "line": 49
+        "line": 55
       },
       {
         "type": "export",
         "endpoint": "_active_snapshot_name",
         "file": "backend/main.py",
-        "line": 53
+        "line": 59
       },
       {
         "type": "export",
         "endpoint": "_snapshot_file",
         "file": "backend/main.py",
-        "line": 61
+        "line": 67
       },
       {
         "type": "export",
         "endpoint": "_snapshot_summary",
         "file": "backend/main.py",
-        "line": 65
+        "line": 71
       },
       {
         "type": "export",
         "endpoint": "_list_snapshots",
         "file": "backend/main.py",
-        "line": 83
+        "line": 89
       },
       {
         "type": "export",
         "endpoint": "ChatContext",
         "file": "backend/main.py",
-        "line": 94
+        "line": 100
       },
       {
         "type": "export",
         "endpoint": "ChatRequest",
         "file": "backend/main.py",
-        "line": 101
+        "line": 107
       },
       {
         "type": "export",
         "endpoint": "_resolve_path",
         "file": "backend/main.py",
-        "line": 232
+        "line": 238
       },
       {
         "type": "export",
         "endpoint": "_load_graph",
         "file": "backend/main.py",
-        "line": 242
+        "line": 248
       },
       {
         "type": "export",
         "endpoint": "_load_entry_points",
         "file": "backend/main.py",
-        "line": 255
+        "line": 261
       },
       {
         "type": "export",
         "endpoint": "_load_knowledge",
         "file": "backend/main.py",
-        "line": 262
+        "line": 268
       },
       {
         "type": "export",
         "endpoint": "_load_request_flows",
         "file": "backend/main.py",
-        "line": 273
+        "line": 279
       },
       {
         "type": "export",
         "endpoint": "get_dependents",
         "file": "backend/main.py",
-        "line": 282
+        "line": 288
       },
       {
         "type": "export",
         "endpoint": "get_dependencies",
         "file": "backend/main.py",
-        "line": 288
+        "line": 294
       },
       {
         "type": "export",
         "endpoint": "get_spof_candidates",
         "file": "backend/main.py",
-        "line": 294
+        "line": 300
       },
       {
         "type": "export",
         "endpoint": "get_architecture_overview",
         "file": "backend/main.py",
-        "line": 320
+        "line": 326
       },
       {
         "type": "export",
         "endpoint": "_execute_tool",
         "file": "backend/main.py",
-        "line": 354
+        "line": 360
       },
       {
         "type": "export",
         "endpoint": "_strip_markdown",
         "file": "backend/main.py",
-        "line": 385
+        "line": 391
       },
       {
         "type": "export",
         "endpoint": "_chat_system_prompt",
         "file": "backend/main.py",
-        "line": 405
+        "line": 411
       },
       {
         "type": "export",
         "endpoint": "_compact_flow_evidence",
         "file": "backend/main.py",
-        "line": 424
+        "line": 430
       },
       {
         "type": "export",
         "endpoint": "_fact_source_label",
         "file": "backend/main.py",
-        "line": 492
+        "line": 498
       },
       {
         "type": "export",
         "endpoint": "_flow_chat_prompt",
         "file": "backend/main.py",
-        "line": 502
+        "line": 508
       },
       {
         "type": "export",
         "endpoint": "_provider_status",
         "file": "backend/main.py",
-        "line": 525
+        "line": 531
       },
       {
         "type": "export",
         "endpoint": "_openai_client",
         "file": "backend/main.py",
-        "line": 551
+        "line": 557
       },
       {
         "type": "export",
         "endpoint": "_offline_flow_explanation",
         "file": "backend/main.py",
-        "line": 577
+        "line": 583
       },
       {
         "type": "export",
         "endpoint": "_offline_architecture_explanation",
         "file": "backend/main.py",
-        "line": 636
+        "line": 642
       },
       {
         "type": "export",
         "endpoint": "_mermaid_id",
         "file": "backend/main.py",
-        "line": 651
+        "line": 657
       },
       {
         "type": "export",
         "endpoint": "_short_label",
         "file": "backend/main.py",
-        "line": 655
+        "line": 661
       },
       {
         "type": "export",
         "endpoint": "_graph_to_mermaid",
         "file": "backend/main.py",
-        "line": 661
+        "line": 667
       },
       {
         "type": "export",
         "endpoint": "_load_mermaid",
         "file": "backend/main.py",
-        "line": 728
+        "line": 734
       },
       {
         "type": "API",
         "endpoint": "GET /",
         "file": "backend/main.py",
-        "line": 735
+        "line": 741
       },
       {
         "type": "export",
         "endpoint": "root",
         "file": "backend/main.py",
-        "line": 736
+        "line": 742
       },
       {
         "type": "API",
         "endpoint": "GET /graph",
         "file": "backend/main.py",
-        "line": 759
+        "line": 765
       },
       {
         "type": "export",
         "endpoint": "get_graph",
         "file": "backend/main.py",
-        "line": 760
+        "line": 766
       },
       {
         "type": "API",
         "endpoint": "GET /graph/mermaid",
         "file": "backend/main.py",
-        "line": 765
+        "line": 771
       },
       {
         "type": "export",
         "endpoint": "get_graph_mermaid",
         "file": "backend/main.py",
-        "line": 766
+        "line": 772
       },
       {
         "type": "API",
         "endpoint": "GET /entry-points",
         "file": "backend/main.py",
-        "line": 771
+        "line": 777
       },
       {
         "type": "export",
         "endpoint": "get_all_entry_points",
         "file": "backend/main.py",
-        "line": 772
+        "line": 778
       },
       {
         "type": "API",
         "endpoint": "GET /entry-points/{service_id}",
         "file": "backend/main.py",
-        "line": 776
+        "line": 782
       },
       {
         "type": "export",
         "endpoint": "get_service_entry_points",
         "file": "backend/main.py",
-        "line": 777
+        "line": 783
       },
       {
         "type": "API",
         "endpoint": "GET /request-flows",
         "file": "backend/main.py",
-        "line": 787
+        "line": 793
       },
       {
         "type": "export",
         "endpoint": "get_request_flow_catalog",
         "file": "backend/main.py",
-        "line": 788
+        "line": 794
       },
       {
         "type": "API",
         "endpoint": "GET /knowledge",
         "file": "backend/main.py",
-        "line": 792
+        "line": 798
       },
       {
         "type": "export",
         "endpoint": "get_knowledge",
         "file": "backend/main.py",
-        "line": 793
-      },
-      {
-        "type": "API",
-        "endpoint": "GET /team-diagrams",
-        "file": "backend/main.py",
-        "line": 797
+        "line": 799
       },
       {
         "type": "export",
-        "endpoint": "get_team_diagrams",
+        "endpoint": "_repo_root",
         "file": "backend/main.py",
-        "line": 798
+        "line": 803
       },
       {
         "type": "export",
-        "endpoint": "ActiveSnapshotRequest",
-        "file": "backend/main.py",
-        "line": 805
-      },
-      {
-        "type": "API",
-        "endpoint": "GET /snapshots",
-        "file": "backend/main.py",
-        "line": 809
-      },
-      {
-        "type": "export",
-        "endpoint": "get_snapshots",
-        "file": "backend/main.py",
-        "line": 810
-      },
-      {
-        "type": "API",
-        "endpoint": "POST /snapshots/active",
+        "endpoint": "_check_repo_file",
         "file": "backend/main.py",
         "line": 817
       },
       {
         "type": "export",
+        "endpoint": "NewFactRequest",
+        "file": "backend/main.py",
+        "line": 824
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /repo-file",
+        "file": "backend/main.py",
+        "line": 834
+      },
+      {
+        "type": "export",
+        "endpoint": "get_repo_file",
+        "file": "backend/main.py",
+        "line": 835
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /knowledge/facts",
+        "file": "backend/main.py",
+        "line": 839
+      },
+      {
+        "type": "export",
+        "endpoint": "post_knowledge_fact",
+        "file": "backend/main.py",
+        "line": 840
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /team-diagrams",
+        "file": "backend/main.py",
+        "line": 874
+      },
+      {
+        "type": "export",
+        "endpoint": "get_team_diagrams",
+        "file": "backend/main.py",
+        "line": 875
+      },
+      {
+        "type": "export",
+        "endpoint": "ActiveSnapshotRequest",
+        "file": "backend/main.py",
+        "line": 882
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /snapshots",
+        "file": "backend/main.py",
+        "line": 886
+      },
+      {
+        "type": "export",
+        "endpoint": "get_snapshots",
+        "file": "backend/main.py",
+        "line": 887
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /snapshots/active",
+        "file": "backend/main.py",
+        "line": 894
+      },
+      {
+        "type": "export",
         "endpoint": "set_active_snapshot",
         "file": "backend/main.py",
-        "line": 818
+        "line": 895
       },
       {
         "type": "API",
         "endpoint": "GET /request-flows/{flow_id}",
         "file": "backend/main.py",
-        "line": 827
+        "line": 904
       },
       {
         "type": "export",
         "endpoint": "get_request_flow",
         "file": "backend/main.py",
-        "line": 828
+        "line": 905
       },
       {
         "type": "API",
         "endpoint": "GET /request-flows/{flow_id}/mermaid",
         "file": "backend/main.py",
-        "line": 838
+        "line": 915
       },
       {
         "type": "export",
         "endpoint": "get_request_flow_mermaid",
         "file": "backend/main.py",
-        "line": 839
+        "line": 916
       },
       {
         "type": "API",
         "endpoint": "POST /simulate/failure/{node_id}",
         "file": "backend/main.py",
-        "line": 849
+        "line": 926
       },
       {
         "type": "export",
         "endpoint": "simulate_failure",
         "file": "backend/main.py",
-        "line": 850
+        "line": 927
       },
       {
         "type": "API",
         "endpoint": "GET /chat/status",
         "file": "backend/main.py",
-        "line": 880
+        "line": 957
       },
       {
         "type": "export",
         "endpoint": "chat_status",
         "file": "backend/main.py",
-        "line": 881
+        "line": 958
       },
       {
         "type": "API",
         "endpoint": "POST /chat",
         "file": "backend/main.py",
-        "line": 885
+        "line": 962
       },
       {
         "type": "export",
         "endpoint": "chat",
         "file": "backend/main.py",
-        "line": 886
+        "line": 963
       },
       {
         "type": "export",
@@ -551,7 +611,7 @@
         "type": "export",
         "endpoint": "KnowledgeApiTests",
         "file": "backend/test_knowledge.py",
-        "line": 137
+        "line": 138
       },
       {
         "type": "export",
@@ -649,21 +709,69 @@
       },
       {
         "type": "export",
+        "endpoint": "flow",
+        "file": "frontend/src/app/knowledge-form.spec.ts",
+        "line": 7
+      },
+      {
+        "type": "export",
+        "endpoint": "type",
+        "file": "frontend/src/app/knowledge-form.spec.ts",
+        "line": 26
+      },
+      {
+        "type": "export",
+        "endpoint": "API",
+        "file": "frontend/src/app/knowledge-form.ts",
+        "line": 5
+      },
+      {
+        "type": "export",
+        "endpoint": "errorDetail",
+        "file": "frontend/src/app/knowledge-form.ts",
+        "line": 14
+      },
+      {
+        "type": "export",
+        "endpoint": "KnowledgeFormComponent",
+        "file": "frontend/src/app/knowledge-form.ts",
+        "line": 23
+      },
+      {
+        "type": "export",
         "endpoint": "catalog",
         "file": "frontend/src/app/request-flows-view.spec.ts",
         "line": 14
       },
       {
         "type": "export",
+        "endpoint": "JOB_FILTER",
+        "file": "frontend/src/app/request-flows-view.ts",
+        "line": 32
+      },
+      {
+        "type": "export",
+        "endpoint": "SECTION_TITLES",
+        "file": "frontend/src/app/request-flows-view.ts",
+        "line": 51
+      },
+      {
+        "type": "export",
+        "endpoint": "firstSentence",
+        "file": "frontend/src/app/request-flows-view.ts",
+        "line": 62
+      },
+      {
+        "type": "export",
         "endpoint": "flowRenderSequence",
         "file": "frontend/src/app/request-flows-view.ts",
-        "line": 30
+        "line": 67
       },
       {
         "type": "export",
         "endpoint": "RequestFlowsViewComponent",
         "file": "frontend/src/app/request-flows-view.ts",
-        "line": 37
+        "line": 75
       },
       {
         "type": "export",

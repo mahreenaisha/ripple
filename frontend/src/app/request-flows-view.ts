@@ -16,6 +16,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import mermaid from 'mermaid';
+import { KnowledgeFormComponent } from './knowledge-form';
 import {
   FlowKnowledgeFact,
   FlowStoryFanOutMember,
@@ -67,6 +68,7 @@ let flowRenderSequence = 0;
 
 @Component({
   selector: 'app-request-flows-view',
+  imports: [KnowledgeFormComponent],
   styleUrl: './request-flows-view.scss',
   templateUrl: './request-flows-view.html',
 })
@@ -104,6 +106,7 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
     (this.catalog()?.flows ?? []).some((flow) => this.isBackground(flow)),
   );
   protected readonly openSection = signal<FlowSection | null>(null);
+  protected readonly addingFact = signal(false);
   protected readonly confidenceLevels = computed(() =>
     [...new Set((this.catalog()?.flows ?? []).map((flow) => flow.confidence))].sort(
       (a, b) => this.confidenceRank(a) - this.confidenceRank(b),
@@ -213,6 +216,7 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
     }
     this.selectedStepId.set(null);
     this.openSection.set(null);
+    this.addingFact.set(false);
     this.selectedFlowId.set(flow.id);
     this.selectionContext.emit({ flowId: flow.id });
     this.loadMermaid(flow.id);
@@ -246,6 +250,14 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
   @HostListener('document:keydown.escape')
   protected closeSection(): void {
     this.openSection.set(null);
+    this.addingFact.set(false);
+  }
+
+  protected factSaved(): void {
+    this.addingFact.set(false);
+    this.http.get<RequestFlowCatalog>('http://localhost:8000/request-flows').subscribe({
+      next: (catalog) => this.catalog.set({ ...catalog, flows: catalog.flows ?? [] }),
+    });
   }
 
   protected showSection(section: FlowSection): void {
@@ -268,15 +280,15 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
     const story = flow.story;
     const tiles: SectionTile[] = [];
     const facts = flow.knowledge ?? [];
-    if (facts.length) {
-      const unverified = facts.filter((fact) => !fact.verified).length;
-      tiles.push({
-        id: 'team',
-        title: SECTION_TITLES.team,
-        preview: `${facts.length} ${facts.length === 1 ? 'fact' : 'facts'}${unverified ? ` · ${unverified} not verified` : ''}`,
-        accent: true,
-      });
-    }
+    const unverified = facts.filter((fact) => !fact.verified).length;
+    tiles.push({
+      id: 'team',
+      title: SECTION_TITLES.team,
+      preview: facts.length
+        ? `${facts.length} ${facts.length === 1 ? 'fact' : 'facts'}${unverified ? ` · ${unverified} not verified` : ''}`
+        : 'Nothing yet · add a fact',
+      accent: facts.length > 0,
+    });
     if (!story) {
       return tiles;
     }
