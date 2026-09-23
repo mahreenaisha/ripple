@@ -141,8 +141,8 @@ describe('RequestFlowsViewComponent', () => {
         summary: 'Runs when TenancyAS sends a heartbeat.',
       },
       knowledge: [{
-        id: 'cadence', kind: 'tribal', title: 'Runs every 5 minutes', text: 'Every 5 minutes.',
-        source: { type: 'person', name: 'Kevin Farrington', role: 'DeviceAS lead' }, verified: false,
+        id: 'purpose', kind: 'doc', title: 'Why the heartbeat exists', text: 'Devices prove they are alive.',
+        source: { type: 'doc', path: 'docs/design/store.md', line: 385 }, verified: false,
       }],
     };
     const fixture = TestBed.createComponent(RequestFlowsViewComponent);
@@ -175,7 +175,7 @@ describe('RequestFlowsViewComponent', () => {
     ]);
     tiles[0].click();
     fixture.detectChanges();
-    expect(host.querySelector('.modal')?.textContent).toContain('Kevin Farrington, DeviceAS lead');
+    expect(host.querySelector('.modal')?.textContent).toContain('docs/design/store.md:385');
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     fixture.detectChanges();
     expect(host.querySelector('.modal')).toBeNull();

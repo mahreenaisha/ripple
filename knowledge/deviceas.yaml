@@ -1,38 +1,22 @@
-# Team knowledge that the code alone cannot tell a new engineer.
-# Each fact names where it came from and whether someone has checked it.
+# Knowledge a new engineer needs that the call graph alone does not show.
+# Every fact must be backed by something in the repo (a doc, config, or code)
+# and name where it came from.
 # applies_to matches flows by trigger label/message type, step class or symbol,
 # a data store or external system the flow touches, or a flow category.
 schema_version: 1
 repo: DeviceAS
 
 facts:
-  - id: heartbeat-cadence
-    kind: tribal
-    title: Runs every 5 minutes, scheduled outside this repo
-    text: >-
-      TenancyAS sends a TenancyDevicesHeartbeat message to DeviceAS every 5 minutes
-      for each tenant. The schedule lives in TenancyAS or its AWS scheduler, not in
-      DeviceAS, which is why reading this repo alone never tells you the cadence.
-    applies_to:
-      triggers: [TenancyDevicesHeartbeat]
-    source:
-      type: person
-      name: Kevin Farrington
-      role: DeviceAS lead
-    verified: false
-    verify_hint: >-
-      Confirm the schedule rule in the TenancyAS repo or in the AWS EventBridge
-      Scheduler console for the environment.
-
   - id: heartbeat-purpose
     kind: doc
     title: Why the heartbeat exists
     text: >-
       Edge devices prove they are alive by checking in. Each acquisition controller
-      stores NextHeartbeat, the time it is next expected to report. The heartbeat job
-      is how DeviceAS notices controllers that went quiet: HeartbeatValidator flags
-      controllers whose NextHeartbeat has passed, marks HeartbeatError, and enqueues a
-      ControllerHeartbeatErrorMessage so their systems are updated. The same pass also
+      stores NextHeartbeat, the time it is next expected to report, and HeartbeatError,
+      which is true when it has not proven alive within the expected window. The
+      heartbeat job is how DeviceAS notices controllers that went quiet: HeartbeatValidator
+      flags controllers whose NextHeartbeat has passed, marks HeartbeatError, and enqueues
+      a ControllerHeartbeatErrorMessage so their systems are updated. The same pass also
       renews and deletes certificates, and syncs reservations and edge deployments.
     applies_to:
       triggers: [TenancyDevicesHeartbeat, ControllerHeartbeatErrorMessage]
@@ -46,14 +30,11 @@ facts:
     kind: rule
     title: Tenancy data isolation (TDI) applies to OpenSearch
     text: >-
-      Every OpenSearch document id must start with the tenant id, and tenant reads and
-      writes must go through the tenant-data route, using the per-tenant service user
-      that TenancyAS provisions. New tenant data should reuse this route instead of a
-      separate table or index.
-    why_it_matters: >-
-      A past DeviceAS change missed this link-up and created a new database table
-      instead, which cost time and effort before the team realized the data should go
-      through the existing tenant-isolated route.
+      Every persisted document carries a TenantId keyword field, and every document id
+      must be prefixed with the tenant id. Tenant reads and writes go through the
+      tenant-data route, authenticated as the per-tenant OpenSearch service user that
+      TenancyAS provisions. Entities are expected to be reached via this route in
+      production.
     applies_to:
       boundaries: [OpenSearch]
     source:
