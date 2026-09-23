@@ -11,6 +11,7 @@ const { extractDependencies } = require("./extract-dependencies");
 const { extractRequestFlows } = require("./extract-request-flows");
 const { buildDependencyGraph } = require("./build-dependency-graph");
 const { generateDiagram } = require("./generate-diagram");
+const { collectTeamDiagrams } = require("./team-diagrams");
 const {
   loadAndMergeMetadata,
   metadataToYaml,
@@ -46,8 +47,10 @@ function scanRepository(
     dependencies,
     { metadata },
   );
+  const teamDiagrams = collectTeamDiagrams(repoPath);
 
   fs.mkdirSync(outputDirectory, { recursive: true });
+  writeJson(outputDirectory, "team-diagrams.json", teamDiagrams);
   writeJson(outputDirectory, "services.json", services);
   writeJson(outputDirectory, "entry-points.json", entryPoints);
   writeJson(outputDirectory, "dependencies.json", dependencies);

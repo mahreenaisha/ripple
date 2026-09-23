@@ -1,24 +1,109 @@
 <div class="toolbar">
-  <p>A paste-ready Mermaid diagram of the current dependency graph.</p>
+  <p>Click a box to see the flows behind it. Click a group title to fold it away.</p>
 
   <div class="actions">
-    <div class="segmented" role="group" aria-label="Diagram direction">
-      <button type="button" [class.active]="direction() === 'TD'" (click)="setDirection('TD')">Top-down</button>
-      <button type="button" [class.active]="direction() === 'LR'" (click)="setDirection('LR')">Left-right</button>
+    <div class="segmented" role="group" aria-label="Fold layers">
+      @for (layer of layers; track layer.id) {
+        <button type="button" [class.active]="!isCollapsed(layer.id)" (click)="toggleLayer(layer.id)">
+          {{ layer.label }}
+        </button>
+      }
     </div>
     <button type="button" class="copy" [disabled]="!mermaidCode()" (click)="copyMermaid()">
-      {{ copied() ? 'Copied' : 'Copy Mermaid Code' }}
+      {{ copied() ? 'Copied' : 'Copy Mermaid for Confluence' }}
     </button>
   </div>
 </div>
 
-@if (loading()) {
-  <div class="empty">
-    <span class="spinner" aria-hidden="true"></span>
-    Loading snapshot…
+<div class="snapshot-body">
+  <div class="canvas-wrap">
+    @if (loading()) {
+      <div class="empty">
+        <span class="spinner" aria-hidden="true"></span>
+        Loading snapshot…
+      </div>
+    } @else if (error(); as message) {
+      <div class="empty">{{ message }}</div>
+    }
+    <div #canvas class="canvas" [class.hidden]="loading() || error()"></div>
   </div>
-} @else if (error(); as message) {
-  <div class="empty">{{ message }}</div>
+
+  @if (selected(); as node) {
+    <aside class="node-panel" aria-label="Selected box">
+      <header>
+        <div>
+          <span class="kicker">{{ node.layer === 'entry' ? 'Entry point' : node.kind }}</span>
+          <h3>{{ node.label }}</h3>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="clearSelection()">×</button>
+      </header>
+      <p>{{ node.description }}</p>
+      @if (selectedFlows().length) {
+        <span class="kicker">Flows · {{ node.flowIds.length }}</span>
+        <ul class="flow-links">
+          @for (flow of selectedFlows(); track flow.id) {
+            <li>
+              <button type="button" (click)="openFlow.emit(flow.id)">
+                <span class="kind" [attr.data-kind]="flow.story?.category">{{ flow.trigger.kind }}</span>
+                <span class="label">{{ flow.trigger.label }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+        @if (node.flowIds.length > selectedFlows().length) {
+          <small>Showing the first {{ selectedFlows().length }}. Search the Flows tab for the rest.</small>
+        }
+      } @else {
+        <small>No scanned flow touches this box directly.</small>
+      }
+    </aside>
+  }
+</div>
+
+@if (team().diagrams.length || team().docs.length) {
+  <section class="team-strip" aria-label="Team diagrams">
+    <div class="strip-head">
+      <span class="kicker">Team diagrams · drawn by people, found in the repo</span>
+    </div>
+    <div class="strip-row">
+      @for (diagram of team().diagrams; track diagram.path + (diagram.line ?? 0)) {
+        <button type="button" class="team-card" [class.active]="openDiagram() === diagram" (click)="showDiagram(diagram)">
+          <span class="format">{{ diagram.format }}</span>
+          <strong>{{ diagram.title }}</strong>
+          <small>{{ diagram.path }}{{ diagram.line ? ':' + diagram.line : '' }}</small>
+        </button>
+      }
+      @for (doc of team().docs; track doc.path) {
+        <div class="team-card doc">
+          <span class="format">design doc</span>
+          <strong>{{ doc.title }}</strong>
+          <small>{{ doc.path }} · {{ doc.lines }} lines</small>
+        </div>
+      }
+    </div>
+  </section>
 }
 
-<div #diagram class="diagram" [class.hidden]="loading() || error()"></div>
+@if (openDiagram(); as diagram) {
+  <div class="diagram-overlay" role="dialog" [attr.aria-label]="diagram.title">
+    <div class="diagram-dialog">
+      <header>
+        <div>
+          <span class="kicker">{{ diagram.path }}{{ diagram.line ? ':' + diagram.line : '' }}</span>
+          <h3>{{ diagram.title }}</h3>
+        </div>
+        <button type="button" class="close" aria-label="Close diagram" (click)="closeDiagram()">×</button>
+      </header>
+      @if (diagram.format === 'mermaid' && !diagramError()) {
+        <div #teamDiagram class="team-diagram"></div>
+      } @else {
+        @if (diagramError(); as message) {
+          <p class="diagram-note">{{ message }}</p>
+        } @else {
+          <p class="diagram-note">PlantUML source. Paste it into a PlantUML viewer to draw it.</p>
+        }
+        <pre>{{ diagram.code }}</pre>
+      }
+    </div>
+  </div>
+}

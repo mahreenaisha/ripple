@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   inject,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -34,6 +35,7 @@ let flowRenderSequence = 0;
   templateUrl: './request-flows-view.html',
 })
 export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() initialFlowId: string | null = null;
   @Output() readonly selectionContext = new EventEmitter<RequestFlowSelectionContext | null>();
   @ViewChild('diagram') private readonly diagram?: ElementRef<HTMLDivElement>;
 
@@ -130,7 +132,9 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
         this.catalog.set(safeCatalog);
         this.loading.set(false);
         const first =
-          safeCatalog.flows.find((flow) => this.isBackground(flow)) ?? safeCatalog.flows[0];
+          safeCatalog.flows.find((flow) => flow.id === this.initialFlowId) ??
+          safeCatalog.flows.find((flow) => this.isBackground(flow)) ??
+          safeCatalog.flows[0];
         if (first) {
           this.selectFlow(first);
         }
