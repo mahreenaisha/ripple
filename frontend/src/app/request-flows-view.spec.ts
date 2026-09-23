@@ -163,13 +163,43 @@ describe('RequestFlowsViewComponent', () => {
     const host = fixture.nativeElement as HTMLElement;
     expect(host.querySelector('.pinned-group')?.textContent).toContain('TenancyDevicesHeartbeat');
     expect(host.querySelector('.hero-summary')?.textContent).toContain('Runs when TenancyAS sends a heartbeat');
-    expect(host.querySelector('.outside-chip')?.textContent).toContain('outside this repo');
-    const story = host.querySelector('.story-card')!.textContent!;
-    expect(story).toContain('Kevin Farrington, DeviceAS lead');
-    expect(story).toContain('Not yet verified');
-    expect(story).toContain('queue.tenancy_devices_heartbeat');
-    expect(story).toContain('checks OpenSearch');
-    expect(story).toContain('2 minutes');
+    const tiles = [...host.querySelectorAll<HTMLButtonElement>('.tile')];
+    expect(tiles.map((tile) => tile.querySelector('.tile-title')?.textContent)).toEqual([
+      'What the team knows',
+      'Why it exists',
+      'Who starts it',
+      'What it does',
+      'What it touches',
+      'Watch in Datadog',
+      'Timing settings',
+      'Notes & glossary',
+    ]);
+    expect(tiles[0].textContent).toContain('1 fact · 1 not verified');
+    expect(tiles[2].textContent).toContain('TenancyAS · outside this repo');
+    expect(host.querySelector('.modal')).toBeNull();
+
+    const openTile = (index: number): string => {
+      tiles[index].click();
+      fixture.detectChanges();
+      const text = host.querySelector('.modal')!.textContent!;
+      host.querySelector<HTMLButtonElement>('.modal-close')!.click();
+      fixture.detectChanges();
+      return text;
+    };
+    expect(openTile(0)).toContain('Kevin Farrington, DeviceAS lead');
+    expect(openTile(2)).toContain('outside this repo');
+    expect(openTile(4)).toContain('checks OpenSearch');
+    expect(openTile(5)).toContain('queue.tenancy_devices_heartbeat');
+    expect(openTile(6)).toContain('2 minutes');
+    expect(host.querySelector('.modal')).toBeNull();
+
+    host.querySelector<HTMLButtonElement>('.expand-button')!.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(host.querySelector('.modal.wide .diagram')).not.toBeNull();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+    expect(host.querySelector('.modal')).toBeNull();
     httpTesting.verify();
   });
 
