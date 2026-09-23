@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnDestroy,
@@ -27,6 +28,41 @@ import {
 
 type FilterValue = 'all' | string;
 
+export type FlowSection =
+  | 'why'
+  | 'trigger'
+  | 'checks'
+  | 'touches'
+  | 'datadog'
+  | 'timing'
+  | 'team'
+  | 'notes'
+  | 'sequence';
+
+export interface SectionTile {
+  id: FlowSection;
+  title: string;
+  preview: string;
+  accent?: boolean;
+}
+
+const SECTION_TITLES: Record<FlowSection, string> = {
+  why: 'Why it exists',
+  trigger: 'Who starts it',
+  checks: 'What it does',
+  touches: 'What it touches',
+  datadog: 'Watch in Datadog',
+  timing: 'Timing settings',
+  team: 'What the team knows',
+  notes: 'Notes & glossary',
+  sequence: 'Sequence view',
+};
+
+function firstSentence(text: string, max = 90): string {
+  const sentence = (text.match(/^.*?[.!?](\s|$)/)?.[0] ?? text).trim();
+  return sentence.length > max ? `${sentence.slice(0, max - 1).trimEnd()}…` : sentence;
+}
+
 let flowRenderSequence = 0;
 
 @Component({
@@ -37,11 +73,17 @@ let flowRenderSequence = 0;
 export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() initialFlowId: string | null = null;
   @Output() readonly selectionContext = new EventEmitter<RequestFlowSelectionContext | null>();
-  @ViewChild('diagram') private readonly diagram?: ElementRef<HTMLDivElement>;
+  @ViewChild('diagram') private set diagramHost(ref: ElementRef<HTMLDivElement> | undefined) {
+    this.diagram = ref;
+    void this.renderMermaid();
+  }
 
+  private diagram?: ElementRef<HTMLDivElement>;
   private readonly http = inject(HttpClient);
   private mermaidRequest?: Subscription;
   private viewReady = false;
+
+  protected readonly openSection = signal<FlowSection | null>(null);
 
   protected readonly catalog = signal<RequestFlowCatalog | null>(null);
   protected readonly loading = signal(true);
@@ -172,6 +214,7 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
       return;
     }
     this.selectedStepId.set(null);
+    this.openSection.set(null);
     this.selectedFlowId.set(flow.id);
     this.selectionContext.emit({ flowId: flow.id });
     this.loadMermaid(flow.id);
@@ -200,6 +243,79 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
       context.stepId = stepId;
     }
     this.selectionContext.emit(context);
+  }
+
+  @HostListener('document:keydown.escape')
+  protected closeSection(): void {
+    this.openSection.set(null);
+  }
+
+  protected showSection(section: FlowSection): void {
+    this.openSection.set(section);
+  }
+
+  protected sectionTitle(section: FlowSection): string {
+    return SECTION_TITLES[section];
+  }
+
+  protected heroLine(flow: RequestFlow): string {
+    return firstSentence(this.flowSummary(flow), 160);
+  }
+
+  protected sectionTiles(flow: RequestFlow): SectionTile[] {
+    const story = flow.story;
+    const tiles: SectionTile[] = [];
+    const facts = flow.knowledge ?? [];
+    if (facts.length) {
+      const unverified = facts.filter((fact) => !fact.verified).length;
+      tiles.push({
+        id: 'team',
+        title: SECTION_TITLES.team,
+        preview: `${facts.length} ${facts.length === 1 ? 'fact' : 'facts'}${unverified ? ` · ${unverified} not verified` : ''}`,
+        accent: true,
+      });
+    }
+    if (!story) {
+      tiles.push({ id: 'notes', title: SECTION_TITLES.notes, preview: 'Limits and plain-language terms' });
+      return tiles;
+    }
+    tiles.push({
+      id: 'why',
+      title: SECTION_TITLES.why,
+      preview: story.purpose ? firstSentence(story.purpose.text, 70) : 'No doc comment found',
+    });
+    const trigger = story.triggeredBy;
+    tiles.push({
+      id: 'trigger',
+      title: SECTION_TITLES.trigger,
+      preview: trigger?.ownerHint
+        ? `${trigger.ownerHint} · outside this repo`
+        : trigger?.publishers?.length
+          ? `${trigger.publishers.length} publisher${trigger.publishers.length === 1 ? '' : 's'} in this repo`
+          : firstSentence(trigger?.label ?? flow.trigger.label, 60),
+    });
+    const checks = this.storyChecks(flow).length;
+    if (checks) {
+      tiles.push({ id: 'checks', title: SECTION_TITLES.checks, preview: `${checks} checks` });
+    }
+    const systems = [...new Set(story.produces.boundaries.map((boundary) => boundary.system))];
+    tiles.push({
+      id: 'touches',
+      title: SECTION_TITLES.touches,
+      preview: systems.length ? firstSentence(systems.join(', '), 60) : 'Nothing outside the code',
+    });
+    if (story.produces.metrics.length) {
+      tiles.push({ id: 'datadog', title: SECTION_TITLES.datadog, preview: story.produces.metrics[0].name });
+    }
+    if (story.timing.length) {
+      tiles.push({
+        id: 'timing',
+        title: SECTION_TITLES.timing,
+        preview: `${story.timing.length} ${story.timing.length === 1 ? 'setting' : 'settings'}`,
+      });
+    }
+    tiles.push({ id: 'notes', title: SECTION_TITLES.notes, preview: 'Limits and plain-language terms' });
+    return tiles;
   }
 
   protected isBackground(flow: RequestFlow): boolean {

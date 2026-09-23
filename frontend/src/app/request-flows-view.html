@@ -16,7 +16,6 @@
       </label>
 
       <div class="filter-block">
-        <span class="filter-label">Trigger</span>
         <div class="filter-row" aria-label="Filter by trigger">
           <button type="button" [class.active]="triggerFilter() === 'all'" (click)="setTriggerFilter('all')">
             All
@@ -29,27 +28,10 @@
         </div>
       </div>
 
-      <div class="filter-block">
-        <span class="filter-label">Confidence</span>
-        <div class="filter-row" aria-label="Filter by confidence">
-          <button type="button" [class.active]="confidenceFilter() === 'all'" (click)="setConfidenceFilter('all')">
-            All
-          </button>
-          @for (level of confidenceLevels(); track level) {
-            <button type="button" [class.active]="confidenceFilter() === level" (click)="setConfidenceFilter(level)">
-              {{ level }}
-            </button>
-          }
-        </div>
-      </div>
-
       @if (catalog(); as flowCatalog) {
         <div class="catalog-count">
           <strong>{{ filteredFlows().length }}</strong> of {{ flowCatalog.flows.length }} flows
         </div>
-        <p class="catalog-hint">
-          Pick a flow. The story card says why it exists, who starts it, what it does and what it touches. The code path and diagram sit underneath. Chat on the right only explains the selected flow.
-        </p>
       }
     </div>
 
@@ -76,7 +58,7 @@
               <span>Runs in the background</span>
               <span>{{ backgroundFlows().length }}</span>
             </div>
-            <p class="pinned-hint">No user clicks these. Something outside the code starts them on a schedule.</p>
+            <p class="pinned-hint">Started by something outside the code, not a user.</p>
             @for (flow of backgroundFlows(); track flow.id) {
               <button
                 type="button"
@@ -116,11 +98,6 @@
                   <strong>{{ flow.trigger.label }}</strong>
                   <small>
                     {{ flow.steps.length }} steps
-                    @if (flow.branches?.length) {
-                      · {{ flow.branches!.length }} alternate
-                      {{ flow.branches!.length === 1 ? 'path' : 'paths' }}
-                    }
-                    · {{ flow.confidence }} confidence
                   </small>
                 </span>
               </button>
@@ -142,184 +119,27 @@
             <span>{{ flow.service }}</span>
           </div>
           <h2>{{ flow.trigger.label }}</h2>
-          <p class="hero-summary">{{ flowSummary(flow) }}</p>
+          <p class="hero-summary">{{ heroLine(flow) }}</p>
         </div>
-        <span class="confidence" [attr.data-confidence]="flow.confidence">
-          <span aria-hidden="true"></span>{{ confidenceLabel(flow.confidence) }}
-        </span>
       </header>
 
       <div class="detail-scroll">
-        @if (flow.story; as story) {
-          <section class="story-card" aria-label="Flow story">
-            @if (flow.knowledge?.length) {
-              <article class="story-block knowledge-block">
-                <span class="section-kicker">What the team knows</span>
-                <ul class="fact-list">
-                  @for (fact of flow.knowledge!; track fact.id) {
-                    <li class="fact" [attr.data-kind]="fact.kind">
-                      <div class="fact-topline">
-                        <span class="fact-kind">{{ factKindLabel(fact) }}</span>
-                        <span class="verified" [class.unverified]="!fact.verified">
-                          {{ fact.verified ? 'Verified' : 'Not yet verified' }}
-                        </span>
-                      </div>
-                      <strong>{{ fact.title }}</strong>
-                      <p>{{ fact.text }}</p>
-                      @if (fact.why_it_matters) {
-                        <p class="why-matters"><b>Why it matters:</b> {{ fact.why_it_matters }}</p>
-                      }
-                      <small>
-                        Source: {{ factSource(fact) }}
-                        @if (fact.matched_by) {
-                          · shown because it {{ fact.matched_by }}
-                        }
-                      </small>
-                      @if (!fact.verified && fact.verify_hint) {
-                        <small class="verify-hint">How to check: {{ fact.verify_hint }}</small>
-                      }
-                    </li>
-                  }
-                </ul>
-              </article>
-            }
-
-            <div class="story-grid">
-              <article class="story-block">
-                <span class="section-kicker">Why it exists</span>
-                @if (story.purpose; as purpose) {
-                  <p>{{ purpose.text }}</p>
-                  <small><code>{{ purpose.file }}:{{ purpose.line }}</code></small>
-                } @else {
-                  <p>No doc comment explains this flow yet. Read the step-by-step path below.</p>
-                }
-              </article>
-
-              <article class="story-block">
-                <span class="section-kicker">Who starts it</span>
-                @if (story.triggeredBy; as trigger) {
-                  <p>
-                    {{ trigger.label }}
-                    @if (trigger.outsideRepo) {
-                      <span class="outside-chip">outside this repo</span>
-                    }
-                  </p>
-                  @if (trigger.publishers?.length) {
-                    <ul class="plain-list">
-                      @for (publisher of trigger.publishers!; track publisher.symbol) {
-                        <li><code>{{ publisher.symbol }}</code></li>
-                      }
-                    </ul>
-                  }
-                  @if (trigger.evidence) {
-                    <small>{{ trigger.evidence }}</small>
-                  }
-                }
-              </article>
-            </div>
-
-            @if (storyChecks(flow).length) {
-              <article class="story-block">
-                <span class="section-kicker">What it does · {{ storyChecks(flow).length }} checks</span>
-                <ol class="check-list">
-                  @for (member of storyChecks(flow); track member.name) {
-                    <li>
-                      <strong>{{ member.label }}</strong>
-                      @if (member.summary) {
-                        <p>{{ member.summary }}</p>
-                      }
-                      @if (member.touches.length) {
-                        <small>touches {{ touchList(member) }}</small>
-                      }
-                    </li>
-                  }
-                </ol>
-              </article>
-            }
-
-            <div class="story-grid">
-              <article class="story-block">
-                <span class="section-kicker">What it touches</span>
-                @if (story.produces.boundaries.length) {
-                  <div class="boundary-list">
-                    @for (boundary of story.produces.boundaries; track boundary.system + boundary.access) {
-                      <span><b>{{ accessLabel(boundary.access) }}</b> {{ boundary.system }}</span>
-                    }
-                  </div>
-                } @else {
-                  <p>No database, queue, or outside system was found.</p>
-                }
-              </article>
-
-              <article class="story-block">
-                <span class="section-kicker">Watch it in Datadog</span>
-                @if (story.produces.metrics.length) {
-                  <ul class="plain-list">
-                    @for (metric of story.produces.metrics; track metric.name) {
-                      <li>
-                        <code class="metric">{{ metric.name }}</code>
-                        @if (metric.type) {
-                          <small>{{ metric.type }}</small>
-                        }
-                      </li>
-                    }
-                  </ul>
-                  <small>Search this name in Datadog Metrics to see how often it runs and how long it takes.</small>
-                } @else {
-                  <p>This flow does not emit its own metric.</p>
-                }
-              </article>
-            </div>
-
-            @if (story.timing.length) {
-              <article class="story-block">
-                <span class="section-kicker">Timing settings in this repo</span>
-                <ul class="timing-list">
-                  @for (setting of story.timing; track setting.key) {
-                    <li>
-                      <code>{{ setting.key }}</code>
-                      <strong>{{ setting.human }}</strong>
-                    </li>
-                  }
-                </ul>
-                <small>These are delays and intervals inside the handler. How often the job itself is sent is decided by whoever starts it.</small>
-              </article>
-            }
-          </section>
-        } @else {
-        <section class="overview-grid" aria-label="Flow overview">
-          <article>
-            <span class="section-kicker">Trigger</span>
-            <strong>{{ flow.trigger.label }}</strong>
-            <p>{{ flow.trigger.kind.toUpperCase() }} entry point</p>
-          </article>
-          <article>
-            <span class="section-kicker">System</span>
-            <strong>{{ flow.service }}</strong>
-            <p>Service identified by the scanner</p>
-          </article>
-          <article class="boundaries-card">
-            <span class="section-kicker">Boundaries touched</span>
-            @if (boundaries(flow).length) {
-              <div class="boundary-list">
-                @for (step of boundaries(flow); track step.id) {
-                  <span><b>{{ step.kind }}</b> {{ step.label }}</span>
-                }
-              </div>
-            } @else {
-              <p>No database, queue, or external boundary was identified.</p>
-            }
-          </article>
+        <section class="tile-grid" aria-label="Flow sections">
+          @for (tile of sectionTiles(flow); track tile.id) {
+            <button type="button" class="tile" [class.accent]="tile.accent" (click)="showSection(tile.id)">
+              <span class="tile-title">{{ tile.title }}</span>
+              <span class="tile-preview">{{ tile.preview }}</span>
+            </button>
+          }
         </section>
-        }
 
         <section class="detail-section">
           <div class="section-heading">
-            <div>
-              <span class="section-kicker">Evidence-backed path</span>
-              <h3>What happens, step by step</h3>
-            </div>
-            <span>{{ flow.steps.length }} steps</span>
+            <h3>Step by step <small>{{ flow.steps.length }} steps</small></h3>
+            <button type="button" class="expand-button" (click)="showSection('sequence')" aria-label="Open sequence view">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>
+              Sequence view
+            </button>
           </div>
 
           <ol class="timeline">
@@ -330,122 +150,188 @@
                   class="step"
                   [class.selected]="selectedStepId() === step.id"
                   [attr.aria-pressed]="selectedStepId() === step.id"
+                  [attr.title]="step.doc || null"
                   (click)="selectStep(step)"
                 >
                   <span class="step-number">{{ index + 1 }}</span>
                   <span class="step-main">
-                    <span class="step-topline">
-                      <span class="step-kind">{{ step.kind }}</span>
-                      <span class="step-confidence">{{ step.confidence }}</span>
-                    </span>
+                    <span class="step-kind">{{ step.kind }}</span>
                     <strong>{{ step.label }}</strong>
-                    @if (step.symbol !== step.label) {
-                      <code>{{ step.symbol }}</code>
-                    }
-                    @if (step.doc) {
-                      <span class="step-doc">{{ step.doc }}</span>
-                    }
                   </span>
                 </button>
-                <details class="evidence">
-                  <summary>Source &amp; evidence</summary>
-                  <div>
+                @if (selectedStepId() === step.id) {
+                  <div class="step-detail">
+                    @if (step.doc) {
+                      <p>{{ step.doc }}</p>
+                    }
                     <code>{{ step.file }}:{{ step.line }}</code>
-                    <ul>
-                      @for (item of step.evidence; track item) {
-                        <li>{{ item }}</li>
-                      }
-                    </ul>
+                    <small>{{ step.evidence.join(' · ') }}</small>
                   </div>
-                </details>
+                }
               </li>
             }
           </ol>
 
           @if (flow.branches?.length) {
-            <details class="alternate-paths">
-              <summary>
-                {{ flow.branches!.length }}
-                {{ flow.branches!.length === 1 ? 'other possible source path' : 'other possible source paths' }}
-              </summary>
-              <p>
-                The main timeline above is the strongest path found. These alternatives branch
-                from the same request and may run only under certain conditions.
-              </p>
-              <ul>
-                @for (branch of flow.branches!; track $index) {
-                  <li>
-                    <strong>Path {{ $index + 1 }}</strong>
-                    <span>{{ branch[branch.length - 1].label }}</span>
-                    <small>{{ branch.length }} evidenced steps</small>
-                  </li>
-                }
-              </ul>
-            </details>
+            <p class="branch-note">
+              {{ flow.branches!.length }} other possible
+              {{ flow.branches!.length === 1 ? 'path' : 'paths' }} found. They may run only under certain conditions.
+            </p>
           }
         </section>
+      </div>
 
-        <section class="detail-section diagram-section">
-          <div class="section-heading">
-            <div>
-              <span class="section-kicker">Sequence view</span>
-              <h3>How the steps connect</h3>
-            </div>
-          </div>
-          <div class="diagram-frame">
-            @if (diagramLoading()) {
-              <div class="diagram-state"><span class="spinner" aria-hidden="true"></span>Building sequence…</div>
-            } @else if (diagramError(); as message) {
-              <div class="diagram-state">{{ message }}</div>
-            }
-            <div #diagram class="diagram" [class.hidden]="diagramLoading() || diagramError()"></div>
-          </div>
-        </section>
-
-        <section class="detail-section context-grid">
-          <article>
-            <div class="section-heading">
+      @if (openSection(); as section) {
+        <div class="modal-backdrop" (click)="closeSection()">
+          <div
+            class="modal"
+            [class.wide]="section === 'sequence'"
+            role="dialog"
+            [attr.aria-label]="sectionTitle(section)"
+            (click)="$event.stopPropagation()"
+          >
+            <header class="modal-head">
               <div>
-                <span class="section-kicker">Read this carefully</span>
-                <h3>Warnings &amp; limitations</h3>
+                <span class="section-kicker">{{ flow.trigger.label }}</span>
+                <h3>{{ sectionTitle(section) }}</h3>
               </div>
-            </div>
-            <ul class="notice-list">
-              <li>Static evidence describes possible source paths, not proof of runtime behavior.</li>
-              @for (warning of catalog()?.warnings ?? []; track $index) {
-                <li>{{ warningText(warning) }}</li>
-              }
-              @for (limit of limitationEntries(); track limit[0]) {
-                <li><code>{{ limit[0] }}</code> is {{ limit[1] }}</li>
-              }
-              @for (step of flow.steps; track step.id) {
-                @if (step.kind === 'inference-limit') {
-                  <li>{{ step.label }}: {{ step.evidence[0] }}</li>
+              <button type="button" class="modal-close" aria-label="Close" (click)="closeSection()">×</button>
+            </header>
+
+            <div class="modal-body">
+              @switch (section) {
+                @case ('team') {
+                  <ul class="fact-list">
+                    @for (fact of flow.knowledge ?? []; track fact.id) {
+                      <li class="fact" [attr.data-kind]="fact.kind">
+                        <div class="fact-topline">
+                          <span class="fact-kind">{{ factKindLabel(fact) }}</span>
+                          <span class="verified" [class.unverified]="!fact.verified">
+                            {{ fact.verified ? 'Verified' : 'Not yet verified' }}
+                          </span>
+                        </div>
+                        <strong>{{ fact.title }}</strong>
+                        <p>{{ fact.text }}</p>
+                        @if (fact.why_it_matters) {
+                          <p class="why-matters"><b>Why it matters:</b> {{ fact.why_it_matters }}</p>
+                        }
+                        <small>Source: {{ factSource(fact) }}</small>
+                        @if (!fact.verified && fact.verify_hint) {
+                          <small class="verify-hint">How to check: {{ fact.verify_hint }}</small>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+                @case ('why') {
+                  <p>{{ flowSummary(flow) }}</p>
+                  @if (flow.story?.purpose; as purpose) {
+                    <small>From the doc comment on <code>{{ purpose.source }}</code> in <code>{{ purpose.file }}:{{ purpose.line }}</code></small>
+                  }
+                }
+                @case ('trigger') {
+                  @if (flow.story?.triggeredBy; as trigger) {
+                    <p>
+                      {{ trigger.label }}
+                      @if (trigger.outsideRepo) {
+                        <span class="outside-chip">outside this repo</span>
+                      }
+                    </p>
+                    @if (trigger.publishers?.length) {
+                      <ul class="plain-list">
+                        @for (publisher of trigger.publishers!; track publisher.symbol) {
+                          <li><code>{{ publisher.symbol }}</code></li>
+                        }
+                      </ul>
+                    }
+                    @if (trigger.evidence) {
+                      <small>How Ripple knows: {{ trigger.evidence }}</small>
+                    }
+                  }
+                }
+                @case ('checks') {
+                  <ol class="check-list">
+                    @for (member of storyChecks(flow); track member.name) {
+                      <li>
+                        <strong>{{ member.label }}</strong>
+                        @if (member.summary) {
+                          <p>{{ member.summary }}</p>
+                        }
+                        @if (member.touches.length) {
+                          <small>touches {{ touchList(member) }}</small>
+                        }
+                      </li>
+                    }
+                  </ol>
+                }
+                @case ('touches') {
+                  @if (flow.story?.produces?.boundaries?.length) {
+                    <div class="boundary-list">
+                      @for (boundary of flow.story!.produces.boundaries; track boundary.system + boundary.access) {
+                        <span><b>{{ accessLabel(boundary.access) }}</b> {{ boundary.system }}</span>
+                      }
+                    </div>
+                  } @else {
+                    <p>No database, queue, or outside system was found.</p>
+                  }
+                }
+                @case ('datadog') {
+                  <ul class="plain-list">
+                    @for (metric of flow.story?.produces?.metrics ?? []; track metric.name) {
+                      <li><code class="metric">{{ metric.name }}</code> <small>{{ metric.type }}</small></li>
+                    }
+                  </ul>
+                  <small>Search this name in Datadog Metrics to see how often it runs and how long it takes.</small>
+                }
+                @case ('timing') {
+                  <ul class="timing-list">
+                    @for (setting of flow.story?.timing ?? []; track setting.key) {
+                      <li>
+                        <code>{{ setting.key }}</code>
+                        <strong>{{ setting.human }}</strong>
+                      </li>
+                    }
+                  </ul>
+                  <small>Delays and intervals inside the handler. How often the job itself runs is decided by whoever starts it.</small>
+                }
+                @case ('notes') {
+                  <ul class="notice-list">
+                    <li>Ripple reads the code. It shows possible paths, not proof of what ran in production.</li>
+                    @for (warning of catalog()?.warnings ?? []; track $index) {
+                      <li>{{ warningText(warning) }}</li>
+                    }
+                    @for (step of flow.steps; track step.id) {
+                      @if (step.kind === 'inference-limit') {
+                        <li>{{ step.label }}: {{ step.evidence[0] }}</li>
+                      }
+                    }
+                  </ul>
+                  <dl class="glossary">
+                    @for (entry of glossaryEntries(flow); track entry[0]) {
+                      <div>
+                        <dt>
+                          <button type="button" (click)="selectTerm(entry[0])">{{ entry[0] }}</button>
+                        </dt>
+                        <dd>{{ entry[1] }}</dd>
+                      </div>
+                    }
+                  </dl>
+                }
+                @case ('sequence') {
+                  <div class="diagram-frame">
+                    @if (diagramLoading()) {
+                      <div class="diagram-state"><span class="spinner" aria-hidden="true"></span>Building sequence…</div>
+                    } @else if (diagramError(); as message) {
+                      <div class="diagram-state">{{ message }}</div>
+                    }
+                    <div #diagram class="diagram" [class.hidden]="diagramLoading() || diagramError()"></div>
+                  </div>
                 }
               }
-            </ul>
-          </article>
-
-          <article>
-            <div class="section-heading">
-              <div>
-                <span class="section-kicker">Plain language</span>
-                <h3>Glossary</h3>
-              </div>
             </div>
-            <dl class="glossary">
-              @for (entry of glossaryEntries(flow); track entry[0]) {
-                <div>
-                  <dt>
-                    <button type="button" (click)="selectTerm(entry[0])">{{ entry[0] }}</button>
-                  </dt>
-                  <dd>{{ entry[1] }}</dd>
-                </div>
-              }
-            </dl>
-          </article>
-        </section>
-      </div>
+          </div>
+        </div>
+      }
     } @else if (!loading() && !error()) {
       <div class="state detail-empty">
         <strong>No request flows found</strong>
