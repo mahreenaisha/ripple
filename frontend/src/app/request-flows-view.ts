@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnDestroy,
@@ -16,6 +17,8 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import mermaid from 'mermaid';
 import {
+  FlowKnowledgeFact,
+  FlowStoryFanOutMember,
   RequestFlow,
   RequestFlowCatalog,
   RequestFlowMermaid,
@@ -24,6 +27,41 @@ import {
 } from './request-flow.types';
 
 type FilterValue = 'all' | string;
+
+export const JOB_FILTER = 'job';
+
+export type FlowSection =
+  | 'team'
+  | 'why'
+  | 'trigger'
+  | 'checks'
+  | 'touches'
+  | 'datadog'
+  | 'timing'
+  | 'sequence';
+
+export interface SectionTile {
+  id: FlowSection;
+  title: string;
+  preview: string;
+  accent?: boolean;
+}
+
+const SECTION_TITLES: Record<FlowSection, string> = {
+  team: 'What the team knows',
+  why: 'Why it exists',
+  trigger: 'Who starts it',
+  checks: 'What it does',
+  touches: 'What it touches',
+  datadog: 'Watch in Datadog',
+  timing: 'Timing settings',
+  sequence: 'Sequence view',
+};
+
+function firstSentence(text: string, max = 90): string {
+  const sentence = (text.match(/^.*?[.!?](\s|$)/)?.[0] ?? text).trim();
+  return sentence.length > max ? `${sentence.slice(0, max - 1).trimEnd()}…` : sentence;
+}
 
 let flowRenderSequence = 0;
 
@@ -36,6 +74,12 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
   @Input() initialFlowId: string | null = null;
   @Output() readonly selectionContext = new EventEmitter<RequestFlowSelectionContext | null>();
   @ViewChild('diagram') private readonly diagram?: ElementRef<HTMLDivElement>;
+  @ViewChild('diagramLarge') private set diagramLarge(ref: ElementRef<HTMLDivElement> | undefined) {
+    if (ref && this.diagram) {
+      ref.nativeElement.innerHTML = this.diagram.nativeElement.innerHTML;
+    }
+  }
+  protected readonly jobFilter = JOB_FILTER;
 
   private readonly http = inject(HttpClient);
   private mermaidRequest?: Subscription;
@@ -56,6 +100,10 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
   protected readonly triggerKinds = computed(() =>
     [...new Set((this.catalog()?.flows ?? []).map((flow) => flow.trigger.kind))].sort(),
   );
+  protected readonly hasJobs = computed(() =>
+    (this.catalog()?.flows ?? []).some((flow) => this.isBackground(flow)),
+  );
+  protected readonly openSection = signal<FlowSection | null>(null);
   protected readonly confidenceLevels = computed(() =>
     [...new Set((this.catalog()?.flows ?? []).map((flow) => flow.confidence))].sort(
       (a, b) => this.confidenceRank(a) - this.confidenceRank(b),
@@ -64,7 +112,11 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
   protected readonly filteredFlows = computed(() => {
     const query = this.query().trim().toLocaleLowerCase();
     return (this.catalog()?.flows ?? []).filter((flow) => {
-      if (this.triggerFilter() !== 'all' && flow.trigger.kind !== this.triggerFilter()) {
+      if (this.triggerFilter() === JOB_FILTER) {
+        if (!this.isBackground(flow)) {
+          return false;
+        }
+      } else if (this.triggerFilter() !== 'all' && flow.trigger.kind !== this.triggerFilter()) {
         return false;
       }
       if (this.confidenceFilter() !== 'all' && flow.confidence !== this.confidenceFilter()) {
@@ -160,6 +212,7 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
       return;
     }
     this.selectedStepId.set(null);
+    this.openSection.set(null);
     this.selectedFlowId.set(flow.id);
     this.selectionContext.emit({ flowId: flow.id });
     this.loadMermaid(flow.id);
@@ -188,6 +241,111 @@ export class RequestFlowsViewComponent implements OnInit, AfterViewInit, OnDestr
       context.stepId = stepId;
     }
     this.selectionContext.emit(context);
+  }
+
+  @HostListener('document:keydown.escape')
+  protected closeSection(): void {
+    this.openSection.set(null);
+  }
+
+  protected showSection(section: FlowSection): void {
+    this.openSection.set(section);
+  }
+
+  protected sectionTitle(section: FlowSection): string {
+    return SECTION_TITLES[section];
+  }
+
+  protected isBackground(flow: RequestFlow): boolean {
+    return flow.story?.category === 'background-job';
+  }
+
+  protected flowSummary(flow: RequestFlow): string {
+    return flow.story?.summary || flow.story?.purpose?.text || this.beginnerSummary(flow);
+  }
+
+  protected sectionTiles(flow: RequestFlow): SectionTile[] {
+    const story = flow.story;
+    const tiles: SectionTile[] = [];
+    const facts = flow.knowledge ?? [];
+    if (facts.length) {
+      const unverified = facts.filter((fact) => !fact.verified).length;
+      tiles.push({
+        id: 'team',
+        title: SECTION_TITLES.team,
+        preview: `${facts.length} ${facts.length === 1 ? 'fact' : 'facts'}${unverified ? ` · ${unverified} not verified` : ''}`,
+        accent: true,
+      });
+    }
+    if (!story) {
+      return tiles;
+    }
+    tiles.push({
+      id: 'why',
+      title: SECTION_TITLES.why,
+      preview: story.purpose ? firstSentence(story.purpose.text, 70) : 'No doc comment found',
+    });
+    const trigger = story.triggeredBy;
+    tiles.push({
+      id: 'trigger',
+      title: SECTION_TITLES.trigger,
+      preview: trigger?.ownerHint
+        ? `${trigger.ownerHint} · outside this repo`
+        : trigger?.publishers?.length
+          ? `${trigger.publishers.length} publisher${trigger.publishers.length === 1 ? '' : 's'} in this repo`
+          : firstSentence(trigger?.label ?? flow.trigger.label, 60),
+    });
+    const checks = this.storyChecks(flow).length;
+    if (checks) {
+      tiles.push({ id: 'checks', title: SECTION_TITLES.checks, preview: `${checks} checks` });
+    }
+    const systems = [...new Set(story.produces.boundaries.map((boundary) => boundary.system))];
+    if (systems.length) {
+      tiles.push({ id: 'touches', title: SECTION_TITLES.touches, preview: firstSentence(systems.join(', '), 60) });
+    }
+    if (story.produces.metrics.length) {
+      tiles.push({ id: 'datadog', title: SECTION_TITLES.datadog, preview: story.produces.metrics[0].name });
+    }
+    if (story.timing.length) {
+      tiles.push({
+        id: 'timing',
+        title: SECTION_TITLES.timing,
+        preview: `${story.timing.length} ${story.timing.length === 1 ? 'setting' : 'settings'}`,
+      });
+    }
+    return tiles;
+  }
+
+  protected storyChecks(flow: RequestFlow): FlowStoryFanOutMember[] {
+    const members = (flow.story?.fanOut ?? []).flatMap((group) => group.members);
+    return this.isBackground(flow) || members.some((member) => member.touches.length)
+      ? members
+      : [];
+  }
+
+  protected touchList(member: FlowStoryFanOutMember): string {
+    return member.touches.map((touch) => touch.system).join(', ');
+  }
+
+  protected accessLabel(access: string): string {
+    return (
+      { write: 'writes to', read: 'reads from', send: 'sends to', check: 'checks' }[access] ?? access
+    );
+  }
+
+  protected factSource(fact: FlowKnowledgeFact): string {
+    const source = fact.source;
+    if (source.type === 'person') {
+      return [source.name, source.role].filter(Boolean).join(', ');
+    }
+    if (source.path) {
+      return source.line ? `${source.path}:${source.line}` : source.path;
+    }
+    return source.url ?? source.type;
+  }
+
+  protected factKindLabel(fact: FlowKnowledgeFact): string {
+    return { tribal: 'Team knowledge', doc: 'Design doc', rule: 'Rule' }[fact.kind] ?? fact.kind;
   }
 
   protected beginnerSummary(flow: RequestFlow): string {
