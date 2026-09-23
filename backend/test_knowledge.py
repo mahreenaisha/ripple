@@ -19,13 +19,13 @@ from knowledge import (
 KNOWLEDGE_YAML = """
 schema_version: 1
 facts:
-  - id: heartbeat-cadence
-    kind: tribal
-    title: Runs every 5 minutes
-    text: TenancyAS sends the heartbeat every 5 minutes.
+  - id: heartbeat-delay
+    kind: doc
+    title: Heartbeat notifications wait 2 minutes
+    text: NotificationSettings HeartbeatDelay is 00:02:00.
     applies_to:
       triggers: [TenancyDevicesHeartbeat]
-    source: {type: person, name: Kevin Farrington, role: DeviceAS lead}
+    source: {type: doc, path: server/appsettings.json, line: 63}
     verified: false
   - id: tdi
     kind: rule
@@ -102,7 +102,7 @@ class KnowledgeModuleTests(unittest.TestCase):
     def test_matches_facts_by_trigger_and_story_boundary_with_rules_first(self):
         knowledge = load_knowledge(self.path)
         facts = facts_for_flow(knowledge, artifact()["flows"][0])
-        self.assertEqual([fact["id"] for fact in facts], ["tdi", "heartbeat-cadence"])
+        self.assertEqual([fact["id"] for fact in facts], ["tdi", "heartbeat-delay"])
         self.assertEqual(facts[0]["matched_by"], "touches OpenSearch")
         self.assertEqual(facts[1]["matched_by"], "trigger TenancyDevicesHeartbeat")
         self.assertEqual(facts_for_flow(knowledge, artifact()["flows"][1]), [])
@@ -130,7 +130,8 @@ class KnowledgeModuleTests(unittest.TestCase):
     def test_checked_in_deviceas_knowledge_is_valid(self):
         knowledge = load_knowledge(main.DEFAULT_KNOWLEDGE)
         ids = {fact["id"] for fact in knowledge["facts"]}
-        self.assertTrue({"heartbeat-cadence", "heartbeat-purpose", "tenancy-data-isolation"} <= ids)
+        self.assertEqual(ids, {"heartbeat-purpose", "tenancy-data-isolation"})
+        self.assertTrue(all(fact["source"]["type"] != "person" for fact in knowledge["facts"]))
         self.assertIn("Scalars Access", knowledge["terms"])
 
 
@@ -159,7 +160,7 @@ class KnowledgeApiTests(unittest.TestCase):
 
     def test_flow_api_serves_attached_facts(self):
         flow = self.client.get("/request-flows/flow-heartbeat").json()
-        self.assertEqual([fact["id"] for fact in flow["knowledge"]], ["tdi", "heartbeat-cadence"])
+        self.assertEqual([fact["id"] for fact in flow["knowledge"]], ["tdi", "heartbeat-delay"])
         self.assertEqual(self.client.get("/knowledge").json()["terms"]["TDI"], "Tenancy data isolation.")
 
     def test_offline_flow_answer_uses_story_and_names_unverified_source(self):
@@ -173,13 +174,13 @@ class KnowledgeApiTests(unittest.TestCase):
         body = response.json()
         self.assertEqual(body["mode"], "offline")
         self.assertIn("Runs when TenancyAS sends a heartbeat", body["response"])
-        self.assertIn("Kevin Farrington, DeviceAS lead, not yet verified", body["response"])
+        self.assertIn("server/appsettings.json:63, not yet verified", body["response"])
 
     def test_flow_prompt_carries_story_and_team_knowledge(self):
         flows = main._load_request_flows()
         prompt = main._flow_chat_prompt(main.ChatContext(type="flow", flow_id="flow-heartbeat"), flows)
         self.assertIn('"team_knowledge"', prompt)
-        self.assertIn("Kevin Farrington", prompt)
+        self.assertIn("server/appsettings.json:63", prompt)
         self.assertIn("It runs 8 checks", prompt)
 
 
