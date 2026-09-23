@@ -79,7 +79,9 @@ export class App implements OnInit {
       return null;
     }
     const commit = current.source?.commit?.slice(0, 7);
+    const scannedAt = Date.parse(current.source?.scannedAt ?? '');
     return {
+      stale: Number.isNaN(scannedAt) || Date.now() - scannedAt > 24 * 3600000,
       label: commit
         ? `${current.name} @ ${commit} · scanned ${timeAgo(current.source?.scannedAt)}`
         : `${current.name} · scanned ${timeAgo(current.source?.scannedAt)}`,

@@ -116,6 +116,12 @@
   white-space: nowrap;
 }
 
+.freshness.stale {
+  border-color: rgb(232 167 64 / 40%);
+  background: rgb(232 167 64 / 10%);
+  color: #edb961;
+}
+
 .add-repo {
   width: 1.7rem;
   height: 1.7rem;
