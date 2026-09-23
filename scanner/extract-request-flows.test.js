@@ -297,3 +297,174 @@ test("honors depth and flow caps and ignores test/generated/vendor code", (t) =>
   assert.equal(result.flows[0].trigger.label, "GET /ok");
   assert.equal(result.flows[0].steps.at(-1).kind, "inference-limit");
 });
+
+test("builds a plain-English story for a background heartbeat job", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/Queue/JobQueueMessageTypeDiscriminator.cs",
+    `namespace Acme.DeviceAS.Server.Queue;
+class JobQueueMessageTypeDiscriminator {
+  static System.Type Resolve(string name) => name switch {
+    "TenancyDevicesHeartbeat" => typeof(TenancyDevicesHeartbeat),
+  };
+}
+`,
+  );
+  repo.write(
+    "server/Queue/Handlers/TenancyDevicesHeartbeatHandler.cs",
+    `using Acme.DeviceAS.Core;
+using Acme.Shared.Models.TenancyMessages;
+namespace Acme.DeviceAS.Server.Queue.Handlers;
+public class TenancyDevicesHeartbeatHandler(IMetricsPublisher _metricsPublisher, ITenancyBackgroundProvider _tenancyBackgroundProvider)
+    : TenancyEventMessageHandlerBase<TenancyDevicesHeartbeat>
+{
+    private const string MetricName = "queue.tenancy_devices_heartbeat";
+    protected override async Task<bool> HandleMessage(TenancyDevicesHeartbeat message)
+    {
+        await _tenancyBackgroundProvider.ValidateDevicesHealth(message.TenantID);
+        _metricsPublisher.Histogram(MetricName, 1);
+        return true;
+    }
+}
+`,
+  );
+  repo.write(
+    "server/Core/ITenancyBackgroundProvider.cs",
+    `namespace Acme.DeviceAS.Core;
+public interface ITenancyBackgroundProvider
+{
+    /// <summary>
+    /// Validates the health of acquisition controllers for a tenant.
+    /// </summary>
+    Task ValidateDevicesHealth(string tenantId);
+}
+`,
+  );
+  repo.write(
+    "server/Core/TenancyBackgroundProvider.cs",
+    `using System.Collections.Generic;
+namespace Acme.DeviceAS.Core;
+public class TenancyBackgroundProvider(IEnumerable<IValidator> validators) : ITenancyBackgroundProvider
+{
+    /// <inheritdoc/>
+    public async Task ValidateDevicesHealth(string tenantId)
+    {
+        foreach (var validator in validators) { await validator.Validate(tenantId); }
+    }
+}
+`,
+  );
+  repo.write(
+    "server/Core/Validators.cs",
+    `using Acme.OpenSearch.Abstractions;
+namespace Acme.DeviceAS.Core;
+public interface IValidator { Task Validate(string tenantId); }
+/// <summary>Enqueues error events for expired heartbeats.</summary>
+public class HeartbeatValidator(IEntityProvider entityProvider) : IValidator
+{
+    public async Task Validate(string tenantId) { }
+}
+/// <summary>Renews certificates that are about to expire.</summary>
+public class CertificateRenewalValidator : IValidator
+{
+    public async Task Validate(string tenantId) { }
+}
+`,
+  );
+  repo.write(
+    "server/appsettings.json",
+    `{
+  "NotificationSettings": {
+    "HeartbeatDelay": "00:02:00",
+    "UnrelatedTimeout": "00:00:30"
+  }
+}
+`,
+  );
+
+  const result = extractRequestFlows(repo.repository, [service("server", "server", "C#")]);
+  const flow = result.flows.find((item) => item.trigger.label === "TenancyDevicesHeartbeat");
+  assert.ok(flow, "heartbeat queue flow is extracted");
+  const { story } = flow;
+
+  assert.equal(flow.trigger.message_type, "TenancyDevicesHeartbeat");
+  assert.equal(story.category, "background-job");
+  assert.equal(story.purpose.text, "Validates the health of acquisition controllers for a tenant.");
+  assert.deepEqual(
+    {
+      outsideRepo: story.triggeredBy.outsideRepo,
+      ownerHint: story.triggeredBy.ownerHint,
+      namespace: story.triggeredBy.namespace,
+    },
+    { outsideRepo: true, ownerHint: "TenancyAS", namespace: "Acme.Shared.Models.TenancyMessages" },
+  );
+  assert.deepEqual(
+    story.fanOut[0].members.map((member) => [member.label, member.summary]),
+    [
+      ["Certificate renewal", "Renews certificates that are about to expire."],
+      ["Heartbeat", "Enqueues error events for expired heartbeats."],
+    ],
+  );
+  assert.deepEqual(story.produces.metrics.map((metric) => metric.name), ["queue.tenancy_devices_heartbeat"]);
+  assert.deepEqual(
+    story.produces.boundaries.map((item) => [item.system, item.access]),
+    [["OpenSearch", "check"]],
+  );
+  assert.deepEqual(
+    story.timing.map((item) => [item.key, item.human]),
+    [["NotificationSettings:HeartbeatDelay", "2 minutes"]],
+  );
+  assert.match(story.summary, /^Runs when TenancyAS sends a "TenancyDevicesHeartbeat" message, outside this repo\./);
+  assert.match(story.summary, /It runs 2 checks: certificate renewal and heartbeat\./);
+  assert.match(story.summary, /Datadog as queue\.tenancy_devices_heartbeat/);
+});
+
+test("marks HTTP triggers as user requests and keeps in-repo messages inside the repo", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/Discriminator.cs",
+    `namespace Acme.DeviceAS.Server;
+class Discriminator {
+  static System.Type Resolve(string name) => name switch {
+    "StatusUpdateRequestMessage" => typeof(StatusUpdateRequestMessage),
+  };
+}
+`,
+  );
+  repo.write(
+    "server/StatusUpdateRequestMessage.cs",
+    "namespace Acme.DeviceAS.Server;\npublic class StatusUpdateRequestMessage { }\n",
+  );
+  repo.write(
+    "server/StatusHandler.cs",
+    `namespace Acme.DeviceAS.Server;
+public class StatusHandler : MessageHandlerBase<StatusUpdateRequestMessage>
+{
+    public Task<bool> HandleMessage(StatusUpdateRequestMessage message) { return Task.FromResult(true); }
+}
+`,
+  );
+  repo.write(
+    "server/StatusPublisher.cs",
+    `namespace Acme.DeviceAS.Server;
+public class StatusPublisher
+{
+    public void Publish() { var message = new StatusUpdateRequestMessage(); }
+}
+`,
+  );
+  repo.write("web/app.js", 'app.get("/health", health);\nfunction health() { return 1; }\n');
+
+  const result = extractRequestFlows(repo.repository, [
+    service("server", "server", "C#"),
+    service("web", "web", "Node.js"),
+  ]);
+  const queue = result.flows.find((flow) => flow.trigger.kind === "queue");
+  const api = result.flows.find((flow) => flow.trigger.kind === "api");
+
+  assert.equal(queue.story.category, "device-event");
+  assert.equal(queue.story.triggeredBy.outsideRepo, false);
+  assert.deepEqual(queue.story.triggeredBy.publishers.map((item) => item.symbol), ["StatusPublisher.Publish"]);
+  assert.equal(api.story.category, "user-request");
+  assert.equal(api.story.summary, "Runs when a client calls GET /health.");
+});
