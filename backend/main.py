@@ -11,6 +11,7 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 from graph_builder import build_graph, graph_to_json, load_architecture_graph
+from knowledge import KnowledgeError, attach_knowledge, load_knowledge
 from request_flows import (
     RequestFlowError,
     flow_to_mermaid,
@@ -39,6 +40,7 @@ DEFAULT_GRAPH = REPO_ROOT / "deviceas-snapshot" / "graph.json"
 DEFAULT_MERMAID = REPO_ROOT / "deviceas-snapshot" / "architecture.mmd"
 DEFAULT_ENTRY_POINTS = REPO_ROOT / "deviceas-snapshot" / "entry-points.json"
 DEFAULT_REQUEST_FLOWS = REPO_ROOT / "deviceas-snapshot" / "request-flows.json"
+DEFAULT_KNOWLEDGE = REPO_ROOT / "knowledge" / "deviceas.yaml"
 
 
 class ChatContext(BaseModel):
@@ -209,12 +211,20 @@ def _load_entry_points() -> dict:
     return json.loads(path.read_text())
 
 
+def _load_knowledge() -> dict:
+    try:
+        return load_knowledge(_resolve_path("KNOWLEDGE_PATH", DEFAULT_KNOWLEDGE))
+    except KnowledgeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
 def _load_request_flows() -> dict:
     path = _resolve_path("REQUEST_FLOWS_PATH", DEFAULT_REQUEST_FLOWS)
     try:
-        return load_request_flows(path)
+        flows = load_request_flows(path)
     except RequestFlowError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return attach_knowledge(flows, _load_knowledge())
 
 
 def get_dependents(G, node_id: str) -> list[str]:
@@ -376,6 +386,7 @@ def _compact_flow_evidence(flow: dict, step_id: int | None = None) -> dict:
             "symbol": step.get("symbol"),
             "file": step.get("file"),
             "line": step.get("line"),
+            **({"doc": step["doc"]} if step.get("doc") else {}),
         }
         for step in keep
     ]
@@ -387,6 +398,31 @@ def _compact_flow_evidence(flow: dict, step_id: int | None = None) -> dict:
         "step_count": len(raw_steps),
         "steps": steps,
     }
+    story = flow.get("story")
+    if story:
+        compact["story"] = {
+            "category": story.get("category"),
+            "summary": story.get("summary"),
+            "triggered_by": (story.get("triggeredBy") or {}).get("label"),
+            "checks": [
+                f"{member['label']}: {member.get('summary', '')}".strip(": ")
+                for group in story.get("fanOut", [])
+                for member in group.get("members", [])
+            ][:10],
+            "metrics": [metric["name"] for metric in story.get("produces", {}).get("metrics", [])],
+            "touches": [item["system"] for item in story.get("produces", {}).get("boundaries", [])],
+            "settings": [f"{item['key']} = {item['human']}" for item in story.get("timing", [])],
+        }
+    if flow.get("knowledge"):
+        compact["team_knowledge"] = [
+            {
+                "title": fact["title"],
+                "text": fact["text"],
+                "source": _fact_source_label(fact),
+                "verified": fact["verified"],
+            }
+            for fact in flow["knowledge"]
+        ]
     if step_id is not None:
         selected = get_step(flow, step_id)
         if selected:
@@ -399,6 +435,16 @@ def _compact_flow_evidence(flow: dict, step_id: int | None = None) -> dict:
                 "line": selected.get("line"),
             }
     return compact
+
+
+def _fact_source_label(fact: dict) -> str:
+    source = fact.get("source") or {}
+    if source.get("type") == "person":
+        role = f", {source['role']}" if source.get("role") else ""
+        return f"{source.get('name', 'a teammate')}{role}"
+    if source.get("path"):
+        return f"{source['path']}:{source['line']}" if source.get("line") else source["path"]
+    return source.get("type", "unknown")
 
 
 def _flow_chat_prompt(context: ChatContext, flows: dict) -> str:
@@ -414,9 +460,12 @@ def _flow_chat_prompt(context: ChatContext, flows: dict) -> str:
         if flow:
             evidence["flow"] = _compact_flow_evidence(flow, context.step_id)
     return (
-        "You are Ripple. Answer in 2-4 short plain sentences. No markdown, "
-        "no lists, no follow-up questions. Use only the evidence below; do "
-        "not invent steps. Mention when something is static inference.\n"
+        "You are Ripple, explaining code to a new engineer. Answer in 2-4 short "
+        "plain sentences. No markdown, no lists, no follow-up questions. Use only "
+        "the evidence below and do not invent steps. For why-questions, rely on "
+        "story.summary and team_knowledge. When you use team knowledge, name its "
+        "source, and say so if it is not verified. Mention when something is "
+        "static inference rather than runtime proof.\n"
         f"Evidence: {json.dumps(evidence, separators=(',', ':'))}"
     )
 
@@ -503,6 +552,18 @@ def _offline_flow_explanation(flows: dict, context: ChatContext) -> str:
             f"{step['line']} with {step['confidence']} confidence. "
             f"Evidence: {evidence} This is static scanner evidence, not "
             "proof of runtime behavior."
+        )
+
+    story = flow.get("story") or {}
+    if story.get("summary"):
+        facts = " ".join(
+            f"{fact['title']}: {fact['text']} (Source: {_fact_source_label(fact)}"
+            f"{'' if fact['verified'] else ', not yet verified'}.)"
+            for fact in flow.get("knowledge", [])
+        )
+        return (
+            f"{story['summary']} {facts}".strip()
+            + " This comes from static source evidence and team notes, not a runtime trace."
         )
 
     descriptions = []
@@ -631,6 +692,7 @@ def root():
             "/request-flows",
             "/request-flows/{flow_id}",
             "/request-flows/{flow_id}/mermaid",
+            "/knowledge",
             "/simulate/failure/{node_id}",
             "/chat",
             "/chat/status",
@@ -670,6 +732,11 @@ def get_service_entry_points(service_id: str):
 @app.get("/request-flows")
 def get_request_flow_catalog():
     return request_flow_catalog(_load_request_flows())
+
+
+@app.get("/knowledge")
+def get_knowledge():
+    return _load_knowledge()
 
 
 @app.get("/request-flows/{flow_id}")

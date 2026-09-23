@@ -1,0 +1,75 @@
+# Team knowledge that the code alone cannot tell a new engineer.
+# Each fact names where it came from and whether someone has checked it.
+# applies_to matches flows by trigger label/message type, step class or symbol,
+# a data store or external system the flow touches, or a flow category.
+schema_version: 1
+repo: DeviceAS
+
+facts:
+  - id: heartbeat-cadence
+    kind: tribal
+    title: Runs every 5 minutes, scheduled outside this repo
+    text: >-
+      TenancyAS sends a TenancyDevicesHeartbeat message to DeviceAS every 5 minutes
+      for each tenant. The schedule lives in TenancyAS or its AWS scheduler, not in
+      DeviceAS, which is why reading this repo alone never tells you the cadence.
+    applies_to:
+      triggers: [TenancyDevicesHeartbeat]
+    source:
+      type: person
+      name: Kevin Farrington
+      role: DeviceAS lead
+    verified: false
+    verify_hint: >-
+      Confirm the schedule rule in the TenancyAS repo or in the AWS EventBridge
+      Scheduler console for the environment.
+
+  - id: heartbeat-purpose
+    kind: doc
+    title: Why the heartbeat exists
+    text: >-
+      Edge devices prove they are alive by checking in. Each acquisition controller
+      stores NextHeartbeat, the time it is next expected to report. The heartbeat job
+      is how DeviceAS notices controllers that went quiet: HeartbeatValidator flags
+      controllers whose NextHeartbeat has passed, marks HeartbeatError, and enqueues a
+      ControllerHeartbeatErrorMessage so their systems are updated. The same pass also
+      renews and deletes certificates, and syncs reservations and edge deployments.
+    applies_to:
+      triggers: [TenancyDevicesHeartbeat, ControllerHeartbeatErrorMessage]
+    source:
+      type: doc
+      path: docs/design/opensearch-data-model-design.md
+      line: 385
+    verified: true
+
+  - id: tenancy-data-isolation
+    kind: rule
+    title: Tenancy data isolation (TDI) applies to OpenSearch
+    text: >-
+      Every OpenSearch document id must start with the tenant id, and tenant reads and
+      writes must go through the tenant-data route, using the per-tenant service user
+      that TenancyAS provisions. New tenant data should reuse this route instead of a
+      separate table or index.
+    why_it_matters: >-
+      A past DeviceAS change missed this link-up and created a new database table
+      instead, which cost time and effort before the team realized the data should go
+      through the existing tenant-isolated route.
+    applies_to:
+      boundaries: [OpenSearch]
+    source:
+      type: doc
+      path: docs/design/opensearch-data-model-design.md
+      line: 737
+    verified: true
+
+terms:
+  Scalars Access: >-
+    Waters' web product, hosted at *.scalars-access.com, where users view lab devices
+    in Lab Monitor. DeviceAS builds links into its system, controller, and reservation
+    pages. It is not a store of scalar values.
+  TDI: >-
+    Tenancy data isolation. The platform rule that keeps each tenant's OpenSearch data
+    separate, enforced by per-tenant service users and tenant-prefixed document ids.
+  heartbeat: >-
+    A periodic proof-of-life check. Devices report on a schedule, and a missed report
+    means the device may be offline or broken.
