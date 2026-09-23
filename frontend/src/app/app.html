@@ -91,7 +91,10 @@
           </div>
         </div>
         <div class="panel-body">
-          <app-request-flows-view (selectionContext)="setFlowSelectionContext($event)" />
+          <app-request-flows-view
+            [initialFlowId]="pendingFlowId()"
+            (selectionContext)="setFlowSelectionContext($event)"
+          />
         </div>
       </section>
     } @else if (activeTab() === 'snapshot') {
@@ -99,11 +102,11 @@
         <div class="panel-head">
           <div>
             <h2>Snapshot</h2>
-            <p>Grouped Mermaid view of services, data stores, and externals</p>
+            <p>Layered view of entry points, services, data stores, and outside systems</p>
           </div>
         </div>
         <div class="panel-body">
-          <app-snapshot-view />
+          <app-snapshot-view (openFlow)="openFlow($event)" />
         </div>
       </section>
     } @else {

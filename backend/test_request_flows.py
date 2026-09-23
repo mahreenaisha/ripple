@@ -139,6 +139,19 @@ class RequestFlowApiTests(unittest.TestCase):
         self.assertIn("sequenceDiagram", mermaid.json()["mermaid"])
         self.assertEqual(self.client.get("/graph").status_code, 200)
 
+    def test_team_diagrams_are_served_and_default_to_empty(self):
+        team_path = Path(self.directory.name) / "team-diagrams.json"
+        with patch.dict(os.environ, {"TEAM_DIAGRAMS_PATH": str(team_path)}):
+            self.assertEqual(
+                self.client.get("/team-diagrams").json(), {"diagrams": [], "docs": []}
+            )
+            team_path.write_text(
+                json.dumps({"diagrams": [{"title": "Onboarding"}], "docs": []}),
+                encoding="utf-8",
+            )
+            body = self.client.get("/team-diagrams").json()
+        self.assertEqual(body["diagrams"][0]["title"], "Onboarding")
+
     def test_chat_status_has_no_secret_and_reports_unavailable(self):
         status = self.client.get("/chat/status")
         self.assertEqual(status.status_code, 200)

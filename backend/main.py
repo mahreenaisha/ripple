@@ -41,6 +41,7 @@ DEFAULT_MERMAID = REPO_ROOT / "deviceas-snapshot" / "architecture.mmd"
 DEFAULT_ENTRY_POINTS = REPO_ROOT / "deviceas-snapshot" / "entry-points.json"
 DEFAULT_REQUEST_FLOWS = REPO_ROOT / "deviceas-snapshot" / "request-flows.json"
 DEFAULT_KNOWLEDGE = REPO_ROOT / "knowledge" / "deviceas.yaml"
+DEFAULT_TEAM_DIAGRAMS = REPO_ROOT / "deviceas-snapshot" / "team-diagrams.json"
 
 
 class ChatContext(BaseModel):
@@ -693,6 +694,7 @@ def root():
             "/request-flows/{flow_id}",
             "/request-flows/{flow_id}/mermaid",
             "/knowledge",
+            "/team-diagrams",
             "/simulate/failure/{node_id}",
             "/chat",
             "/chat/status",
@@ -737,6 +739,14 @@ def get_request_flow_catalog():
 @app.get("/knowledge")
 def get_knowledge():
     return _load_knowledge()
+
+
+@app.get("/team-diagrams")
+def get_team_diagrams():
+    path = _resolve_path("TEAM_DIAGRAMS_PATH", DEFAULT_TEAM_DIAGRAMS)
+    if not path.is_file():
+        return {"diagrams": [], "docs": []}
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 @app.get("/request-flows/{flow_id}")

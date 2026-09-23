@@ -4,6 +4,7 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
+  overflow-y: auto;
   background: #0e1421;
 }
 
@@ -81,25 +82,257 @@
   cursor: default;
 }
 
-.diagram {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  padding: 1.25rem;
+.toolbar {
+  flex-wrap: wrap;
 }
 
-.diagram.hidden {
+.snapshot-body {
+  display: flex;
+  flex: 1;
+  min-height: 360px;
+}
+
+.canvas-wrap {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.canvas {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.canvas.hidden {
   display: none;
 }
 
-.diagram :is(svg) {
+.kicker {
+  color: #7f93a7;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.node-panel {
+  display: flex;
+  flex: 0 0 300px;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 0;
+  padding: 1rem;
+  border-left: 1px solid var(--border-soft);
+  background: rgb(11 18 28 / 80%);
+  overflow-y: auto;
+}
+
+.node-panel header,
+.diagram-dialog header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.node-panel h3,
+.diagram-dialog h3 {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.node-panel p {
+  margin: 0;
+  color: #c8d3df;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.node-panel small {
+  color: var(--text-muted);
+  font-size: 0.66rem;
+}
+
+.close {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.flow-links {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flow-links button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.7rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.flow-links button:hover {
+  border-color: rgb(61 187 154 / 35%);
+  background: rgb(61 187 154 / 8%);
+}
+
+.flow-links .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flow-links .kind {
+  flex: 0 0 auto;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: rgb(29 111 184 / 16%);
+  color: #83bde9;
+  font-size: 0.56rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.flow-links .kind[data-kind='background-job'] {
+  background: rgb(168 130 232 / 14%);
+  color: #c2a8f0;
+}
+
+.team-strip {
+  flex: 0 0 auto;
+  padding: 0.6rem 1rem 0.8rem;
+  border-top: 1px solid var(--border-soft);
+}
+
+.strip-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.45rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.team-card {
+  display: grid;
+  flex: 0 0 210px;
+  gap: 0.2rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: rgb(20 28 36 / 70%);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.team-card.doc {
+  cursor: default;
+  border-style: dashed;
+}
+
+.team-card:not(.doc):hover,
+.team-card.active {
+  border-color: rgb(61 187 154 / 45%);
+}
+
+.team-card strong {
+  overflow: hidden;
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-card small {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-card .format {
+  color: #70d4bb;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.diagram-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: rgb(5 9 14 / 72%);
+}
+
+.diagram-dialog {
+  display: flex;
+  width: min(1100px, 100%);
+  max-height: 100%;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #0e1421;
+  overflow: hidden;
+}
+
+.team-diagram {
+  min-height: 0;
+  overflow: auto;
+}
+
+.team-diagram :is(svg) {
   display: block;
   max-width: 100%;
   height: auto;
   margin: 0 auto;
 }
 
+.diagram-dialog pre {
+  margin: 0;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: #0a1018;
+  color: #aeb9c4;
+  font-size: 0.7rem;
+  overflow: auto;
+}
+
+.diagram-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
 .empty {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex: 1;
   align-items: center;

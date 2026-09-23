@@ -43,6 +43,13 @@ export class App implements OnInit {
     this.activeTab.set(tab);
   }
 
+  protected readonly pendingFlowId = signal<string | null>(null);
+
+  protected openFlow(flowId: string): void {
+    this.pendingFlowId.set(flowId);
+    this.setTab('flows');
+  }
+
   protected setFlowSelectionContext(context: RequestFlowSelectionContext | null): void {
     this.flowSelectionContext.set(context);
   }
