@@ -5,6 +5,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
+const { buildStories } = require("./flow-story");
 
 const SCHEMA_VERSION = "1.0.0";
 const SOURCE_EXTENSIONS = new Set([
@@ -39,7 +40,7 @@ function readText(filePath) {
   }
 }
 
-function collectSourceFiles(rootPath) {
+function collectSourceFiles(rootPath, configFiles = []) {
   const files = [];
   const queue = [rootPath];
   while (queue.length) {
@@ -58,6 +59,8 @@ function collectSourceFiles(rootPath) {
         queue.push(absolute);
       } else if (entry.isFile() && SOURCE_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) {
         files.push(absolute);
+      } else if (entry.isFile() && entry.name.toLowerCase() === "appsettings.json") {
+        configFiles.push(absolute);
       }
     }
   }
@@ -396,6 +399,7 @@ function queueTriggers(sources, functions) {
     return matches.map((handler) => ({
       type: "queue",
       label: item.label,
+      messageType: item.messageType,
       handler: handler.fn.symbol,
       handlerFn: handler.fn,
       file: item.file,
@@ -463,7 +467,8 @@ function extractRequestFlows(repoPath, services = [], entryPoints = {}, options 
       .sort((a, b) => b.path.length - a.path.length);
     return matches[0]?.name || "repository";
   };
-  const sources = collectSourceFiles(rootPath).map((absolute) => ({
+  const configPaths = [];
+  const sources = collectSourceFiles(rootPath, configPaths).map((absolute) => ({
     absolute,
     file: toPosix(path.relative(rootPath, absolute)),
     extension: path.extname(absolute).toLowerCase(),
@@ -563,6 +568,7 @@ function extractRequestFlows(repoPath, services = [], entryPoints = {}, options 
       trigger: {
         kind: trigger.type,
         label: trigger.label,
+        ...(trigger.messageType ? { message_type: trigger.messageType } : {}),
       },
       confidence: primary.some((step) => step.confidence === "medium") ? "medium" : "high",
       steps: [triggerStep, handlerStep, ...primary],
@@ -572,6 +578,14 @@ function extractRequestFlows(repoPath, services = [], entryPoints = {}, options 
     }
     flows.push(flow);
   }
+  buildStories(flows, {
+    sources,
+    functions,
+    configFiles: configPaths.map((absolute) => ({
+      absolute,
+      file: toPosix(path.relative(rootPath, absolute)),
+    })),
+  });
   if (flows.length >= limits.max_flows) {
     warnings.push({
       code: "flow-cap-reached",
