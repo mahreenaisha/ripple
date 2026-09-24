@@ -5,8 +5,10 @@
   min-width: 0;
   min-height: 0;
   background:
-    radial-gradient(680px 420px at 50% 40%, rgb(217 74 56 / 10%), transparent 70%),
-    #101820;
+    linear-gradient(rgb(255 255 255 / 2%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 2%) 1px, transparent 1px),
+    #0b0f13;
+  background-size: 28px 28px;
 }
 
 .canvas {
@@ -25,11 +27,10 @@
   gap: 0.75rem;
   padding: 0.65rem 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgb(18 24 38 / 88%);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgb(3 7 18 / 45%);
-  font-size: 0.82rem;
+  border-radius: 8px;
+  background: rgb(16 20 25 / 96%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 28%);
+  font-size: 0.9rem;
   color: var(--text);
   pointer-events: none;
 }
@@ -39,8 +40,8 @@
 }
 
 .status strong {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: #fca5a5;
+  font-family: var(--font-mono);
+  color: #ff9c9c;
 }
 
 .progress,
@@ -63,15 +64,15 @@
   border-radius: 8px;
   padding: 0.35rem 0.75rem;
   font: inherit;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
 }
 
 .reset:hover {
-  border-color: #ef4444;
-  color: #fecaca;
+  border-color: var(--risky);
+  color: #ffb0b0;
 }
 
 .legend {
@@ -81,18 +82,17 @@
   width: 285px;
   padding: 0.8rem 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgb(18 24 38 / 90%);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgb(3 7 18 / 45%);
-  font-size: 0.75rem;
-  line-height: 1.45;
+  border-radius: 8px;
+  background: rgb(16 20 25 / 96%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 28%);
+  font-size: 0.875rem;
+  line-height: 1.5;
   color: var(--text);
 }
 
 .legend-title {
   margin: 0 0 0.4rem;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -102,7 +102,7 @@
 .legend-lead {
   margin: 0 0 0.6rem;
   color: var(--text-muted);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
 }
 
 .legend ul {
@@ -169,7 +169,7 @@
   padding-top: 0.55rem;
   border-top: 1px solid var(--border-soft);
   color: var(--text-muted);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 
 @media (max-height: 700px) {

@@ -4,14 +4,14 @@
   margin-top: 14px;
   padding: 14px;
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  background: rgb(255 255 255 / 2%);
+  border-radius: 8px;
+  background: #0c1014;
 }
 
 label,
 legend {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
 }
 
 label > span {
@@ -23,13 +23,14 @@ input:not([type='radio'], [type='checkbox']),
 textarea {
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 10px;
+  min-height: 42px;
+  padding: 9px 11px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: #0f1a24;
+  background: var(--surface-2);
   color: var(--text);
   font: inherit;
-  font-size: 0.88rem;
+  font-size: 1rem;
 }
 
 textarea {
@@ -38,8 +39,8 @@ textarea {
 
 input:focus,
 textarea:focus {
-  outline: none;
-  border-color: rgb(61 187 154 / 60%);
+  outline: 3px solid rgb(54 196 154 / 10%);
+  border-color: var(--accent);
 }
 
 fieldset {
@@ -76,18 +77,18 @@ fieldset label {
 
 .hint {
   margin-top: -6px;
-  color: #6f8193;
-  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-size: 0.82rem;
 }
 
 .found {
   display: grid;
   gap: 4px;
   padding: 8px 10px;
-  border: 1px solid rgb(61 187 154 / 35%);
+  border: 1px solid rgb(54 196 154 / 35%);
   border-radius: 8px;
-  color: #70d4bb;
-  font-size: 0.8rem;
+  color: var(--accent-soft);
+  font-size: 0.875rem;
 }
 
 .found code {
@@ -98,13 +99,14 @@ fieldset label {
 }
 
 code {
-  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
 }
 
 .error {
   margin: 0;
   color: #f08c8c;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
 }
 
 .actions {
@@ -120,7 +122,7 @@ button {
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
@@ -130,9 +132,9 @@ button:disabled {
 }
 
 button.primary {
-  border-color: rgb(61 187 154 / 60%);
-  background: rgb(61 187 154 / 18%);
-  color: #94e3cf;
+  border-color: rgb(54 196 154 / 60%);
+  background: rgb(54 196 154 / 16%);
+  color: var(--accent-soft);
 }
 
 .ghost {
