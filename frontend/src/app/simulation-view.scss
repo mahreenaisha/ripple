@@ -7,7 +7,7 @@
   background:
     linear-gradient(rgb(255 255 255 / 2%) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 2%) 1px, transparent 1px),
-    var(--bg);
+    #0b0f13;
   background-size: 28px 28px;
 }
 
@@ -28,7 +28,7 @@
   padding: 0.65rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgb(60 54 77 / 96%);
+  background: rgb(16 20 25 / 96%);
   box-shadow: 0 8px 24px rgb(0 0 0 / 28%);
   font-size: 0.9rem;
   color: var(--text);
@@ -83,7 +83,7 @@
   padding: 0.8rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgb(60 54 77 / 96%);
+  background: rgb(16 20 25 / 96%);
   box-shadow: 0 8px 24px rgb(0 0 0 / 28%);
   font-size: 0.875rem;
   line-height: 1.5;
@@ -159,7 +159,7 @@
 }
 
 .dot.untouched {
-  background: #5c5470;
+  background: #3c4c66;
   box-shadow: 0 0 0 2px rgb(255 255 255 / 18%);
   opacity: 0.6;
 }

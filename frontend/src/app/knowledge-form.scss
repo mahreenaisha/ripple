@@ -5,7 +5,7 @@
   padding: 14px;
   border: 1px solid var(--border-soft);
   border-radius: 8px;
-  background: var(--bg);
+  background: #0c1014;
 }
 
 label,
@@ -39,7 +39,7 @@ textarea {
 
 input:focus,
 textarea:focus {
-  outline: 3px solid rgb(185 180 199 / 14%);
+  outline: 3px solid rgb(54 196 154 / 10%);
   border-color: var(--accent);
 }
 
@@ -85,7 +85,7 @@ fieldset label {
   display: grid;
   gap: 4px;
   padding: 8px 10px;
-  border: 1px solid rgb(185 180 199 / 45%);
+  border: 1px solid rgb(54 196 154 / 35%);
   border-radius: 8px;
   color: var(--accent-soft);
   font-size: 0.875rem;
@@ -132,8 +132,8 @@ button:disabled {
 }
 
 button.primary {
-  border-color: rgb(185 180 199 / 65%);
-  background: rgb(185 180 199 / 18%);
+  border-color: rgb(54 196 154 / 60%);
+  background: rgb(54 196 154 / 16%);
   color: var(--accent-soft);
 }
 
