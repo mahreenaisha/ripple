@@ -58,11 +58,11 @@ interface EntryPoint {
 }
 
 const EDGE_COLORS: Record<string, string> = {
-  calls: '#2f6fed',
-  queries: '#1f8a5b',
-  imports: '#8a734b',
-  publishes: '#c45c26',
-  subscribes: '#7c3aed',
+  calls: '#faf0e6',
+  queries: '#b9b4c7',
+  imports: '#5c5470',
+  publishes: '#faf0e6',
+  subscribes: '#b9b4c7',
 };
 
 @Component({
@@ -127,7 +127,7 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
           edgeType: edge.type || 'calls',
           weight: edge.call_count || 1,
           confidence: edge.confidence || 'medium',
-          color: EDGE_COLORS[edge.type || 'calls'] || '#5b6b82',
+          color: EDGE_COLORS[edge.type || 'calls'] || '#5c5470',
         },
       })),
     ];
@@ -152,12 +152,12 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
             label: 'data(label)',
             'background-opacity': 0.95,
             'border-width': 2,
-            color: '#f3f6f8',
+            color: '#faf0e6',
             'text-valign': 'bottom',
             'text-halign': 'center',
             'text-margin-y': 8,
             'text-outline-width': 3,
-            'text-outline-color': '#090b0e',
+            'text-outline-color': '#352f44',
             'font-size': 13,
             'font-weight': 600,
             'font-family': 'IBM Plex Sans, sans-serif',
@@ -172,24 +172,24 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
           selector: 'node[kind = "service"]',
           style: {
             shape: 'round-rectangle',
-            'background-color': '#176b87',
-            'border-color': '#6db4d5',
+            'background-color': '#5c5470',
+            'border-color': '#faf0e6',
           },
         },
         {
           selector: 'node[kind = "database"]',
           style: {
             shape: 'barrel',
-            'background-color': '#17694f',
-            'border-color': '#78ddbd',
+            'background-color': '#352f44',
+            'border-color': '#b9b4c7',
           },
         },
         {
           selector: 'node[kind = "external_api"]',
           style: {
             shape: 'hexagon',
-            'background-color': '#8a734b',
-            'border-color': '#d2bf95',
+            'background-color': '#5c5470',
+            'border-color': '#b9b4c7',
           },
         },
         {
@@ -232,7 +232,7 @@ export class GraphViewComponent implements AfterViewInit, OnDestroy {
         {
           selector: 'node.highlighted',
           style: {
-            'overlay-color': '#36c49a',
+            'overlay-color': '#faf0e6',
             'overlay-opacity': 0.22,
             'overlay-padding': 8,
           },
