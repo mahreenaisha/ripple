@@ -1,20 +1,26 @@
 :root {
-  --bg: #0c1218;
-  --surface: #141c24;
-  --surface-2: #1a2430;
-  --border: #2a3948;
-  --border-soft: #1f2b38;
-  --text: #eef3f8;
-  --text-muted: #8fa0b2;
-  --accent: #1d6fb8;
-  --accent-soft: #4f97d4;
-  --teal: #3dbb9a;
-  --healthy: #2fbf71;
-  --risky: #d94a38;
-  --spof: #e85d04;
-  --warm: #c45c26;
-  --radius: 14px;
-  --shadow: 0 18px 44px rgb(4 8 12 / 48%);
+  color-scheme: dark;
+  --bg: #090b0e;
+  --surface: #101419;
+  --surface-2: #171c22;
+  --surface-hover: #1c232b;
+  --border: #29323c;
+  --border-soft: #202830;
+  --text: #f3f6f8;
+  --text-muted: #b2bdc7;
+  --text-subtle: #84919d;
+  --accent: #36c49a;
+  --accent-soft: #78ddbd;
+  --teal: #36c49a;
+  --healthy: #4bd39f;
+  --risky: #f06b6b;
+  --spof: #f08a5d;
+  --warm: #f0b35a;
+  --violet: #b9a4ff;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --radius: 10px;
+  --shadow: 0 18px 52px rgb(0 0 0 / 30%);
 }
 
 html,
@@ -24,12 +30,22 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(980px 560px at 8% -8%, rgb(29 111 184 / 18%), transparent 58%),
-    radial-gradient(820px 500px at 92% 0%, rgb(61 187 154 / 12%), transparent 52%),
-    radial-gradient(700px 480px at 50% 110%, rgb(196 92 38 / 10%), transparent 48%),
-    linear-gradient(180deg, #0e151c 0%, var(--bg) 40%, #0a1015 100%);
+  background: var(--bg);
   color: var(--text);
-  font-family: Sora, "Segoe UI", sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+code {
+  font-family: var(--font-mono);
 }
