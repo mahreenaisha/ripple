@@ -5,7 +5,7 @@
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  background: var(--bg);
+  background: #0c1014;
 }
 
 .toolbar {
@@ -128,7 +128,7 @@
   min-height: 0;
   padding: 1rem;
   border-left: 1px solid var(--border-soft);
-  background: var(--surface);
+  background: #0d1116;
   overflow-y: auto;
 }
 
@@ -192,8 +192,8 @@
 }
 
 .flow-links button:hover {
-  border-color: rgb(185 180 199 / 45%);
-  background: rgb(185 180 199 / 10%);
+  border-color: rgb(54 196 154 / 35%);
+  background: rgb(54 196 154 / 8%);
 }
 
 .flow-links .label {
@@ -206,15 +206,15 @@
   flex: 0 0 auto;
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
-  background: rgb(250 240 230 / 10%);
-  color: var(--accent-soft);
+  background: rgb(109 180 213 / 12%);
+  color: #9dd3ea;
   font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .flow-links .kind[data-kind='background-job'] {
-  background: rgb(185 180 199 / 12%);
+  background: rgb(185 164 255 / 12%);
   color: var(--violet);
 }
 
@@ -253,7 +253,7 @@
 
 .team-card:not(.doc):hover,
 .team-card.active {
-  border-color: rgb(185 180 199 / 60%);
+  border-color: rgb(54 196 154 / 50%);
 }
 
 .team-card strong {
@@ -298,7 +298,7 @@
   padding: 1rem 1.2rem;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--surface);
+  background: #11161c;
   overflow: hidden;
 }
 
@@ -318,7 +318,7 @@
   margin: 0;
   padding: 0.8rem;
   border-radius: 8px;
-  background: var(--bg);
+  background: #0a1018;
   color: var(--text-muted);
   font-size: 0.82rem;
   overflow: auto;
