@@ -1,0 +1,2432 @@
+{
+  "Waters.TenancyAS.Jobs.DeactivatingUsers": {
+    "entries": [
+      {
+        "type": "export",
+        "endpoint": "CognitoService.GetUserPools",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/CognitoService.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "CognitoService.GetUsers",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/CognitoService.cs",
+        "line": 54
+      },
+      {
+        "type": "export",
+        "endpoint": "CognitoService.GetUserAuthLastSignInEvent",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/CognitoService.cs",
+        "line": 81
+      },
+      {
+        "type": "export",
+        "endpoint": "CognitoService.DisableUser",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/CognitoService.cs",
+        "line": 115
+      },
+      {
+        "type": "export",
+        "endpoint": "ConsoleHostApplicationLifetime.StopApplication",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/ConsoleHostApplicationLifetime.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogService.GetUserPoolId",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/TenancyCatalogService.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogService.GetTenantIdsForCluster",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Business/TenancyCatalogService.cs",
+        "line": 37
+      },
+      {
+        "type": "export",
+        "endpoint": "ApiException.ToString",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Exceptions/ApiException.cs",
+        "line": 20
+      },
+      {
+        "type": "export",
+        "endpoint": "AddressHelper.GenerateBaseAddress",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Helpers/Constants.cs",
+        "line": 12
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddCognitoIdentityProvider",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Helpers/ServiceCollectionExtensions.cs",
+        "line": 14
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceProviderHelpers.GetServiceProvider",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Helpers/ServiceProviderHelpers.cs",
+        "line": 18
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceProviderHelpers.GetConfiguration",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Helpers/ServiceProviderHelpers.cs",
+        "line": 49
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersJob.Run",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersJob.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersJob.Execute",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersJob.cs",
+        "line": 62
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersJob.IsConfigurationValid",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersJob.cs",
+        "line": 64
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersJob.LogDeactivationMode",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersJob.cs",
+        "line": 80
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersUserPoolJob.Execute",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersUserPoolJob.cs",
+        "line": 24
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersUserPoolJob.ListOrDeactivateUsers",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersUserPoolJob.cs",
+        "line": 44
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersUserPoolJob.LogDeactivationSettings",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersUserPoolJob.cs",
+        "line": 55
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersUserPoolJob.DeactivateUsers",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersUserPoolJob.cs",
+        "line": 56
+      },
+      {
+        "type": "export",
+        "endpoint": "BaseDeactivatingUsersUserPoolJob.ListUsers",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/BaseDeactivatingUsersUserPoolJob.cs",
+        "line": 57
+      },
+      {
+        "type": "export",
+        "endpoint": "DeactivatingUsersJob.DeactivateUsers",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/DeactivatingUsersJob.cs",
+        "line": 46
+      },
+      {
+        "type": "export",
+        "endpoint": "DeactivatingUsersJob.ListUsers",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/DeactivatingUsersJob.cs",
+        "line": 93
+      },
+      {
+        "type": "export",
+        "endpoint": "DeactivatingUsersJob.LogDeactivationSettings",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/DeactivatingUsersJob.cs",
+        "line": 126
+      },
+      {
+        "type": "export",
+        "endpoint": "DeactivatingUsersJob.GenerateLastSignInLogMessage",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/DeactivatingUsersJob.cs",
+        "line": 137
+      },
+      {
+        "type": "export",
+        "endpoint": "DeactivatingUsersJob.GetUsersToDeactivate",
+        "file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Jobs/DeactivatingUsersJob.cs",
+        "line": 149
+      }
+    ]
+  },
+  "Waters.TenancyAS.OpenSearchRoleMappingInstaller": {
+    "entries": [
+      {
+        "type": "export",
+        "endpoint": "OpenSearchRoleMappingInstallation.PublishMappingFileInstallationMessage",
+        "file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Business/OpensearchRoleMappingInstallation.cs",
+        "line": 27
+      },
+      {
+        "type": "export",
+        "endpoint": "OpenSearchRoleMappingInstallation.IsParametersValid",
+        "file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Business/OpensearchRoleMappingInstallation.cs",
+        "line": 41
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceProviderHelpers.GetServiceProvider",
+        "file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Helpers/ServiceProviderHelpers.cs",
+        "line": 16
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceProviderHelpers.GetConfiguration",
+        "file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Helpers/ServiceProviderHelpers.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "JobRunner.RunOpenSearchRoleMappingInstallationAsync",
+        "file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Jobs/JobRunner.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "JobRunner.IsConfigurationValid",
+        "file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Jobs/JobRunner.cs",
+        "line": 63
+      }
+    ]
+  },
+  "Waters.TenancyAS.WebAPI": {
+    "entries": [
+      {
+        "type": "export",
+        "endpoint": "PasswordResetExceptionFilterAttribute.OnException",
+        "file": "Services/Waters.TenancyAS.WebAPI/Attributes/PasswordResetExceptionFilter.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "PasswordResetExceptionFilterAttribute.CreateProblemDetailsObject",
+        "file": "Services/Waters.TenancyAS.WebAPI/Attributes/PasswordResetExceptionFilter.cs",
+        "line": 47
+      },
+      {
+        "type": "export",
+        "endpoint": "PasswordResetExceptionFilterAttribute.CreateProblemDetailsObject",
+        "file": "Services/Waters.TenancyAS.WebAPI/Attributes/PasswordResetExceptionFilter.cs",
+        "line": 61
+      },
+      {
+        "type": "export",
+        "endpoint": "RequireAppNameHeaderAttribute.OnActionExecuting",
+        "file": "Services/Waters.TenancyAS.WebAPI/Attributes/RequireAppNameHeaderAttribute.cs",
+        "line": 9
+      },
+      {
+        "type": "export",
+        "endpoint": "SwaggerDefaultValues.Apply",
+        "file": "Services/Waters.TenancyAS.WebAPI/Attributes/SwaggerDefaultValues.cs",
+        "line": 13
+      },
+      {
+        "type": "export",
+        "endpoint": "AuthorizationConfiguration.AssertTenantIdClaim",
+        "file": "Services/Waters.TenancyAS.WebAPI/AuthorizationPolicies/AuthorizationConfiguration.cs",
+        "line": 13
+      },
+      {
+        "type": "export",
+        "endpoint": "AuthorizationConfiguration.AddTenantPolicy",
+        "file": "Services/Waters.TenancyAS.WebAPI/AuthorizationPolicies/AuthorizationConfiguration.cs",
+        "line": 16
+      },
+      {
+        "type": "export",
+        "endpoint": "AuthorizationConfiguration.AddPolicies",
+        "file": "Services/Waters.TenancyAS.WebAPI/AuthorizationPolicies/AuthorizationConfiguration.cs",
+        "line": 26
+      },
+      {
+        "type": "export",
+        "endpoint": "WatersAccessTokenHandler.HandleRequirementAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/AuthorizationPolicies/WatersAccessTokenHandler.cs",
+        "line": 29
+      },
+      {
+        "type": "export",
+        "endpoint": "WatersAccessTokenHandler.AssertPolicyClaim",
+        "file": "Services/Waters.TenancyAS.WebAPI/AuthorizationPolicies/WatersAccessTokenHandler.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "WatersAccessTokenHandler.MapPolicyNameToClaimName",
+        "file": "Services/Waters.TenancyAS.WebAPI/AuthorizationPolicies/WatersAccessTokenHandler.cs",
+        "line": 47
+      },
+      {
+        "type": "export",
+        "endpoint": "AutofacModule.Load",
+        "file": "Services/Waters.TenancyAS.WebAPI/AutofacModule.cs",
+        "line": 21
+      },
+      {
+        "type": "export",
+        "endpoint": "AutofacModule.RegisterComponents",
+        "file": "Services/Waters.TenancyAS.WebAPI/AutofacModule.cs",
+        "line": 30
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.CopyProxyHttpResponse",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/Extensions.cs",
+        "line": 16
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.GetCorrelationId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/Extensions.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.ToProblemDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/Extensions.cs",
+        "line": 55
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.ToProblemDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/Extensions.cs",
+        "line": 68
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.BadRequestWithProblemDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/Extensions.cs",
+        "line": 79
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/external-identity/reset-password",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/ExternalIdentityController.cs",
+        "line": 54
+      },
+      {
+        "type": "export",
+        "endpoint": "ExternalIdentityController.ResetPassword",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/ExternalIdentityController.cs",
+        "line": 63
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Folders/get-folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 44
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.GetFolders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 48
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/Folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 65
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.Post",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 68
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 101
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.Get",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 104
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Folders/assign-teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 116
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.AssignTeamsToFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 119
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Folders/unassign-teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 146
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.UnassignTeamsFromFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 149
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.GetTeamsForFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 177
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Folders/assigned-teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 189
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersController.GetTeamIdsForFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/FoldersController.cs",
+        "line": 192
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Permissions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/PermissionsController.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "PermissionsController.GetPermissions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/PermissionsController.cs",
+        "line": 39
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 60
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.Get",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 63
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Teams/Hierarchy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 82
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.GetTeamWithHierarchy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 85
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/Teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 110
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.Post",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 114
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.GetUsersForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 144
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Teams/assign-user",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 157
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.AssignUserToTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 160
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Teams/unassign-user",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 184
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.UnassignUserFromTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 187
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Teams/assigned-users",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 210
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.GetUserIdsForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 213
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Teams/assigned-folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 225
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.GetFolderIdsForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 228
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Teams/update-team",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 239
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.UpdateTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 244
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Teams/assign-folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 270
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.AssignFoldersToTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 273
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Teams/unassign-folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 300
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.UnassignFoldersFromTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 303
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Teams/folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 328
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.GetFoldersForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 331
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Teams/update-permissions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 344
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.UpdateTeamPermissions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 349
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Teams/assigned-permissions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 373
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsController.GetPermissionIdsForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TeamsController.cs",
+        "line": 378
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 37
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.GetTenantsSummary",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 42
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog/lookup-identifiers/{externalId?}",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 59
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.LookupTenantIdentifiers",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 68
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog/lookup-identifiers",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 73
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.LookupTenantIdentifiers",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 81
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog/{tenantId}/basic",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 106
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.GetTenancyBasicInfo",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 113
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog/{tenantId}/auth",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 132
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.GetTenancyAuthInfo",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 140
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog/{tenantId}/authconfig",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 164
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.GetTenancyAuthConfigInfo",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 168
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/tenant-catalog/{tenantId}/{itemType}",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 183
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.GetTenancyMetadata",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 191
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/tenant-catalog/{tenantId}/{itemType}",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 218
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.CreateTenancyMetadata",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 229
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/tenant-catalog/{tenantId}/{itemType}",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 260
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.UpdateTenancyMetadata",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 270
+      },
+      {
+        "type": "API",
+        "endpoint": "DELETE /api/v{version:apiVersion}/tenant-catalog/{tenantId}/{itemType}",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 299
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.DeleteTenancyMetadata",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 307
+      },
+      {
+        "type": "API",
+        "endpoint": "PATCH /api/v{version:apiVersion}/tenant-catalog/{tenantId}/{itemType}",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 327
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.UpdateTenancyMetadataViaPatch",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 337
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCatalogController.TenantBeingCreatedResponse",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyCatalogController.cs",
+        "line": 363
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/Tenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 68
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.CreateTenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 76
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/Tenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 108
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.CreateTenancyV2",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 114
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Tenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 146
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.GetTenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 154
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Tenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 180
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.GetTenancyV2",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 187
+      },
+      {
+        "type": "API",
+        "endpoint": "DELETE /api/v{version:apiVersion}/Tenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 210
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.DeleteTenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 215
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Tenancy/disable-tenant",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 233
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.DisableTenancy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 239
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Tenancy/{tenantId}/AuthType",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 256
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyController.UpdateTenancyAuthType",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/TenancyController.cs",
+        "line": 262
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Users/get-users",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 73
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.GetUsers",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 77
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Users",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 89
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.Get",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 92
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/Users/add-user",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 124
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.AddUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 130
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Users/teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 156
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.GetTeamsForUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 159
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Users/assigned-teams",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 171
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.GetTeamIdsForUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 174
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Users/assign-team",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 187
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.AssignTeamToUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 190
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Users/unassign-team",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 210
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.UnassignTeamFromUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 213
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Users/update-user",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 233
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.UpdateUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 239
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Users/folders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 271
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.GetFoldersForUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 275
+      },
+      {
+        "type": "API",
+        "endpoint": "PUT /api/v{version:apiVersion}/Users/reset-password",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 293
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.ResetPassword",
+        "file": "Services/Waters.TenancyAS.WebAPI/Controllers/UsersController.cs",
+        "line": 299
+      },
+      {
+        "type": "export",
+        "endpoint": "ApiExplorerGroupPerVersionAttributeConvention.Apply",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/ApiExplorerGroupPerVersionAttributeConvention.cs",
+        "line": 9
+      },
+      {
+        "type": "export",
+        "endpoint": "ApiVersioningExtensions.ConfigureSwaggerForVersions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/ApiVersioningExtensions.cs",
+        "line": 17
+      },
+      {
+        "type": "export",
+        "endpoint": "ApiVersioningExtensions.ConfigureApiVersioning",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/ApiVersioningExtensions.cs",
+        "line": 32
+      },
+      {
+        "type": "export",
+        "endpoint": "ApiVersioningExtensions.ConfigureSwaggerOptions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/ApiVersioningExtensions.cs",
+        "line": 64
+      },
+      {
+        "type": "export",
+        "endpoint": "AddressHelper.GenerateBaseAddress",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Constants.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.AddServiceConfigurations",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Extensions.cs",
+        "line": 30
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.AddFeatureFlags",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Extensions.cs",
+        "line": 57
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.AddFeatureFlags",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Extensions.cs",
+        "line": 60
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.IsValidTenancyStateForUpgrade",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Extensions.cs",
+        "line": 77
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.IsCleanupAllowed",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Extensions.cs",
+        "line": 82
+      },
+      {
+        "type": "export",
+        "endpoint": "Extensions.MaskEmail",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/Extensions.cs",
+        "line": 91
+      },
+      {
+        "type": "export",
+        "endpoint": "FormatHelpers.GetUserDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/FormatHelpers.cs",
+        "line": 8
+      },
+      {
+        "type": "export",
+        "endpoint": "FormatHelpers.GetUserDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/FormatHelpers.cs",
+        "line": 9
+      },
+      {
+        "type": "export",
+        "endpoint": "IdentityExtensions.ToUserIdentity",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/IdentityExtensions.cs",
+        "line": 10
+      },
+      {
+        "type": "export",
+        "endpoint": "IdentityExtensions.ToUpdateIdentityDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/IdentityExtensions.cs",
+        "line": 29
+      },
+      {
+        "type": "export",
+        "endpoint": "ResponseModelMappers.MapCreateTenantResponseToDto",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/ResponseModelMappers.cs",
+        "line": 8
+      },
+      {
+        "type": "export",
+        "endpoint": "ServicesHelper.GetTenancyAdminUrl",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/ServicesHelper.cs",
+        "line": 12
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentifierHelpers.RoleId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenancyIdentifierHelpers.cs",
+        "line": 7
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentifierHelpers.PolicyId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenancyIdentifierHelpers.cs",
+        "line": 9
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentifierHelpers.IdentityPoolName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenancyIdentifierHelpers.cs",
+        "line": 11
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentifierHelpers.UserPoolName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenancyIdentifierHelpers.cs",
+        "line": 13
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentifierHelpers.GetBucketFolderName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenancyIdentifierHelpers.cs",
+        "line": 15
+      },
+      {
+        "type": "export",
+        "endpoint": "TenantDetailsToTenantMapper.MapToTenantWithAuthenticationDetailsObject",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenantDetailsToTenantMapper.cs",
+        "line": 7
+      },
+      {
+        "type": "export",
+        "endpoint": "TenantDetailsToTenantMapper.MapToTenant",
+        "file": "Services/Waters.TenancyAS.WebAPI/Helpers/TenantDetailsToTenantMapper.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationBuilderExtensions.AddInterService",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationBuilderExtensions.cs",
+        "line": 16
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationBuilderExtensions.AddInterService",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationBuilderExtensions.cs",
+        "line": 25
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationHandler.HandleAuthenticateAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationHandler.cs",
+        "line": 38
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationHandler.GetTenantId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationHandler.cs",
+        "line": 64
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationHandler.TryGetTenantFromJson",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationHandler.cs",
+        "line": 85
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationHandler.GetRequestorUserId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationHandler.cs",
+        "line": 133
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationHandler.GetCorrelationId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationHandler.cs",
+        "line": 142
+      },
+      {
+        "type": "export",
+        "endpoint": "InterServiceAuthenticationHandler.HandleChallengeAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/AuthenticationHandlers/InterServiceAuthenticationHandler.cs",
+        "line": 157
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.RegisterTenant",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 53
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.DeleteTenantAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 78
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTenantAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 104
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUsers",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 113
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.RegisterUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 118
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.UpdateUserIdentity",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 122
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamsForUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 126
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamIdsForUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 130
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 134
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 138
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUsersByIds",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 142
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFoldersForUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 146
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 153
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamHierarchy",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 157
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUsersForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 161
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUserIdsForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 165
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.AssignUserToTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 169
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.UnassignUserFromTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 173
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.AssignFoldersToTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 176
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.UnassignFoldersFromTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 179
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.AssignDefaultUserToDefaultTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 183
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamNames",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 187
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 191
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamPath",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 195
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.UpdateTeamPermissions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 199
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetPermissionIdsForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 203
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.CreateFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 210
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.CreateRootFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 221
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.AssignTeamsToFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 232
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.AssignRootTeamToRootFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 235
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.UnassignTeamsFromFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 239
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 243
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 247
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFolderNames",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 251
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFoldersForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 254
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFolders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 258
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamsForFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 262
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetTeamIdsForFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 266
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetFolderIdsForTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 270
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetPermissionSets",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 276
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetPermissionsInfo",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 284
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetPermissionSetsByIds",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 293
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.SetupHttpClient",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs",
+        "line": 301
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASTeamsProxy.Create",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASTeamsProxy.cs",
+        "line": 26
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASTenantClient.Create",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASTenantClient.cs",
+        "line": 10
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASUsersProxy.Create",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASUsersProxy.cs",
+        "line": 26
+      },
+      {
+        "type": "export",
+        "endpoint": "FolderService.SendFolderAssignedAuditLogMessageWithDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/FolderService.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "FolderService.SendFolderCreatedAuditLogMessageWithUserDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/FolderService.cs",
+        "line": 53
+      },
+      {
+        "type": "export",
+        "endpoint": "PartialTenancyInformationService.BuildPartiallyCreatedTenant",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/PartialTenancyInformationService.cs",
+        "line": 41
+      },
+      {
+        "type": "export",
+        "endpoint": "PartialTenancyInformationService.TryLookupIdentityPoolId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/PartialTenancyInformationService.cs",
+        "line": 66
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddCognitoProviders",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 59
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddS3Provider",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 87
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddOpenSearch",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 104
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddSecretManager",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 135
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddFileSystem",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 149
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetTenancyProviderSettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 157
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetDomainManagedLoginSettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 172
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetPasswordPolicySettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 175
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetTokensValiditySettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 178
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetMediatorTokensValiditySettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 189
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetAdvancedSecuritySettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 201
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetEmailSettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 215
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetClusterName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 229
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetAccountId",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 241
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetPublicStaticAssetsUrl",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 253
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.GetDomainName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 265
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.EnsureHttps",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 277
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddTenancyAuthenticationAndAuthorization",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 290
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddTenancyAuthentication",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 302
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddTenancyAuthorizationPolicies",
+        "file": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ServiceCollectionExtensions.cs",
+        "line": 315
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyMessageTypeDiscriminator.ResolveMessageType",
+        "file": "Services/Waters.TenancyAS.WebAPI/MessageDeserialization/TenancyMessageTypeDiscriminator.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "AddAppNameHeaderMiddleware.InvokeAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Middlewares/AddAppNameHeaderMiddleware.cs",
+        "line": 21
+      },
+      {
+        "type": "export",
+        "endpoint": "AddAppNameHeaderMiddleware.IsLegacyPasswordResetFlow",
+        "file": "Services/Waters.TenancyAS.WebAPI/Middlewares/AddAppNameHeaderMiddleware.cs",
+        "line": 41
+      },
+      {
+        "type": "export",
+        "endpoint": "PayloadExceptionMiddleware.InvokeAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Middlewares/PayloadExceptionMiddleware.cs",
+        "line": 17
+      },
+      {
+        "type": "export",
+        "endpoint": "RedirectUpperCaseMiddleware.InvokeAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Middlewares/RedirectUpperCaseMiddleware.cs",
+        "line": 21
+      },
+      {
+        "type": "export",
+        "endpoint": "Program.Main",
+        "file": "Services/Waters.TenancyAS.WebAPI/Program.cs",
+        "line": 20
+      },
+      {
+        "type": "export",
+        "endpoint": "Program.CreateHostBuilder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Program.cs",
+        "line": 30
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDisabledHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/DisableTenancy/TenancyDisabledHandler.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDisableRequestAcceptedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/DisableTenancy/TenancyDisableRequestAcceptedHandler.cs",
+        "line": 41
+      },
+      {
+        "type": "export",
+        "endpoint": "ManageTdiForMongoDbHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/FeatureStateUpdate/ManageTDIForMongoDBHandler.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersFromTeamUnassignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/FolderAssignment/FoldersFromTeamUnassignedHandler.cs",
+        "line": 31
+      },
+      {
+        "type": "export",
+        "endpoint": "FoldersToTeamAssignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/FolderAssignment/FoldersToTeamAssignedHandler.cs",
+        "line": 25
+      },
+      {
+        "type": "export",
+        "endpoint": "FolderCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/FolderCreation/FolderCreatedHandler.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "OpenSearchRoleUpgradeTenancyIdentifiedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchRoleUpgradeTenancyIdentifiedHandler.cs",
+        "line": 27
+      },
+      {
+        "type": "export",
+        "endpoint": "OpenSearchServiceRolesUpdatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchServiceRolesUpdatedHandler.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyAsOpenSearchUserRoleMappingInstalledHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/TenancyAsOpenSearchUserRoleMappingInstalledHandler.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyAsOpenSearchUserRoleMappingInstalledHandler.IsConfigMismatchError",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/TenancyAsOpenSearchUserRoleMappingInstalledHandler.cs",
+        "line": 63
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCleanUpHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyCleanUpHandler.cs",
+        "line": 22
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDomainCleanUpHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyDomainCleanUpHandler.cs",
+        "line": 35
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolCleanupHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyIdentityPoolCleanupHandler.cs",
+        "line": 44
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolCleanupHandler.IsTenancyExistAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyIdentityPoolCleanupHandler.cs",
+        "line": 89
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyOrphanItemTypeCleanUpHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyOrphanItemTypeCleanUpHandler.cs",
+        "line": 29
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyOrphanItemTypeHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyOrphanItemTypeHandler.cs",
+        "line": 35
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyPoliciesDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyPoliciesDeletedHandler.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyPolicyDeleteStartedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyPolicyDeleteStartedHandler.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyPolicyDeleteStartedHandler.ConvertToTenantModel",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyPolicyDeleteStartedHandler.cs",
+        "line": 82
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRoleDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyRoleDeletedHandler.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserPoolCleanUpHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyUserPoolCleanUpHandler.cs",
+        "line": 44
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserPoolCleanUpHandler.IsTenancyExistAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OrphanedTenancyResourceCleanUp/TenancyUserPoolCleanUpHandler.cs",
+        "line": 104
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdatePermissionsToTeamAssignmentHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/PermissionAssignment/UpdatePermissionsToTeamAssignmentHandler.cs",
+        "line": 34
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdatePermissionsToTeamAssignmentHandler.GetDisplayNamesForPermissionIds",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/PermissionAssignment/UpdatePermissionsToTeamAssignmentHandler.cs",
+        "line": 73
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsFromFolderUnassignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TeamAssignment/TeamsFromFolderUnassignedHandler.cs",
+        "line": 32
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsFromUserUnassignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TeamAssignment/TeamsFromUserUnassignedHandler.cs",
+        "line": 32
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsToFolderAssignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TeamAssignment/TeamsToFolderAssignedHandler.cs",
+        "line": 32
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamsToUserAssignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TeamAssignment/TeamsToUserAssignedHandler.cs",
+        "line": 32
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TeamCreation/TeamCreatedHandler.cs",
+        "line": 24
+      },
+      {
+        "type": "export",
+        "endpoint": "TeamUpdatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TeamUpdating/TeamUpdatedHandler.cs",
+        "line": 25
+      },
+      {
+        "type": "export",
+        "endpoint": "AuthenticationTypeConfiguredHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyAuthenticationTypeUpdate/AuthenticationTypeConfiguredHandler.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "AllOpenSearchServiceUsersCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/AllOpenSearchServiceUsersCreatedHandler.cs",
+        "line": 66
+      },
+      {
+        "type": "export",
+        "endpoint": "AllOpenSearchServiceUsersCreatedHandler.TryCreateUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/AllOpenSearchServiceUsersCreatedHandler.cs",
+        "line": 106
+      },
+      {
+        "type": "export",
+        "endpoint": "AllOpenSearchServiceUsersCreatedHandler.IsUserAlreadyCreated",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/AllOpenSearchServiceUsersCreatedHandler.cs",
+        "line": 130
+      },
+      {
+        "type": "export",
+        "endpoint": "AllOpenSearchServiceUsersCreatedHandler.TryCreateIdentity",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/AllOpenSearchServiceUsersCreatedHandler.cs",
+        "line": 144
+      },
+      {
+        "type": "export",
+        "endpoint": "AllOpenSearchServiceUsersCreatedHandler.IsIdentityExists",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/AllOpenSearchServiceUsersCreatedHandler.cs",
+        "line": 162
+      },
+      {
+        "type": "export",
+        "endpoint": "AllOpenSearchServiceUsersCreatedHandler.CreateIdentity",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/AllOpenSearchServiceUsersCreatedHandler.cs",
+        "line": 175
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 52
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.GetConfiguredRolesWri",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 133
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.ShouldSkipRoleCreationForTenancyType",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 150
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.TryGetLocalizedRoleStrings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 155
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.TryCreateRoleAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 168
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.GetRolesWriAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 200
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.GetFilteredPermissionIdsFromPermissionSets",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 256
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.GetAdditionalPermissionIdModels",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 279
+      },
+      {
+        "type": "export",
+        "endpoint": "DefaultAdministrationRolesCreatedHandler.BuildIdempotencyKey",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/DefaultAdministrationRolesCreatedHandler.cs",
+        "line": 298
+      },
+      {
+        "type": "export",
+        "endpoint": "RoleBasedFeaturesEnabledHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/RoleBasedFeaturesEnabledHandler.cs",
+        "line": 38
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyAccessPoliciesCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyAccessPoliciesCreatedHandler.cs",
+        "line": 57
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyAccessPoliciesCreatedHandler.CreateRootS3Folder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyAccessPoliciesCreatedHandler.cs",
+        "line": 112
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyAccessPoliciesCreatedHandler.IsSuccessStatusCode",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyAccessPoliciesCreatedHandler.cs",
+        "line": 131
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyCreatedHandler.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyCreationStartedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyCreationStartedHandler.cs",
+        "line": 38
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDefaultUserAssignedToRootTeamHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyDefaultUserAssignedToRootTeamHandler.cs",
+        "line": 25
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDefaultUserCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyDefaultUserCreatedHandler.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyFolderCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyFolderCreatedHandler.cs",
+        "line": 41
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyIdentityPoolCreatedHandler.cs",
+        "line": 57
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolCreatedHandler.ExtractUserPoolIdFromIssuer",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyIdentityPoolCreatedHandler.cs",
+        "line": 93
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolCreatedHandler.BuildTenancyCatalogAuthRecord",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyIdentityPoolCreatedHandler.cs",
+        "line": 104
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 57
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.UpdateTenancyStateAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 66
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.ProcessAppClientSecretAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 77
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.GetAppClientSecretAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 101
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.StoreAppClientSecretAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 114
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.PublishEventsAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 139
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyProvisioningCompletedHandler.ExtractUserPoolIdFromIssuer",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyProvisioningCompletedHandler.cs",
+        "line": 169
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRegisteredHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRegisteredHandler.cs",
+        "line": 59
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootFolderAssignedToRootTeamHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootFolderAssignedToRootTeamHandler.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootFolderAssignedToRootTeamHandler.GetFilteredPermissionIdsFromPermissionSets",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootFolderAssignedToRootTeamHandler.cs",
+        "line": 106
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootFolderAssignedToRootTeamHandler.GetRootTeamAdditionalPermissionIdModels",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootFolderAssignedToRootTeamHandler.cs",
+        "line": 132
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootFolderCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootFolderCreatedHandler.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootFolderCreatedHandler.SendFoldersAssignmentAuditLogMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootFolderCreatedHandler.cs",
+        "line": 60
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootTeamCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootTeamCreatedHandler.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootTeamCreatedHandler.SendFolderCreationAuditLogMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootTeamCreatedHandler.cs",
+        "line": 88
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyRootTeamPermissionsInitializedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyRootTeamPermissionsInitializedHandler.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyS3FolderCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyS3FolderCreatedHandler.cs",
+        "line": 50
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyS3FolderCreatedHandler.PublishAllOpenSearchServiceUsersCreatedMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyS3FolderCreatedHandler.cs",
+        "line": 65
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyS3FolderCreatedHandler.ProcessMappingFilesAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyS3FolderCreatedHandler.cs",
+        "line": 79
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreatedHandler.cs",
+        "line": 42
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreatedHandler.HandleConflictRootTeamAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreatedHandler.cs",
+        "line": 93
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreatedHandler.PublishProvisioningCompletedAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreatedHandler.cs",
+        "line": 133
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreatedHandler.IsAllowedToCreateTeam",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreatedHandler.cs",
+        "line": 142
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreationStartedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreationStartedHandler.cs",
+        "line": 52
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreationStartedHandler.IsValidMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreationStartedHandler.cs",
+        "line": 77
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserCreationStartedHandler.GetUsersAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserCreationStartedHandler.cs",
+        "line": 154
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserPoolCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserPoolCreatedHandler.cs",
+        "line": 54
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserPoolCreatedHandler.CreateTenantIdentityPool",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyCreation/TenancyUserPoolCreatedHandler.cs",
+        "line": 93
+      },
+      {
+        "type": "export",
+        "endpoint": "DropTDIMongoDBHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/DropTDIMongoDBHandler.cs",
+        "line": 24
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDeleteRequestAcceptedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyDeleteRequestAcceptedHandler.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDeleteStartedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyDeleteStartedHandler.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDeleteStartedHandler.ConvertToTenantModel",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyDeleteStartedHandler.cs",
+        "line": 77
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyDomainDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyDomainDeletedHandler.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyFoundHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyFoundHandler.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyGraphDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyGraphDeletedHandler.cs",
+        "line": 37
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyIdentityPoolDeletedHandler.cs",
+        "line": 34
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolDeletedHandler.DeleteFolder",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyIdentityPoolDeletedHandler.cs",
+        "line": 73
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyIdentityPoolDeletedHandler.IsSuccessStatusCode",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyIdentityPoolDeletedHandler.cs",
+        "line": 107
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyMongoDbUserDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyMongoDbUserDeletedHandler.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "TenancyUserPoolDeletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyUserPoolDeletedHandler.cs",
+        "line": 29
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoConfigurationCompletedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoConfigurationCompletedHandler.cs",
+        "line": 35
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoConfigurationCompletedHandler.IsValidRequiredParameters",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoConfigurationCompletedHandler.cs",
+        "line": 69
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoConfigurationCompletedHandler.BuildTenancyCatalogAuthRecord",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoConfigurationCompletedHandler.cs",
+        "line": 85
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoConfigurationRequestedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoConfigurationRequestedHandler.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 47
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.ProcessMessageAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 60
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.IsTenantInValidState",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 120
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.HandleMediatorClientAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 125
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.CreateTenantDataDto",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 154
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.CreateUserPoolClientAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 165
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.StoreAppClientSecretAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 178
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.GetMediatorClientAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 203
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.CheckAuthTypeAndPublishEvent",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 209
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateCognitoMediatorAppClientHandler.PublishAuthTypeChangeEventAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateCognitoMediatorAppClientHandler.cs",
+        "line": 248
+      },
+      {
+        "type": "export",
+        "endpoint": "UpdateTenancyUserPoolHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UpgradeJob/UpdateTenancyUserPoolHandler.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersAssignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserAssignment/UsersAssignedHandler.cs",
+        "line": 31
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersUnassignedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserAssignment/UsersUnassignedHandler.cs",
+        "line": 33
+      },
+      {
+        "type": "export",
+        "endpoint": "IdentityCreatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserCreation/IdentityCreatedHandler.cs",
+        "line": 37
+      },
+      {
+        "type": "export",
+        "endpoint": "NewUserIdentityUpdatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserCreation/NewUserIdentityUpdatedHandler.cs",
+        "line": 25
+      },
+      {
+        "type": "export",
+        "endpoint": "UserRegisteredHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserCreation/UserRegisteredHandler.cs",
+        "line": 43
+      },
+      {
+        "type": "export",
+        "endpoint": "UserRegisteredHandler.ShouldSkipSuppressionListUser",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserCreation/UserRegisteredHandler.cs",
+        "line": 128
+      },
+      {
+        "type": "export",
+        "endpoint": "UserRegisteredHandler.IsSuppressionListEmail",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserCreation/UserRegisteredHandler.cs",
+        "line": 135
+      },
+      {
+        "type": "export",
+        "endpoint": "UserRegisteredHandler.ShouldSuppressWelcomeEmail",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserCreation/UserRegisteredHandler.cs",
+        "line": 141
+      },
+      {
+        "type": "export",
+        "endpoint": "UserPasswordResetHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserPasswordResetting/UserPasswordResetHandler.cs",
+        "line": 50
+      },
+      {
+        "type": "export",
+        "endpoint": "UserDetailsUpdatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserDetailsUpdatedHandler.cs",
+        "line": 31
+      },
+      {
+        "type": "export",
+        "endpoint": "UserDetailsUpdatedHandler.UpdateUserIdentityDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserDetailsUpdatedHandler.cs",
+        "line": 85
+      },
+      {
+        "type": "export",
+        "endpoint": "UserDisabledHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserDisabledHandler.cs",
+        "line": 30
+      },
+      {
+        "type": "export",
+        "endpoint": "UserReEnabledHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserReEnabledHandler.cs",
+        "line": 30
+      },
+      {
+        "type": "export",
+        "endpoint": "UserUpdatedHandler.HandleMessage",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserUpdatedHandler.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "UserUpdatedHandler.UpdateUserIdentityDetails",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserUpdatedHandler.cs",
+        "line": 66
+      },
+      {
+        "type": "export",
+        "endpoint": "UserUpdatedHandler.ChangeUserStatusAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/UserUpdation/UserUpdatedHandler.cs",
+        "line": 80
+      },
+      {
+        "type": "export",
+        "endpoint": "LocaleResourceDto.GetValue",
+        "file": "Services/Waters.TenancyAS.WebAPI/Resources/LocaleResourceDto.cs",
+        "line": 12
+      },
+      {
+        "type": "export",
+        "endpoint": "LocaleResourceReader.GetLocaleResourcesAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Resources/LocaleResourceReader.cs",
+        "line": 19
+      },
+      {
+        "type": "export",
+        "endpoint": "LocaleResourceReader.GetEmbededLocaleResourcesAsync",
+        "file": "Services/Waters.TenancyAS.WebAPI/Resources/LocaleResourceReader.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetClusterName",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 9
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetClusterRegion",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 11
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetEnableSwaggerValue",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 13
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetClusterBucketSettings",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 15
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetRootTeamPermissionSetIds",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 17
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetRootTeamAdditionalPermissionIds",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 19
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetDefaultAdministrationRoleDefinitions",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 21
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.IsDocumentDbRunning",
+        "file": "Services/Waters.TenancyAS.WebAPI/Settings/ConfigurationExtensions.cs",
+        "line": 23
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.ConfigureServices",
+        "file": "Services/Waters.TenancyAS.WebAPI/Startup.cs",
+        "line": 102
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.Configure",
+        "file": "Services/Waters.TenancyAS.WebAPI/Startup.cs",
+        "line": 331
+      },
+      {
+        "type": "export",
+        "endpoint": "StartupWithAutoFac.ConfigureContainer",
+        "file": "Services/Waters.TenancyAS.WebAPI/StartupWithAutoFac.cs",
+        "line": 28
+      }
+    ]
+  }
+}

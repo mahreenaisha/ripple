@@ -1,0 +1,908 @@
+[
+  {
+    "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "to": "cognito-idp.eu-west-1.amazonaws.com",
+    "type": "external_api",
+    "evidence": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/OpenAPIs/TenancyAS_TenancyCatalog.yaml:541: example: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_WHPy7KntP"
+  },
+  {
+    "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "to": "dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com",
+    "type": "external_api",
+    "evidence": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/OpenAPIs/TenancyAS_TenancyCatalog.yaml:546: example: https://dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com/login"
+  },
+  {
+    "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "to": "dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com",
+    "type": "external_api",
+    "evidence": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/OpenAPIs/TenancyAS_TenancyCatalog.yaml:551: example: https://dev-eu-wcc-stage-waters.auth.eu-west-1.amazoncognito.com/logout"
+  },
+  {
+    "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "to": "dev-eu.scalars-access.com",
+    "type": "external_api",
+    "evidence": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/OpenAPIs/TenancyAS_TenancyCatalog.yaml:556: example: https://dev-eu.scalars-access.com:443/hub"
+  },
+  {
+    "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "to": "dev-eu.scalars-access.com",
+    "type": "external_api",
+    "evidence": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/OpenAPIs/TenancyAS_TenancyCatalog.yaml:561: example: https://dev-eu.scalars-access.com:443/hub/login"
+  },
+  {
+    "from": "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+    "to": "internal:Waters.TenancyAS.Contracts.Messages",
+    "type": "import",
+    "evidence": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller.csproj:29: <ProjectReference Include=\"..\\..\\..\\..\\Contracts\\Waters.TenancyAS.Contracts.Messages\\Waters.TenancyAS.Contracts.Messages.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Jobs/JobRunner.cs:45: _logger.LogInformation(\"OpenSearch Role Mapping Installation Job started for the \\\"{clusterName}\\\" cluster and the \\\"{cloudRegion}\\\" with values: mapping file name = {mappingFileName} and config version = {configVersion}"
+  },
+  {
+    "from": "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Program.cs:13: description: \"If this parameter is provided, then OpenSearch mapping file name will be as provided.\"),"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "api-authorization",
+    "type": "external_api",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/appsettings.Development.json:48: \"InternalTokenAuthority\": \"http://api-authorization\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/LegacyEventBridgePublisher.cs:32: IAmazonEventBridge eventBridge,"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/LegacyEventBridgePublisher.cs:36: _eventBridge = eventBridge;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/LegacyEventBridgePublisher.cs:5: using Amazon.EventBridge;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/LegacyEventBridgePublisher.cs:6: using Amazon.EventBridge.Model;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/LegacyEventBridgePublisher.cs:63: \"Legacy EventBridge publish failed for {DetailType}: {ErrorCode} — {ErrorMessage}\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS EventBridge",
+    "type": "message_queue",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:19: <PackageReference Include=\"AWSSDK.EventBridge\" Version=\"4.0.*\" />"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/appsettings.Development.json:18: \"ServiceUrl\": \"http://sqs.eu-west-1.amazonaws.com\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Settings/SqsQueueSettings.cs:8: public class SqsQueueSettings"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Startup.cs:155: var queueConfig = Configuration.GetSection(\"SQSQueueSettings\").Get<SqsQueueSettings>();"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "AWS SQS",
+    "type": "message_queue",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Startup.cs:219: services.AddStandardSqsQueueListener<TenancyMessageTypeDiscriminator>("
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "cognito-idp.",
+    "type": "external_api",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/TenancyProvider.cs:434: private static string GetIssuerUri(string region, string userPoolId) => $\"https://cognito-idp.{region}.amazonaws.com/{userPoolId}\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "complianceas-service",
+    "type": "http_call",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Infrastructure/ComplianceASProxy.cs:28: private const string HostName = \"complianceas-service\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "dev-eu.scalars-access.com",
+    "type": "external_api",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/appsettings.Development.json:14: \"public_url\": \"https://dev-eu.scalars-access.com/assets\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Caching/DynamoDbClientServiceCacheProvider.cs:4: using Waters.DynamoDB.NonTDI.Access.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Caching/DynamoDbClientServiceCacheProvider.cs:6: namespace Waters.DynamoDB.NonTDI.Access.Caching"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Caching/DynamoDbClientServiceMemoryCache.cs:4: namespace Waters.DynamoDB.NonTDI.Access.Caching"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Caching/IDynamoDbClientServiceCacheProvider.cs:2: using Waters.DynamoDB.NonTDI.Access.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Caching/IDynamoDbClientServiceCacheProvider.cs:4: namespace Waters.DynamoDB.NonTDI.Access.Caching"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Caching/IDynamoDbClientServiceMemoryCache.cs:3: namespace Waters.DynamoDB.NonTDI.Access.Caching"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/ErrorResults/NonTdiScopedDynamoDbAccessErrors.cs:3: namespace Waters.DynamoDB.NonTDI.Access.ErrorResults"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Extensions/ServiceCollectionExtensions.cs:4: using Waters.DynamoDB.NonTDI.Access.Caching;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Extensions/ServiceCollectionExtensions.cs:5: using Waters.DynamoDB.NonTDI.Access.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Extensions/ServiceCollectionExtensions.cs:8: namespace Waters.DynamoDB.NonTDI.Access.Extensions"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Helpers/AssumeGlobalSecondaryIndexRoleHelper.cs:19: var roleArn = $\"arn:aws:iam::{catalogConfig.AccountId}:role/dynamodb-gsi-readonly-v2-{catalogConfig.ClusterName}\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Helpers/AssumeGlobalSecondaryIndexRoleHelper.cs:2: using Waters.DynamoDB.NonTDI.Access.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Helpers/AssumeGlobalSecondaryIndexRoleHelper.cs:4: namespace Waters.DynamoDB.NonTDI.Access.Helpers"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Helpers/CacheConfigurationHelper.cs:1: using Waters.DynamoDB.NonTDI.Access.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Helpers/CacheConfigurationHelper.cs:3: namespace Waters.DynamoDB.NonTDI.Access.Helpers"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Helpers/Constants.cs:1: namespace Waters.DynamoDB.NonTDI.Access.Helpers"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Models/DynamoDbClientCacheKey.cs:2: namespace Waters.DynamoDB.NonTDI.Access.Models"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Models/GlobalTenancyCatalogDynamodbConfig.cs:1: using Waters.DynamoDB.NonTDI.Access.Helpers;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/Models/GlobalTenancyCatalogDynamodbConfig.cs:3: namespace Waters.DynamoDB.NonTDI.Access.Models"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/NonTdiScopedDynamoDbClientProvider.cs:11: namespace Waters.DynamoDB.NonTDI.Access"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/NonTdiScopedDynamoDbClientProvider.cs:6: using Waters.DynamoDB.NonTDI.Access.Caching;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/NonTdiScopedDynamoDbClientProvider.cs:7: using Waters.DynamoDB.NonTDI.Access.ErrorResults;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/NonTdiScopedDynamoDbClientProvider.cs:8: using Waters.DynamoDB.NonTDI.Access.Helpers;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/DynamoDb/Waters.DynamoDB.NonTDI.Access/NonTdiScopedDynamoDbClientProvider.cs:9: using Waters.DynamoDB.NonTDI.Access.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1062: _logger.LogError(\"Failed to get dynamoDB client.\");"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1063: return Result.Fail(\"Failed to get dynamoDB client.\");"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1116: var dynamodbClient = await _nonTdiScopedDynamoDbClientProvider.GetNonTDIScopedDynamoDbClient(string.Empty, Constants.ClusterTenantsIndexName, cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1117: if (dynamodbClient.IsFailed)"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1124: var response = await dynamodbClient.Value.QueryAsync(request, cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1151: private async Task<IAmazonDynamoDB> GetDbClient(CancellationToken cancellationToken = default)"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1179: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1184: await dynamodbClient.UpdateItemAsync(new UpdateItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1245: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1246: await dynamodbClient.UpdateItemAsync(new UpdateItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1365: private async Task<Dictionary<string, AttributeValue>> EnsureETagPresentAsync(IAmazonDynamoDB dynamodbClient,"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1374: await dynamodbClient.UpdateItemAsync(new UpdateItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:141: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1425: _logger.LogError(\"Failed to get non tdi scoped dynamodb client object\");"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:144: var getItemResponse = await dynamodbClient.GetItemAsync(new GetItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:15: using Waters.AccessControl.DynamoDB.Interfaces;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1521: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:1522: var response = await dynamodbClient.QueryAsync(queryRequest, cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:17: using Waters.DynamoDB.NonTDI.Access;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:179: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:184: var getItemResponse = await dynamodbClient.GetItemAsync(new GetItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:197: await EnsureETagPresentAsync(dynamodbClient, getItemResponse.Item, key, cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:522: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:523: await dynamodbClient.UpdateItemAsync(updateItemRequest, cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:576: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:585: await dynamodbClient.PutItemAsync(new PutItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:692: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:699: await dynamodbClient.UpdateItemAsync(new UpdateItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:760: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:766: await dynamodbClient.UpdateItemAsync(new UpdateItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:79: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:813: var dynamodbClient = await GetDbClient(cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:815: var response = await dynamodbClient.UpdateItemAsync(new UpdateItemRequest"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/DynamoDbStore/TenancyCatalogStoreV2.cs:97: await EnsureETagPresentAsync(dynamodbClient, item, key, cancellationToken);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/Waters.TenancyAS.Private.Repositories.csproj:14: <PackageReference Include=\"Waters.AccessControl.DynamoDB\" Version=\"3.0.*\" />"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/Waters.TenancyAS.Private.Repositories.csproj:20: <ProjectReference Include=\"..\\..\\DynamoDb\\Waters.DynamoDB.NonTDI.Access\\Waters.DynamoDB.NonTDI.Access.csproj\" />"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Startup.cs:13: using Waters.AccessControl.DynamoDB.Extensions;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Startup.cs:21: using Waters.DynamoDB.NonTDI.Access.Extensions;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "DynamoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:39: <PackageReference Include=\"Waters.AccessControl.DynamoDB\" Version=\"3.0.0\" />"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.AccessControl.SES",
+    "type": "import",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Waters.TenancyAS.Private.Business.csproj:49: <ProjectReference Include=\"..\\..\\SES\\Waters.AccessControl.SES\\Waters.AccessControl.SES.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.AccessControl.SES",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:67: <ProjectReference Include=\"..\\..\\Private\\SES\\Waters.AccessControl.SES\\Waters.AccessControl.SES.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.DynamoDB.NonTDI.Access",
+    "type": "import",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/Waters.TenancyAS.Private.Repositories.csproj:20: <ProjectReference Include=\"..\\..\\DynamoDb\\Waters.DynamoDB.NonTDI.Access\\Waters.DynamoDB.NonTDI.Access.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Adapters",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:63: <ProjectReference Include=\"..\\..\\Adapters\\Waters.TenancyAS.Adapters\\Waters.TenancyAS.Adapters.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Contracts.Messages",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:61: <ProjectReference Include=\"..\\..\\Contracts\\Waters.TenancyAS.Contracts.Messages\\Waters.TenancyAS.Contracts.Messages.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Interface",
+    "type": "import",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Waters.TenancyAS.Private.Business.csproj:46: <ProjectReference Include=\"..\\..\\..\\Interface\\Waters.TenancyAS.Interface\\Waters.TenancyAS.Interface.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Interface",
+    "type": "import",
+    "evidence": "Private/Interfaces/Waters.TenancyAS.Private.Interfaces/Waters.TenancyAS.Private.Interfaces.csproj:39: <ProjectReference Include=\"..\\..\\..\\Interface\\Waters.TenancyAS.Interface\\Waters.TenancyAS.Interface.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Interface",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:62: <ProjectReference Include=\"..\\..\\Interface\\Waters.TenancyAS.Interface\\Waters.TenancyAS.Interface.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Business",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:64: <ProjectReference Include=\"..\\..\\Private\\Business\\Waters.TenancyAS.Private.Business\\Waters.TenancyAS.Private.Business.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Interfaces",
+    "type": "import",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Waters.TenancyAS.Adapters.csproj:16: <ProjectReference Include=\"..\\..\\Private\\Interfaces\\Waters.TenancyAS.Private.Interfaces\\Waters.TenancyAS.Private.Interfaces.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Interfaces",
+    "type": "import",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Waters.TenancyAS.Private.Business.csproj:47: <ProjectReference Include=\"..\\..\\Interfaces\\Waters.TenancyAS.Private.Interfaces\\Waters.TenancyAS.Private.Interfaces.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Interfaces",
+    "type": "import",
+    "evidence": "Private/Repositories/Waters.TenancyAS.Private.Repositories/Waters.TenancyAS.Private.Repositories.csproj:21: <ProjectReference Include=\"..\\..\\Interfaces\\Waters.TenancyAS.Private.Interfaces\\Waters.TenancyAS.Private.Interfaces.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Interfaces",
+    "type": "import",
+    "evidence": "Private/SES/Waters.AccessControl.SES/Waters.AccessControl.SES.csproj:23: <ProjectReference Include=\"..\\..\\Interfaces\\Waters.TenancyAS.Private.Interfaces\\Waters.TenancyAS.Private.Interfaces.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Interfaces",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:65: <ProjectReference Include=\"..\\..\\Private\\Interfaces\\Waters.TenancyAS.Private.Interfaces\\Waters.TenancyAS.Private.Interfaces.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Repositories",
+    "type": "import",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Waters.TenancyAS.Private.Business.csproj:48: <ProjectReference Include=\"..\\..\\Repositories\\Waters.TenancyAS.Private.Repositories\\Waters.TenancyAS.Private.Repositories.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "internal:Waters.TenancyAS.Private.Repositories",
+    "type": "import",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Waters.TenancyAS.WebAPI.csproj:66: <ProjectReference Include=\"..\\..\\Private\\Repositories\\Waters.TenancyAS.Private.Repositories\\Waters.TenancyAS.Private.Repositories.csproj\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Accessors/MongoDBAccessor.cs:11: using Waters.AccessControl.MongoDB.Management;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Accessors/MongoDBAccessor.cs:187: _logger.LogError(\"Failed to delete mongodb users for tenancy {TenantId}. Error : {ErrorMessage}\", message.TenantID, response.Errors[0].Message);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Accessors/MongoDBAccessor.cs:202: _logger.LogError(\"Failed to drop mongodb for tenancy {TenantId}. Error : {ErrorMessage}\", _watersConnectCloudContextAccessor.Current.TenantId, response.Errors[0].Message);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/MongoDBFeatureToServiceMapper.cs:44: return Result.Fail(\"No service is mapped to this MongoDB Feature\");"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Waters.TenancyAS.Private.Business.csproj:26: <PackageReference Include=\"Waters.AccessControl.MongoDB.Management\" Version=\"4.8.*\" />"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/FeatureStateUpdate/ManageTDIForMongoDBHandler.cs:32: Logger.LogWarning(\"MongoDb resource can not be created for the tenant {TenantId} at this moment due to no documentdb instances running on cluster\", message.TenantID);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/DropTDIMongoDBHandler.cs:29: Logger.LogError(\"Unable to drop MongoDB for the specified tenancy ({TenantId}) due to its tenancy type being {TenancyType}\", message.TenantID, tenancyType);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/DropTDIMongoDBHandler.cs:35: Logger.LogInformation(\"Successfully dropped mongodb for tenancy {TenantId}\", message.TenantID);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/DropTDIMongoDBHandler.cs:38: Logger.LogError(\"Failed to drop mongodb for tenancy {TenantId}\", message.TenantID);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyFoundHandler.cs:61: Logger.LogWarning(\"MongoDb resource can not be deleted for the tenant {TenantId} at this moment due to no documentdb instances running on cluster\", message.TenantID);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyMongoDbUserDeletedHandler.cs:29: Logger.LogInformation(\"Successfully deleted mongodb users for tenancy {TenantId}\", message.TenantID);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/TenancyDeletion/TenancyMongoDbUserDeletedHandler.cs:33: Logger.LogError(\"Failed to delete mongodb users for tenancy {TenantId}\", message.TenantID);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Startup.cs:14: using Waters.AccessControl.MongoDB.Management.Extensions;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "MongoDB",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Startup.cs:15: using Waters.AccessControl.MongoDB.Management.Models;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Clients/OpenSearchClient.cs:100: new Models.OpenSearch.IndexPermission"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Clients/OpenSearchClient.cs:16: using Waters.TenancyAS.Adapters.Models.OpenSearch;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Helpers/AdapterConstants.cs:16: public const string OpenSearchPutRoleRequestExceptionMessage = \"Failed to create/update OpenSearch role.\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Helpers/AdapterConstants.cs:17: public const string OpenSearchPutUserRequestExceptionMessage = \"Failed to create OpenSearch user.\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Models/OpenSearch/CreateRoleRequest.cs:4: namespace Waters.TenancyAS.Adapters.Models.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Models/OpenSearch/CreateUserRequest.cs:4: namespace Waters.TenancyAS.Adapters.Models.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Adapters/Waters.TenancyAS.Adapters/Models/OpenSearch/IndexPermission.cs:6: namespace Waters.TenancyAS.Adapters.Models.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchManager.cs:103: \"CreateOrUpdateUserAsync - Failed to retrieve OpenSearch password for tenant {TenantId}. Unable to create or update OpenSearch user from OpenSearchMappingFile {MappingFile}.\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchManager.cs:114: \"CreateOrUpdateUserAsync - Successfully created or updated OpenSearch user for tenant {TenantId} and mapping file {MappingFile}\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchManager.cs:120: \"CreateOrUpdateUserAsync - Failed to create or update OpenSearch user for tenant {TenantId} and mapping file {MappingFile}: {Errors}\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchManager.cs:169: _logger.LogError(\"CreateOrReplaceUserAsync - Failed to retrieve OpenSearch password. Unable to create or update OpenSearch User for tenant {TenantId}\", tenantId);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchManager.cs:73: _logger.LogInformation(\"Attempting to upsert OpenSearch Role for the {ServiceName} service using the OpenSearch {MappingFileName} mapping file with {MappingFileVersion} version\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchManager.cs:94: _logger.LogInformation(\"CreateOrUpdateUserAsync - Attempting to upsert OpenSearch User for {TenantId} using OpenSearchMappingFile: {MappingFileName}, Version: {MappingFileVersion}\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchRoleService.cs:40: _logger.LogError(\"Failed to retrieve OpenSearch password.\" +"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchRoleService.cs:41: \" Unable to create or update OpenSearch Role for the {serviceName} service.\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchRoleService.cs:65: _logger.LogInformation(\"Successfully created or updated OpenSearch role for the {serviceName} service.\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Services/OpenSearchRoleService.cs:71: \"Failed to create or update OpenSearch role for the {serviceName} service: {errors}\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Interfaces/Waters.TenancyAS.Private.Interfaces/Errors/OpenSearchRoleNotExistsError.cs:10: private const string DefaultMessage = \"Failed to create an OpenSearch user. The OpenSearch Role being assigned does not exist.\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Interfaces/Waters.TenancyAS.Private.Interfaces/Queue/Messages/OpenSearch/OpenSearchRoleUpgradeTenancyIdentified.cs:3: namespace Waters.TenancyAS.Private.Interfaces.Queue.Messages.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Interfaces/Waters.TenancyAS.Private.Interfaces/Queue/Messages/OpenSearch/OpenSearchServiceRolesUpdated.cs:3: namespace Waters.TenancyAS.Private.Interfaces.Queue.Messages.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Interfaces/Waters.TenancyAS.Private.Interfaces/Waters.TenancyAS.Private.Interfaces.csproj:43: <OpenApiReference Include=\"..\\..\\..\\Docs\\Swagger\\config\\opensearch-role-mapping.yaml\" CodeGenerator=\"NSwagCSharp\" Namespace=\"Waters.TenancyAS.Private.Interfaces\">"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Private/Interfaces/Waters.TenancyAS.Private.Interfaces/Waters.TenancyAS.Private.Interfaces.csproj:46: <Link>OpenAPI\\opensearch-service-role-mapping.yaml</Link>"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/appsettings.Development.json:53: \"PasswordSecretKey\": \"dev-eu-wcc-tenancyas-+-shared-opensearch-service-job-user-password\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/appsettings.Development.json:54: \"Endpoint\": \"http://localhost:9200\""
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/MessageDeserialization/TenancyMessageTypeDiscriminator.cs:9: using Waters.TenancyAS.Private.Interfaces.Queue.Messages.OpenSearch;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchRoleUpgradeTenancyIdentifiedHandler.cs:10: namespace Waters.TenancyAS.WebAPI.Queue.Handlers.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchRoleUpgradeTenancyIdentifiedHandler.cs:36: Logger.LogError(\"Failed to create/update an OpenSearch user with a role from the '{mappingFileName}' mapping file.\", message.MappingFileName);"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchRoleUpgradeTenancyIdentifiedHandler.cs:7: using Waters.TenancyAS.Private.Interfaces.Queue.Messages.OpenSearch;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchServiceRolesUpdatedHandler.cs:11: using Waters.TenancyAS.Private.Interfaces.Queue.Messages.OpenSearch;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/OpenSearchServiceRolesUpdatedHandler.cs:14: namespace Waters.TenancyAS.WebAPI.Queue.Handlers.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/TenancyAsOpenSearchUserRoleMappingInstalledHandler.cs:13: using Waters.TenancyAS.Private.Interfaces.Queue.Messages.OpenSearch;"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "OpenSearch",
+    "type": "database",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Queue/Handlers/OpenSearch/TenancyAsOpenSearchUserRoleMappingInstalledHandler.cs:16: namespace Waters.TenancyAS.WebAPI.Queue.Handlers.OpenSearch"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "public-assets-dev-eu-wcc.s3.eu-west-1.amazonaws.com",
+    "type": "external_api",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/appsettings.Development.json:5: \"PublicAssetsUrl\": \"https://public-assets-dev-eu-wcc.s3.eu-west-1.amazonaws.com\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "tenancyadmin-service",
+    "type": "http_call",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Helpers/ServicesHelper.cs:16: return $\"http://tenancyadmin-service:{servicePort}/api/v1.0/\";"
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "test",
+    "type": "external_api",
+    "evidence": "Services/Waters.TenancyAS.WebAPI/Helpers/TenantDetailsToTenantMapper.cs:17: SilentRefreshRedirectUri = \"http://test\","
+  },
+  {
+    "from": "Waters.TenancyAS.WebAPI",
+    "to": "watersconnect.com",
+    "type": "external_api",
+    "evidence": "Private/Business/Waters.TenancyAS.Private.Business/Helpers/SupportCodeHelpers.cs:11: public const string ProblemDetailsTypeWithSupportCode = \"https://watersconnect.com/support-codes/{0}\";"
+  }
+]

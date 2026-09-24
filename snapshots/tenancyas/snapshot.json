@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "name": "TenancyAS",
+  "slug": "tenancyas",
+  "source": {
+    "commit": "c2b226f27069281c2ec6a5a9e44dc09e40db16a8",
+    "branch": "main",
+    "remote": "git@github.com:WatersConnectCloud/wcc-tenancyas.git",
+    "committedAt": "2026-09-23T14:02:02+05:30",
+    "localPath": "/mnt/c/Users/conmais/git/company/wcc-tenancyas",
+    "scannedAt": "2026-09-24T11:03:45.049Z"
+  },
+  "counts": {
+    "services": 3,
+    "entryPoints": 403,
+    "dependencies": 151,
+    "flows": 49,
+    "nodes": 16,
+    "edges": 16
+  },
+  "durationMs": 26998
+}

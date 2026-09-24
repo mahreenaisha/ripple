@@ -1,0 +1,437 @@
+{
+  "nodes": [
+    {
+      "id": "api-authorization",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS Cognito",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.Jobs.DeactivatingUsers",
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS EventBridge",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "AWS SQS",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "complianceas-service",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "DynamoDB",
+      "type": "database",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "MongoDB",
+      "type": "database",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "OpenSearch",
+      "type": "database",
+      "confidence": "medium",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "public-assets-dev-eu-wcc.s3.eu-west-1.amazonaws.com",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Scalars Access",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": true,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.Jobs.DeactivatingUsers",
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "tenancyadmin-service",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "test",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "spof_source": null,
+      "language": "C#",
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [
+        "AWS Cognito",
+        "Scalars Access"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-09-14T14:13:13+01:00",
+        "lines_of_code": 683,
+        "status": "active",
+        "is_spof": false,
+        "gotchas": null,
+        "owner": null
+      }
+    },
+    {
+      "id": "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "spof_source": null,
+      "language": "C#",
+      "entry_points_count": 0,
+      "databases": [
+        "OpenSearch"
+      ],
+      "dependencies_on": [
+        "OpenSearch"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-09-15T11:13:56+01:00",
+        "lines_of_code": 220,
+        "status": "active",
+        "is_spof": false,
+        "gotchas": null,
+        "owner": null
+      }
+    },
+    {
+      "id": "Waters.TenancyAS.WebAPI",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "spof_source": null,
+      "language": "C#",
+      "entry_points_count": 49,
+      "databases": [
+        "DynamoDB",
+        "MongoDB",
+        "OpenSearch"
+      ],
+      "dependencies_on": [
+        "AWS Cognito",
+        "AWS EventBridge",
+        "AWS SQS",
+        "DynamoDB",
+        "MongoDB",
+        "OpenSearch",
+        "Scalars Access",
+        "api-authorization",
+        "complianceas-service",
+        "public-assets-dev-eu-wcc.s3.eu-west-1.amazonaws.com",
+        "tenancyadmin-service",
+        "test",
+        "watersconnect.com"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-09-18T19:43:03+05:30",
+        "lines_of_code": 10275,
+        "status": "active",
+        "is_spof": false,
+        "gotchas": null,
+        "owner": null
+      }
+    },
+    {
+      "id": "watersconnect.com",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.TenancyAS.WebAPI"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+      "to": "AWS Cognito",
+      "type": "calls",
+      "count": 3,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+      "to": "Scalars Access",
+      "type": "calls",
+      "count": 2,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+      "to": "OpenSearch",
+      "type": "queries",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "api-authorization",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "AWS Cognito",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "AWS EventBridge",
+      "type": "publishes",
+      "count": 5,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "AWS SQS",
+      "type": "subscribes",
+      "count": 1,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "complianceas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "DynamoDB",
+      "type": "queries",
+      "count": 12,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "MongoDB",
+      "type": "queries",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "OpenSearch",
+      "type": "queries",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "public-assets-dev-eu-wcc.s3.eu-west-1.amazonaws.com",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "Scalars Access",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "tenancyadmin-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "test",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.TenancyAS.WebAPI",
+      "to": "watersconnect.com",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-09-24T11:03:41.831Z",
+    "repo_url": "git@github.com:WatersConnectCloud/wcc-tenancyas.git",
+    "total_services": 3,
+    "total_nodes": 16,
+    "total_edges": 16,
+    "edge_count_semantics": "unique source operation/evidence locations",
+    "deployment_order": [],
+    "known_issues": []
+  }
+}
