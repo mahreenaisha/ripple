@@ -1,0 +1,59 @@
+flowchart LR
+  subgraph service [Services]
+    node12["Waters.TenancyAS.Jobs.DeactivatingUsers<br/>0 entry points"]
+    node13["Waters.TenancyAS.OpenSearchRoleMappingInstaller<br/>0 entry points"]
+    node14["Waters.TenancyAS.WebAPI<br/>49 entry points"]
+  end
+  subgraph database [Databases]
+    node5[("DynamoDB")]
+    node6[("MongoDB")]
+    node7[("OpenSearch")]
+  end
+  subgraph externalapi [External systems]
+    node0["api-authorization"]
+    node1["AWS Cognito"]
+    node2["AWS EventBridge"]
+    node3["AWS SQS"]
+    node4["complianceas-service"]
+    node8["public-assets-dev-eu-wcc.s3.eu-west-1.amazonaws.com"]
+    node9["Scalars Access"]
+    node10["tenancyadmin-service"]
+    node11["test"]
+    node15["watersconnect.com"]
+  end
+  node12 -->|"calls ×3 (high)"| node1
+  node12 -->|"calls ×2 (high)"| node9
+  node13 -->|"queries ×1 (medium)"| node7
+  node14 -->|"calls ×1 (medium)"| node0
+  node14 -->|"calls ×1 (medium)"| node1
+  node14 -->|"publishes ×5 (high)"| node2
+  node14 -->|"subscribes ×1 (high)"| node3
+  node14 -->|"calls ×1 (medium)"| node4
+  node14 -->|"queries ×12 (high)"| node5
+  node14 -->|"queries ×1 (medium)"| node6
+  node14 -->|"queries ×1 (medium)"| node7
+  node14 -->|"calls ×1 (medium)"| node8
+  node14 -->|"calls ×1 (medium)"| node9
+  node14 -->|"calls ×1 (medium)"| node10
+  node14 -->|"calls ×1 (medium)"| node11
+  node14 -->|"calls ×1 (medium)"| node15
+  classDef service fill:#dbeafe,stroke:#2563eb,color:#172554
+  classDef database fill:#d1fae5,stroke:#059669,color:#064e3b
+  classDef external fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef danger fill:#fecaca,stroke:#dc2626,color:#7f1d1d,stroke-width:3px
+  class node0 external
+  class node1 external
+  class node2 external
+  class node3 external
+  class node4 external
+  class node5 database
+  class node6 database
+  class node7 database
+  class node8 external
+  class node9 external
+  class node10 external
+  class node11 external
+  class node12 service
+  class node13 service
+  class node14 service
+  class node15 external

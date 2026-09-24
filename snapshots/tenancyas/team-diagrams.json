@@ -1,0 +1,10 @@
+{
+  "diagrams": [],
+  "docs": [
+    {
+      "title": "INFSAAS-20398: Migrate TenancyAS from Legacy Publisher Libraries to Waters.Messaging.Publishers v15+",
+      "path": "Docs/INFSAAS-20398-migration-plan.md",
+      "lines": 347
+    }
+  ]
+}

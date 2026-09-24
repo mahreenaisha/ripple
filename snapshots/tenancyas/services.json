@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "path": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers",
+    "language": "C#",
+    "entry_file": "Jobs/Adhoc/DeactivatingUsers/Waters.TenancyAS.Jobs.DeactivatingUsers/Program.cs",
+    "kind": "cli",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.TenancyAS.Jobs.DeactivatingUsers.csproj",
+      "entrypoint: Program.cs",
+      "project output: Exe",
+      "framework: System.CommandLine"
+    ]
+  },
+  {
+    "name": "Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+    "path": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller",
+    "language": "C#",
+    "entry_file": "Jobs/Adhoc/OpenSearchRoleMappingInstaller/Waters.TenancyAS.OpenSearchRoleMappingInstaller/Program.cs",
+    "kind": "cli",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.TenancyAS.OpenSearchRoleMappingInstaller.csproj",
+      "entrypoint: Program.cs",
+      "project output: Exe",
+      "framework: System.CommandLine"
+    ]
+  },
+  {
+    "name": "Waters.TenancyAS.WebAPI",
+    "path": "Services/Waters.TenancyAS.WebAPI",
+    "language": "C#",
+    "entry_file": "Services/Waters.TenancyAS.WebAPI/Program.cs",
+    "kind": "api-service",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.TenancyAS.WebAPI.csproj",
+      "entrypoint: Program.cs",
+      "project SDK: Microsoft.NET.Sdk.Web"
+    ]
+  }
+]
