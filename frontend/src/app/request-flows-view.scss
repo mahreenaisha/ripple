@@ -4,7 +4,7 @@
   min-width: 0;
   min-height: 0;
   container-type: inline-size;
-  background: #0c1014;
+  background: var(--bg);
 }
 
 button,
@@ -25,7 +25,7 @@ input {
   min-height: 0;
   flex-direction: column;
   border-right: 1px solid var(--border-soft);
-  background: #0d1116;
+  background: var(--surface);
 }
 
 .catalog-tools {
@@ -50,7 +50,7 @@ input {
 
 .search:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgb(54 196 154 / 10%);
+  box-shadow: 0 0 0 3px rgb(185 180 199 / 14%);
 }
 
 .search svg {
@@ -108,8 +108,8 @@ input {
 .filter-row button:hover,
 .filter-row button.active,
 .retry:hover {
-  border-color: rgb(54 196 154 / 55%);
-  background: rgb(54 196 154 / 12%);
+  border-color: rgb(185 180 199 / 65%);
+  background: rgb(185 180 199 / 14%);
   color: var(--accent-soft);
 }
 
@@ -134,7 +134,7 @@ input {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-color: #3a4652 transparent;
+  scrollbar-color: #5c5470 transparent;
   scrollbar-width: thin;
 }
 
@@ -180,7 +180,7 @@ input {
 }
 
 .flow-card.selected {
-  border-color: rgb(54 196 154 / 24%);
+  border-color: rgb(185 180 199 / 42%);
   background: var(--surface-2);
   box-shadow: inset 3px 0 var(--accent);
 }
@@ -224,7 +224,7 @@ input {
 }
 
 .kind-badge[data-kind='queue'] {
-  border-color: rgb(54 196 154 / 35%);
+  border-color: rgb(185 180 199 / 45%);
   background: transparent;
   color: var(--accent-soft);
 }
@@ -477,7 +477,7 @@ input {
 
 .step.selected {
   border-color: var(--accent);
-  background: rgb(54 196 154 / 7%);
+  background: rgb(185 180 199 / 10%);
   box-shadow: inset 3px 0 var(--accent);
 }
 
@@ -510,7 +510,7 @@ input {
 .step-main code,
 .evidence code,
 .notice-list code {
-  color: #a9c7d8;
+  color: var(--accent-soft);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   overflow-wrap: anywhere;
@@ -543,7 +543,7 @@ input {
   margin-top: 0.45rem;
   padding: 0.65rem 0.8rem;
   border-left: 2px solid var(--border);
-  background: #0c1014;
+  background: var(--bg);
 }
 
 .evidence ul,
@@ -561,7 +561,7 @@ input {
   background:
     linear-gradient(rgb(255 255 255 / 2.5%) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 2.5%) 1px, transparent 1px),
-    #0b0f13;
+    var(--bg);
   background-size: 24px 24px;
   overflow: auto;
 }
@@ -893,7 +893,7 @@ input {
 }
 
 .fact[data-kind='rule'] {
-  border-left: 2px solid var(--warm);
+  border-left: 2px solid var(--accent-soft);
 }
 
 .fact[data-kind='tribal'] {
@@ -960,8 +960,8 @@ input {
 }
 
 .tile.accent {
-  border-color: rgb(54 196 154 / 35%);
-  background: rgb(54 196 154 / 7%);
+  border-color: rgb(185 180 199 / 45%);
+  background: rgb(185 180 199 / 10%);
 }
 
 .tile-title {
@@ -1021,7 +1021,7 @@ input {
   flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: #11161c;
+  background: var(--surface);
   box-shadow: 0 24px 80px rgb(0 0 0 / 55%);
   overflow: hidden;
 }
@@ -1090,7 +1090,7 @@ input {
 }
 
 .modal-body code {
-  color: #a9c7d8;
+  color: var(--accent-soft);
   font-family: var(--font-mono);
   font-size: 0.875rem;
   overflow-wrap: anywhere;
