@@ -245,18 +245,18 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
       {
         selector: 'node[impactLevel = 1]',
         style: {
-          'background-color': '#235a70',
+          'background-color': '#0e5264',
           'border-width': 3,
-          'border-color': '#6db4d5',
+          'border-color': '#67e8f9',
           'z-index': 998,
         },
       },
       {
         selector: 'node[impactLevel = 2]',
         style: {
-          'background-color': '#38566c',
+          'background-color': '#1e3a5f',
           'border-width': 3,
-          'border-color': '#8eabc0',
+          'border-color': '#93c5fd',
           color: '#f3f6f8',
           'z-index': 997,
         },
@@ -264,9 +264,9 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
       {
         selector: 'node[impactLevel >= 3]',
         style: {
-          'background-color': '#465b6c',
+          'background-color': '#664b1a',
           'border-width': 3,
-          'border-color': '#b2bdc7',
+          'border-color': '#f0b35a',
           'z-index': 996,
         },
       },
