@@ -134,7 +134,7 @@ describe('App', () => {
     const tabLabels = Array.from(
       (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),
     ).map((tab) => tab.textContent?.trim());
-    expect(tabLabels).toEqual(['Map', 'Flows', 'Snapshot', 'Simulate']);
+    expect(tabLabels).toEqual(['Map', 'Flows', 'Snapshot', 'Impact']);
 
     const flowsTab = Array.from(
       (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),

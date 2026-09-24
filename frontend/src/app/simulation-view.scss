@@ -41,7 +41,7 @@
 
 .status strong {
   font-family: var(--font-mono);
-  color: #ff9c9c;
+  color: var(--accent-soft);
 }
 
 .progress,
@@ -53,7 +53,7 @@
 }
 
 .progress {
-  color: var(--spof);
+  color: var(--accent);
 }
 
 .reset {
@@ -71,8 +71,8 @@
 }
 
 .reset:hover {
-  border-color: var(--risky);
-  color: #ffb0b0;
+  border-color: var(--accent);
+  color: var(--accent-soft);
 }
 
 .legend {
@@ -138,29 +138,29 @@
   border-radius: 50%;
 }
 
-.dot.hop0 {
-  background: #ef4444;
-  box-shadow: 0 0 0 2px #fecaca;
+.dot.selected {
+  background: #17694f;
+  box-shadow: 0 0 0 2px #78ddbd;
 }
 
-.dot.hop1 {
-  background: #fb923c;
-  box-shadow: 0 0 0 2px #fed7aa;
+.dot.direct {
+  background: #235a70;
+  box-shadow: 0 0 0 2px #6db4d5;
 }
 
-.dot.hop2 {
-  background: #facc15;
-  box-shadow: 0 0 0 2px #fef08a;
+.dot.level2 {
+  background: #38566c;
+  box-shadow: 0 0 0 2px #8eabc0;
 }
 
-.dot.hop3 {
-  background: #fde68a;
-  box-shadow: 0 0 0 2px #fef3c7;
+.dot.transitive {
+  background: #465b6c;
+  box-shadow: 0 0 0 2px #b2bdc7;
 }
 
 .dot.untouched {
-  background: #3c4c66;
-  box-shadow: 0 0 0 2px rgb(255 255 255 / 18%);
+  background: var(--surface-2);
+  box-shadow: 0 0 0 2px var(--border-soft);
   opacity: 0.6;
 }
 

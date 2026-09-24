@@ -1,48 +1,50 @@
 <div #cyContainer class="canvas"></div>
 
 <div class="toolbar">
-  @if (failedNode(); as nodeId) {
+  @if (selectedNode(); as nodeId) {
     <p class="status">
-      Simulating failure of: <strong>{{ nodeId }}</strong>
+      Impact from: <strong>{{ nodeId }}</strong>
       @if (running()) {
-        <span class="progress">rippling outward… hop {{ currentHop() }} of {{ maxHop() }}</span>
+        <span class="progress">tracing dependents… level {{ currentLevel() }} of {{ maxLevel() }}</span>
+      } @else if (affectedCount() === 0) {
+        <span class="summary">No dependent services found</span>
       } @else {
         <span class="summary">
-          {{ affectedCount() }} downstream service{{ affectedCount() === 1 ? '' : 's' }} affected across
-          {{ maxHop() }} hop{{ maxHop() === 1 ? '' : 's' }}
+          {{ affectedCount() }} potentially affected service{{ affectedCount() === 1 ? '' : 's' }} across
+          {{ maxLevel() }} level{{ maxLevel() === 1 ? '' : 's' }}
         </span>
       }
     </p>
-    <button type="button" class="reset" (click)="reset()">Reset</button>
+    <button type="button" class="reset" (click)="reset()">Clear selection</button>
   } @else {
-    <p class="status">Click any service to knock it out and watch the failure ripple outward</p>
+    <p class="status">Select a service to see what depends on it</p>
   }
 </div>
 
 <aside class="legend">
   <p class="legend-title">Reading this view</p>
-  <p class="legend-lead">Colour shows <strong>when</strong> a service is hit, not how risky it is. Each node is also labelled with its hop.</p>
+  <p class="legend-lead">Colour shows how closely each service depends on your selection.</p>
   <ul>
     <li>
-      <span class="swatch" aria-hidden="true"><i class="dot hop0"></i></span>
-      <span><strong>hop 0</strong> — the service you knocked out</span>
+      <span class="swatch" aria-hidden="true"><i class="dot selected"></i></span>
+      <span><strong>Selected</strong> — the service you may change</span>
     </li>
     <li>
-      <span class="swatch" aria-hidden="true"><i class="dot hop1"></i></span>
-      <span><strong>hop 1</strong> — depends directly on it, fails first</span>
+      <span class="swatch" aria-hidden="true"><i class="dot direct"></i></span>
+      <span><strong>Direct</strong> — depends on the selected service</span>
     </li>
     <li>
-      <span class="swatch" aria-hidden="true"><i class="dot hop2"></i></span>
-      <span><strong>hop 2</strong> — knocked out one step later</span>
+      <span class="swatch" aria-hidden="true"><i class="dot level2"></i></span>
+      <span><strong>Level 2</strong> — depends through one other service</span>
     </li>
     <li>
-      <span class="swatch" aria-hidden="true"><i class="dot hop3"></i></span>
-      <span><strong>hop 3+</strong> — the far edge of the blast radius</span>
+      <span class="swatch" aria-hidden="true"><i class="dot transitive"></i></span>
+      <span><strong>Level 3+</strong> — farther transitive dependents</span>
     </li>
     <li>
       <span class="swatch" aria-hidden="true"><i class="dot untouched"></i></span>
-      <span><strong>grey</strong> — unaffected, dimmed during a run</span>
+      <span><strong>Dimmed</strong> — no dependency path found</span>
     </li>
   </ul>
-  <p class="legend-hint">Node size is incoming call volume, so a large red node means a lot of traffic just died. Red links trace the path the failure travelled.</p>
+  <p class="legend-hint">Node size reflects incoming references found by the scanner. Highlighted links are potential impact paths, not proof that a change will break a service.</p>
 </aside>

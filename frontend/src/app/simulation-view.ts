@@ -3,17 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import cytoscape, { Core, StylesheetJson } from 'cytoscape';
 import { GraphData } from './graph-view';
 
-interface SimulationWave {
+interface ImpactWave {
   hop: number;
   nodes: string[];
 }
 
-interface SimulationResult {
-  failed_node: string;
-  waves: SimulationWave[];
+interface ImpactResult {
+  waves: ImpactWave[];
 }
 
-const HOP_DELAY_MS = 500;
+const LEVEL_DELAY_MS = 500;
 
 @Component({
   selector: 'app-simulation-view',
@@ -29,10 +28,10 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
   private cy?: Core;
   private timers: ReturnType<typeof setTimeout>[] = [];
 
-  protected readonly failedNode = signal<string | null>(null);
+  protected readonly selectedNode = signal<string | null>(null);
   protected readonly running = signal(false);
-  protected readonly currentHop = signal(0);
-  protected readonly maxHop = signal(0);
+  protected readonly currentLevel = signal(0);
+  protected readonly maxLevel = signal(0);
   protected readonly affectedCount = signal(0);
 
   ngAfterViewInit(): void {
@@ -92,17 +91,17 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
     });
 
     this.cy.on('tap', 'node', (evt) => {
-      this.simulateFailure(String(evt.target.id()));
+      this.traceImpact(String(evt.target.id()));
     });
   }
 
   protected reset(): void {
     this.clearTimers();
-    this.clearSimulationState();
-    this.failedNode.set(null);
+    this.clearImpactState();
+    this.selectedNode.set(null);
     this.running.set(false);
-    this.currentHop.set(0);
-    this.maxHop.set(0);
+    this.currentLevel.set(0);
+    this.maxLevel.set(0);
     this.affectedCount.set(0);
   }
 
@@ -111,21 +110,21 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
     this.cy?.destroy();
   }
 
-  private simulateFailure(nodeId: string): void {
+  private traceImpact(nodeId: string): void {
     this.clearTimers();
-    this.clearSimulationState();
-    this.failedNode.set(nodeId);
+    this.clearImpactState();
+    this.selectedNode.set(nodeId);
     this.running.set(true);
-    this.currentHop.set(0);
-    this.maxHop.set(0);
+    this.currentLevel.set(0);
+    this.maxLevel.set(0);
     this.affectedCount.set(0);
 
     this.cy?.elements().addClass('faded');
 
     this.http
-      .post<SimulationResult>(`http://localhost:8000/simulate/failure/${encodeURIComponent(nodeId)}`, {})
+      .post<ImpactResult>(`http://localhost:8000/simulate/failure/${encodeURIComponent(nodeId)}`, {})
       .subscribe({
-        next: (result) => this.playWaves(result.waves ?? []),
+        next: (result) => this.revealLevels(result.waves ?? []),
         error: () => {
           this.running.set(false);
           this.cy?.elements().removeClass('faded');
@@ -133,7 +132,7 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  private playWaves(waves: SimulationWave[]): void {
+  private revealLevels(waves: ImpactWave[]): void {
     const sorted = [...waves].sort((a, b) => a.hop - b.hop);
 
     if (sorted.length === 0) {
@@ -142,51 +141,59 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.maxHop.set(sorted[sorted.length - 1].hop);
+    this.maxLevel.set(sorted[sorted.length - 1].hop);
 
     sorted.forEach((wave, index) => {
       const timer = setTimeout(() => {
-        this.applyWave(wave);
-        this.currentHop.set(wave.hop);
+        this.revealLevel(wave);
+        this.currentLevel.set(wave.hop);
 
         if (index === sorted.length - 1) {
           this.running.set(false);
         }
-      }, index * HOP_DELAY_MS);
+      }, index * LEVEL_DELAY_MS);
       this.timers.push(timer);
     });
   }
 
-  private applyWave(wave: SimulationWave): void {
+  private revealLevel(wave: ImpactWave): void {
     if (!this.cy) {
       return;
     }
 
     for (const id of wave.nodes) {
       const node = this.cy.getElementById(id);
-      if (node.empty() || node.data('hop') !== undefined) {
+      if (node.empty() || node.data('impactLevel') !== undefined) {
         continue;
       }
 
-      node.data('hop', wave.hop);
-      node.data('label', wave.hop === 0 ? `${id}\nfailed` : `${id}\nhop ${wave.hop}`);
+      node.data('impactLevel', wave.hop);
+      node.data(
+        'label',
+        wave.hop === 0 ? `${id}\nselected` : wave.hop === 1 ? `${id}\ndirect` : `${id}\nlevel ${wave.hop}`,
+      );
       node.removeClass('faded');
     }
 
-    // Reveal the dependency edges the failure travelled along.
+    // Reveal dependency paths connecting the selected service to its dependents.
     this.cy.edges().forEach((edge) => {
-      if (edge.source().data('hop') !== undefined && edge.target().data('hop') !== undefined) {
-        edge.removeClass('faded').addClass('blast');
+      if (
+        edge.source().data('impactLevel') !== undefined &&
+        edge.target().data('impactLevel') !== undefined
+      ) {
+        edge.removeClass('faded').addClass('impact');
       }
     });
 
-    this.affectedCount.set(this.cy.nodes().filter((node) => node.data('hop') >= 1).length);
+    this.affectedCount.set(
+      this.cy.nodes().filter((node) => node.data('impactLevel') >= 1).length,
+    );
   }
 
-  private clearSimulationState(): void {
-    this.cy?.elements().removeClass('faded blast');
+  private clearImpactState(): void {
+    this.cy?.elements().removeClass('faded impact');
     this.cy?.nodes().forEach((node) => {
-      node.removeData('hop');
+      node.removeData('impactLevel');
       node.data('label', node.id());
     });
   }
@@ -227,39 +234,39 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
         },
       },
       {
-        selector: 'node[hop = 0]',
+        selector: 'node[impactLevel = 0]',
         style: {
-          'background-color': '#ef4444',
+          'background-color': '#17694f',
           'border-width': 4,
-          'border-color': '#fecaca',
+          'border-color': '#78ddbd',
           'z-index': 999,
         },
       },
       {
-        selector: 'node[hop = 1]',
+        selector: 'node[impactLevel = 1]',
         style: {
-          'background-color': '#fb923c',
+          'background-color': '#235a70',
           'border-width': 3,
-          'border-color': '#fed7aa',
+          'border-color': '#6db4d5',
           'z-index': 998,
         },
       },
       {
-        selector: 'node[hop = 2]',
+        selector: 'node[impactLevel = 2]',
         style: {
-          'background-color': '#facc15',
+          'background-color': '#38566c',
           'border-width': 3,
-          'border-color': '#fef08a',
+          'border-color': '#8eabc0',
           color: '#f3f6f8',
           'z-index': 997,
         },
       },
       {
-        selector: 'node[hop >= 3]',
+        selector: 'node[impactLevel >= 3]',
         style: {
-          'background-color': '#fde68a',
+          'background-color': '#465b6c',
           'border-width': 3,
-          'border-color': '#fef3c7',
+          'border-color': '#b2bdc7',
           'z-index': 996,
         },
       },
@@ -278,12 +285,12 @@ export class SimulationViewComponent implements AfterViewInit, OnDestroy {
         },
       },
       {
-        selector: 'edge.blast',
+        selector: 'edge.impact',
         style: {
           width: 2.6,
           opacity: 1,
-          'line-color': '#f87171',
-          'target-arrow-color': '#f87171',
+          'line-color': '#36c49a',
+          'target-arrow-color': '#36c49a',
         },
       },
       {
