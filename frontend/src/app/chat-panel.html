@@ -37,7 +37,7 @@
 <div #messageList class="messages">
   @if (messages().length === 0 && !thinking()) {
     <p class="hint">
-      {{ isFlowMode() ? 'Ask about the selected request flow or step.' : 'Ask about services, risk, or blast radius.' }}
+      {{ isFlowMode() ? 'Ask about the selected request flow or step.' : 'Ask about services, dependencies, or change impact.' }}
     </p>
   }
 
