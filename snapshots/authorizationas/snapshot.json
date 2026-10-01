@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "name": "AuthorizationAS",
+  "slug": "authorizationas",
+  "source": {
+    "commit": "645bada1e7d1d3553061771a2f756cdb6880af1e",
+    "branch": "main",
+    "remote": "git@github.com:WatersConnectCloud/wcc-authorizationas.git",
+    "committedAt": "2026-09-24T14:26:29+05:30",
+    "localPath": "/mnt/c/Users/conmais/git/company/wcc-authorizationas",
+    "scannedAt": "2026-09-24T11:41:54.544Z"
+  },
+  "counts": {
+    "services": 3,
+    "entryPoints": 74,
+    "dependencies": 6,
+    "flows": 10,
+    "nodes": 8,
+    "edges": 5
+  },
+  "durationMs": 10997
+}

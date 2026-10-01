@@ -1,0 +1,2815 @@
+{
+  "schema_version": "1.0.0",
+  "generator": {
+    "name": "ripple-request-flow-scanner",
+    "deterministic": true,
+    "strategy": "static-evidence-heuristics",
+    "source": {
+      "commit": "645bada1e7d1d3553061771a2f756cdb6880af1e",
+      "branch": "main",
+      "remote": "git@github.com:WatersConnectCloud/wcc-authorizationas.git",
+      "committedAt": "2026-09-24T14:26:29+05:30",
+      "localPath": "/mnt/c/Users/conmais/git/company/wcc-authorizationas",
+      "scannedAt": "2026-09-24T11:41:54.544Z"
+    }
+  },
+  "limits": {
+    "max_depth": 6,
+    "max_paths_per_trigger": 8,
+    "max_flows": 500
+  },
+  "flows": [
+    {
+      "id": "flow-0e2ff734c96e",
+      "service": "Waters.AuthorizationAS.Service",
+      "trigger": {
+        "kind": "api",
+        "label": "POST /device-token"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "POST /device-token",
+          "label": "POST /device-token",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+          "line": 52,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "DevicesController.RequestAccessToken",
+          "label": "DevicesController.RequestAccessToken",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+          "line": 63,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Request an access token."
+        },
+        {
+          "kind": "call",
+          "symbol": "DeviceTokenProvider.CreateDeviceTokenAsync",
+          "label": "DeviceTokenProvider.CreateDeviceTokenAsync",
+          "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/DeviceTokenProvider.cs",
+          "line": 20,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type IDeviceTokenProvider resolves to DeviceTokenProvider"
+          ],
+          "doc": "Generates a new auth ticket token based on DeviceAccessTokenRequest"
+        },
+        {
+          "kind": "call",
+          "symbol": "InternalTokensController.CreateToken",
+          "label": "InternalTokensController.CreateToken",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 55,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ],
+          "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+        },
+        {
+          "kind": "call",
+          "symbol": "ErrorResponseMapper.MapErrorToResponse",
+          "label": "ErrorResponseMapper.MapErrorToResponse",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+          "line": 16,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type IErrorResponseMapper resolves to ErrorResponseMapper"
+          ],
+          "doc": "Maps a FluentResults IError to an IActionResult containing a ProblemDetails body."
+        },
+        {
+          "kind": "call",
+          "symbol": "ApiException.ToString",
+          "label": "ApiException.ToString",
+          "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+          "line": 31,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "label": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/DeviceTokenProvider.cs",
+            "line": 20,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDeviceTokenProvider resolves to DeviceTokenProvider"
+            ],
+            "doc": "Generates a new auth ticket token based on DeviceAccessTokenRequest"
+          },
+          {
+            "kind": "call",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "ErrorResponseMapper.MapErrorToResponse",
+            "label": "ErrorResponseMapper.MapErrorToResponse",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+            "line": 16,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IErrorResponseMapper resolves to ErrorResponseMapper"
+            ],
+            "doc": "Maps a FluentResults IError to an IActionResult containing a ProblemDetails body."
+          },
+          {
+            "kind": "call",
+            "symbol": "ApiException.ToString",
+            "label": "ApiException.ToString",
+            "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+            "line": 31,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "label": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/DeviceTokenProvider.cs",
+            "line": 20,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDeviceTokenProvider resolves to DeviceTokenProvider"
+            ],
+            "doc": "Generates a new auth ticket token based on DeviceAccessTokenRequest"
+          },
+          {
+            "kind": "call",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "ErrorResponseMapper.MapExceptionToResponse",
+            "label": "ErrorResponseMapper.MapExceptionToResponse",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+            "line": 77,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IErrorResponseMapper resolves to ErrorResponseMapper"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ApiException.ToString",
+            "label": "ApiException.ToString",
+            "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+            "line": 31,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "label": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/DeviceTokenProvider.cs",
+            "line": 20,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDeviceTokenProvider resolves to DeviceTokenProvider"
+            ],
+            "doc": "Generates a new auth ticket token based on DeviceAccessTokenRequest"
+          },
+          {
+            "kind": "call",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "TokenTelemetryScope.Begin",
+            "label": "TokenTelemetryScope.Begin",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Telemetry/TokenTelemetryScope.cs",
+            "line": 31,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type TokenTelemetryScope resolves to TokenTelemetryScope"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "TokenTelemetryScope.TryAddCorrelationId",
+            "label": "TokenTelemetryScope.TryAddCorrelationId",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Telemetry/TokenTelemetryScope.cs",
+            "line": 50,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "label": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/DeviceTokenProvider.cs",
+            "line": 20,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDeviceTokenProvider resolves to DeviceTokenProvider"
+            ],
+            "doc": "Generates a new auth ticket token based on DeviceAccessTokenRequest"
+          },
+          {
+            "kind": "call",
+            "symbol": "ApiException.ToString",
+            "label": "ApiException.ToString",
+            "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+            "line": 31,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "label": "DeviceTokenProvider.CreateDeviceTokenAsync",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/DeviceTokenProvider.cs",
+            "line": 20,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDeviceTokenProvider resolves to DeviceTokenProvider"
+            ],
+            "doc": "Generates a new auth ticket token based on DeviceAccessTokenRequest"
+          },
+          {
+            "kind": "call",
+            "symbol": "TenancyCatalogAdapter.ValidateTenantAsync",
+            "label": "TenancyCatalogAdapter.ValidateTenantAsync",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/Adapters/TenancyCatalogAdapter.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITenancyCatalogAdapter resolves to TenancyCatalogAdapter"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "TenancyCatalogAdapter.ExtractMessage",
+            "label": "TenancyCatalogAdapter.ExtractMessage",
+            "file": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/Adapters/TenancyCatalogAdapter.cs",
+            "line": 38,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "DevicesController.GetLoggingScope",
+            "label": "DevicesController.GetLoggingScope",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 75,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /device-token",
+            "label": "POST /device-token",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 52,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "DevicesController.RequestAccessToken",
+            "label": "DevicesController.RequestAccessToken",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+            "line": 63,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Request an access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "Validators.ValidateRequestUtcExpiryTime",
+            "label": "Validators.ValidateRequestUtcExpiryTime",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Helpers/Validators.cs",
+            "line": 27,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Request an access token.",
+          "source": "DevicesController.RequestAccessToken",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+          "line": 63
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route POST /device-token"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls POST /device-token. Request an access token."
+      }
+    },
+    {
+      "id": "flow-2d12cef52db0",
+      "service": "Waters.AuthorizationAS.Service",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /api/v{version:apiVersion}/Permissions"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /api/v{version:apiVersion}/Permissions",
+          "label": "GET /api/v{version:apiVersion}/Permissions",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+          "line": 40,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "PermissionsController.Claims",
+          "label": "PermissionsController.Claims",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+          "line": 42,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Get the claims from provided access token."
+        },
+        {
+          "kind": "call",
+          "symbol": "DomainConfigurationResolver.foreach",
+          "label": "DomainConfigurationResolver.foreach",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+          "line": 59,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /api/v{version:apiVersion}/Permissions",
+            "label": "GET /api/v{version:apiVersion}/Permissions",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+            "line": 40,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "PermissionsController.Claims",
+            "label": "PermissionsController.Claims",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+            "line": 42,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Get the claims from provided access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "XUnitOutput.WriteLine",
+            "label": "XUnitOutput.WriteLine",
+            "file": "current/ContractTests/Utilities/xUnitOutput.cs",
+            "line": 15,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /api/v{version:apiVersion}/Permissions",
+            "label": "GET /api/v{version:apiVersion}/Permissions",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+            "line": 40,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "PermissionsController.Claims",
+            "label": "PermissionsController.Claims",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+            "line": 42,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Get the claims from provided access token."
+          },
+          {
+            "kind": "call",
+            "symbol": "XUnitOutput.WriteLine",
+            "label": "XUnitOutput.WriteLine",
+            "file": "current/ContractTests/Utilities/xUnitOutput.cs",
+            "line": 15,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Get the claims from provided access token.",
+          "source": "PermissionsController.Claims",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+          "line": 42
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /api/v{version:apiVersion}/Permissions"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /api/v{version:apiVersion}/Permissions. Get the claims from provided access token."
+      }
+    },
+    {
+      "id": "flow-8066c094f750",
+      "service": "Waters.AuthorizationAS.Service",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /api/v{version:apiVersion}/Permissions/get-user"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /api/v{version:apiVersion}/Permissions/get-user",
+          "label": "GET /api/v{version:apiVersion}/Permissions/get-user",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+          "line": 65,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "PermissionsController.GetUser",
+          "label": "PermissionsController.GetUser",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+          "line": 70,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Get user details."
+        },
+        {
+          "kind": "call",
+          "symbol": "ComplianceASProxy.GetUserAsync",
+          "label": "ComplianceASProxy.GetUserAsync",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+          "line": 47,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ],
+          "doc": "Get user info using cloud context"
+        },
+        {
+          "kind": "external",
+          "symbol": "_client.SendAsync",
+          "label": "HTTP via _client.SendAsync",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+          "line": 59,
+          "confidence": "medium",
+          "evidence": [
+            "HTTP/API client receiver evidence; source call: _client.SendAsync; receiver type: HttpClient"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /api/v{version:apiVersion}/Permissions/get-user",
+            "label": "GET /api/v{version:apiVersion}/Permissions/get-user",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+            "line": 65,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "PermissionsController.GetUser",
+            "label": "PermissionsController.GetUser",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+            "line": 70,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Get user details."
+          },
+          {
+            "kind": "call",
+            "symbol": "ComplianceASProxy.GetUserAsync",
+            "label": "ComplianceASProxy.GetUserAsync",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+            "line": 47,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Get user info using cloud context"
+          },
+          {
+            "kind": "call",
+            "symbol": "ComplianceASProxy.GetRetryPolicy",
+            "label": "ComplianceASProxy.GetRetryPolicy",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+            "line": 96,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Get user details.",
+          "source": "PermissionsController.GetUser",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+          "line": 70
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /api/v{version:apiVersion}/Permissions/get-user"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": [
+            {
+              "kind": "external",
+              "system": "HTTP",
+              "access": "send",
+              "calls": [
+                "_client.SendAsync"
+              ]
+            }
+          ]
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /api/v{version:apiVersion}/Permissions/get-user. Get user details. Along the way it calls HTTP."
+      }
+    },
+    {
+      "id": "flow-162dfcb8f540",
+      "service": "Waters.AuthorizationAS.Service",
+      "trigger": {
+        "kind": "api",
+        "label": "POST /api/v{version:apiVersion}/Users"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "POST /api/v{version:apiVersion}/Users",
+          "label": "POST /api/v{version:apiVersion}/Users",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+          "line": 44,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "UsersController.LogoutEvent",
+          "label": "UsersController.LogoutEvent",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+          "line": 50,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Send the auditlog message of user logout."
+        },
+        {
+          "kind": "call",
+          "symbol": "UserLogoutAuditLogEntry.Send",
+          "label": "UserLogoutAuditLogEntry.Send",
+          "file": "current/Services/Waters.AuthorizationAS.Service/APIModels/AuditLogEntries/UserLogoutAuditLogEntry.cs",
+          "line": 21,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ],
+          "doc": "Creating message and sending autitlog entry."
+        },
+        {
+          "kind": "call",
+          "symbol": "ApiException.ToString",
+          "label": "ApiException.ToString",
+          "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+          "line": 31,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v{version:apiVersion}/Users",
+            "label": "POST /api/v{version:apiVersion}/Users",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+            "line": 44,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "UsersController.LogoutEvent",
+            "label": "UsersController.LogoutEvent",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+            "line": 50,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Send the auditlog message of user logout."
+          },
+          {
+            "kind": "call",
+            "symbol": "UserLogoutInfo.SetUser",
+            "label": "UserLogoutInfo.SetUser",
+            "file": "current/Services/Waters.AuthorizationAS.Service/APIModels/UserLogoutInfo.cs",
+            "line": 31,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type UserLogoutInfo resolves to UserLogoutInfo"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Send the auditlog message of user logout.",
+          "source": "UsersController.LogoutEvent",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+          "line": 50
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route POST /api/v{version:apiVersion}/Users"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls POST /api/v{version:apiVersion}/Users. Send the auditlog message of user logout."
+      }
+    },
+    {
+      "id": "flow-e4fb42f3f0a6",
+      "service": "Waters.AuthorizationAS.Service",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /health"
+      },
+      "confidence": "high",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /health",
+          "label": "GET /health",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+          "line": 208,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "Startup.ResolveAuthorizationProvider",
+          "label": "Startup.ResolveAuthorizationProvider",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+          "line": 219,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ]
+        }
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "The startup class.",
+          "source": "Startup",
+          "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+          "line": 219
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /health"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /health. The startup class."
+      }
+    },
+    {
+      "id": "flow-48ca0d93a3cd",
+      "service": "Waters.Authorization.AuthorizationAS.Server",
+      "trigger": {
+        "kind": "api",
+        "label": "POST /api/v2/internal-token/create-token"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "POST /api/v2/internal-token/create-token",
+          "label": "POST /api/v2/internal-token/create-token",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 47,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "InternalTokensController.CreateToken",
+          "label": "InternalTokensController.CreateToken",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 55,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+        },
+        {
+          "kind": "call",
+          "symbol": "CreateTokenOperation.CreateTokenAsync",
+          "label": "CreateTokenOperation.CreateTokenAsync",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+          "line": 24,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type ITokenPort resolves to CreateTokenOperation"
+          ],
+          "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+        },
+        {
+          "kind": "call",
+          "symbol": "CreateTokenUseCase.ExecuteAsync",
+          "label": "CreateTokenUseCase.ExecuteAsync",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+          "line": 59,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+          ]
+        },
+        {
+          "kind": "call",
+          "symbol": "PermissionMappingService.MapPermissions",
+          "label": "PermissionMappingService.MapPermissions",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionMappingService.cs",
+          "line": 53,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type PermissionMappingService resolves to PermissionMappingService"
+          ],
+          "doc": "Computes the permission closure for targetDomain seeded with every claim key in sourcePermissions."
+        },
+        {
+          "kind": "call",
+          "symbol": "PermissionClosure.Compute",
+          "label": "PermissionClosure.Compute",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+          "line": 24,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ],
+          "doc": "Computes the set of claim keys reachable from seeds within MaxPermissionChainDepth hops."
+        },
+        {
+          "kind": "queue",
+          "symbol": "queue.Enqueue",
+          "label": "queue via queue.Enqueue",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+          "line": 37,
+          "confidence": "medium",
+          "evidence": [
+            "Generic queue publisher naming evidence; source call: queue.Enqueue"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionMappingService.MapPermissions",
+            "label": "PermissionMappingService.MapPermissions",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionMappingService.cs",
+            "line": 53,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type PermissionMappingService resolves to PermissionMappingService"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionClosure.Compute",
+            "label": "PermissionClosure.Compute",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 24,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "queue",
+            "symbol": "queue.Enqueue",
+            "label": "queue via queue.Enqueue",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 37,
+            "confidence": "medium",
+            "evidence": [
+              "Generic queue publisher naming evidence; source call: queue.Enqueue"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionMappingService.MapPermissions",
+            "label": "PermissionMappingService.MapPermissions",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionMappingService.cs",
+            "line": 53,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type PermissionMappingService resolves to PermissionMappingService"
+            ],
+            "doc": "Computes the permission closure for targetDomain seeded with every claim key in sourcePermissions."
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionClosure.Compute",
+            "label": "PermissionClosure.Compute",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 24,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Computes the set of claim keys reachable from seeds within MaxPermissionChainDepth hops."
+          },
+          {
+            "kind": "queue",
+            "symbol": "queue.Enqueue",
+            "label": "queue via queue.Enqueue",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 64,
+            "confidence": "medium",
+            "evidence": [
+              "Generic queue publisher naming evidence; source call: queue.Enqueue"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionMappingService.MapPermissions",
+            "label": "PermissionMappingService.MapPermissions",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionMappingService.cs",
+            "line": 53,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type PermissionMappingService resolves to PermissionMappingService"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionClosure.Compute",
+            "label": "PermissionClosure.Compute",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 24,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "queue",
+            "symbol": "queue.Enqueue",
+            "label": "queue via queue.Enqueue",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 64,
+            "confidence": "medium",
+            "evidence": [
+              "Generic queue publisher naming evidence; source call: queue.Enqueue"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.CheckRule",
+            "label": "BusinessRuleChecker.CheckRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 27,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.FailKnownRule",
+            "label": "BusinessRuleChecker.FailKnownRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 71,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.CheckRule",
+            "label": "BusinessRuleChecker.CheckRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 27,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.FailKnownRule",
+            "label": "BusinessRuleChecker.FailKnownRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 71,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainBoundaryClaimFilter.Apply",
+            "label": "DomainBoundaryClaimFilter.Apply",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainBoundaryClaimFilter.cs",
+            "line": 14,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainConfigurationResolver.foreach",
+            "label": "DomainConfigurationResolver.foreach",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+            "line": 59,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/create-token",
+            "label": "POST /api/v2/internal-token/create-token",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 47,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.CreateToken",
+            "label": "InternalTokensController.CreateToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 55,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenOperation.CreateTokenAsync",
+            "label": "CreateTokenOperation.CreateTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/CreateTokenOperation.cs",
+            "line": 24,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenPort resolves to CreateTokenOperation"
+            ],
+            "doc": "Creates an internal token for a background service identified by its SPIFFE ID."
+          },
+          {
+            "kind": "call",
+            "symbol": "CreateTokenUseCase.ExecuteAsync",
+            "label": "CreateTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/CreateTokenUseCase.cs",
+            "line": 59,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type CreateTokenUseCase resolves to CreateTokenUseCase"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainConfigurationResolver.Resolve",
+            "label": "DomainConfigurationResolver.Resolve",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+            "line": 30,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDomainConfigurationResolver resolves to DomainConfigurationResolver"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainConfigurationResolver.foreach",
+            "label": "DomainConfigurationResolver.foreach",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+            "line": 59,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Creates an internal token for a background service identified by its SPIFFE ID.",
+          "source": "InternalTokensController.CreateToken",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 55
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route POST /api/v2/internal-token/create-token"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": [
+            {
+              "kind": "queue",
+              "system": "queue",
+              "access": "send",
+              "calls": [
+                "queue.Enqueue"
+              ]
+            }
+          ]
+        },
+        "timing": [],
+        "summary": "Runs when a client calls POST /api/v2/internal-token/create-token. Creates an internal token for a background service identified by its SPIFFE ID. Along the way it calls queue."
+      }
+    },
+    {
+      "id": "flow-6f9a1f12f592",
+      "service": "Waters.Authorization.AuthorizationAS.Server",
+      "trigger": {
+        "kind": "api",
+        "label": "POST /api/v2/internal-token/exchange"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "POST /api/v2/internal-token/exchange",
+          "label": "POST /api/v2/internal-token/exchange",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 101,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "InternalTokensController.ExchangeToken",
+          "label": "InternalTokensController.ExchangeToken",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 109,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+        },
+        {
+          "kind": "call",
+          "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+          "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+          "line": 23,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+          ],
+          "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+        },
+        {
+          "kind": "call",
+          "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+          "label": "ExchangeTokenUseCase.ExecuteAsync",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+          "line": 60,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+          ],
+          "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+        },
+        {
+          "kind": "call",
+          "symbol": "PermissionMappingService.MapPermissions",
+          "label": "PermissionMappingService.MapPermissions",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionMappingService.cs",
+          "line": 53,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type PermissionMappingService resolves to PermissionMappingService"
+          ],
+          "doc": "Computes the permission closure for targetDomain seeded with every claim key in sourcePermissions."
+        },
+        {
+          "kind": "call",
+          "symbol": "PermissionClosure.Compute",
+          "label": "PermissionClosure.Compute",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+          "line": 24,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ],
+          "doc": "Computes the set of claim keys reachable from seeds within MaxPermissionChainDepth hops."
+        },
+        {
+          "kind": "queue",
+          "symbol": "queue.Enqueue",
+          "label": "queue via queue.Enqueue",
+          "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+          "line": 37,
+          "confidence": "medium",
+          "evidence": [
+            "Generic queue publisher naming evidence; source call: queue.Enqueue"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionMappingService.MapPermissions",
+            "label": "PermissionMappingService.MapPermissions",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionMappingService.cs",
+            "line": 53,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type PermissionMappingService resolves to PermissionMappingService"
+            ],
+            "doc": "Computes the permission closure for targetDomain seeded with every claim key in sourcePermissions."
+          },
+          {
+            "kind": "call",
+            "symbol": "PermissionClosure.Compute",
+            "label": "PermissionClosure.Compute",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 24,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Computes the set of claim keys reachable from seeds within MaxPermissionChainDepth hops."
+          },
+          {
+            "kind": "queue",
+            "symbol": "queue.Enqueue",
+            "label": "queue via queue.Enqueue",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/PermissionClosure.cs",
+            "line": 64,
+            "confidence": "medium",
+            "evidence": [
+              "Generic queue publisher naming evidence; source call: queue.Enqueue"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.CheckRule",
+            "label": "BusinessRuleChecker.CheckRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 27,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.FailKnownRule",
+            "label": "BusinessRuleChecker.FailKnownRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 71,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.CheckRule",
+            "label": "BusinessRuleChecker.CheckRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 27,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.FailKnownRule",
+            "label": "BusinessRuleChecker.FailKnownRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 71,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainBoundaryClaimFilter.Apply",
+            "label": "DomainBoundaryClaimFilter.Apply",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainBoundaryClaimFilter.cs",
+            "line": 14,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainConfigurationResolver.foreach",
+            "label": "DomainConfigurationResolver.foreach",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+            "line": 59,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainConfigurationResolver.Resolve",
+            "label": "DomainConfigurationResolver.Resolve",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+            "line": 30,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IDomainConfigurationResolver resolves to DomainConfigurationResolver"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "DomainConfigurationResolver.foreach",
+            "label": "DomainConfigurationResolver.foreach",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Services/DomainConfigurationResolver.cs",
+            "line": 59,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "InternalTokenSigning.SignTokenAsync",
+            "label": "InternalTokenSigning.SignTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/InternalTokenHandling/InternalTokenSigning.cs",
+            "line": 37,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type IInternalTokenSigning resolves to InternalTokenSigning"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "InternalTokenExtensions.AsSerializableInternalToken",
+            "label": "InternalTokenExtensions.AsSerializableInternalToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/InternalTokenExtensions.cs",
+            "line": 29,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "POST /api/v2/internal-token/exchange",
+            "label": "POST /api/v2/internal-token/exchange",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 101,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "InternalTokensController.ExchangeToken",
+            "label": "InternalTokensController.ExchangeToken",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+            "line": 109,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ],
+            "doc": "Exchanges an internal token for a new signed internal JWT scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "label": "ExchangeTokenOperation.ExchangeTokenAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/PrimaryPorts/ExchangeTokenOperation.cs",
+            "line": 23,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ITokenExchangePort resolves to ExchangeTokenOperation"
+            ],
+            "doc": "Exchanges a validated internal token for a new signed internal token scoped to the target domain."
+          },
+          {
+            "kind": "call",
+            "symbol": "ExchangeTokenUseCase.ExecuteAsync",
+            "label": "ExchangeTokenUseCase.ExecuteAsync",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/UseCases/ExchangeTokenUseCase.cs",
+            "line": 60,
+            "confidence": "high",
+            "evidence": [
+              "Receiver type ExchangeTokenUseCase resolves to ExchangeTokenUseCase"
+            ],
+            "doc": "Validates the exchange request, builds a new internal token, signs it, and returns the response."
+          },
+          {
+            "kind": "call",
+            "symbol": "BusinessRuleChecker.FailKnownRule",
+            "label": "BusinessRuleChecker.FailKnownRule",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Entities/BusinessRuleChecker.cs",
+            "line": 71,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Exchanges an internal token for a new signed internal JWT scoped to the target domain. Source token is taken from the raw Authorization header and validated in Domain (not via ASP.",
+          "source": "InternalTokensController.ExchangeToken",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+          "line": 109
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route POST /api/v2/internal-token/exchange"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": [
+            {
+              "kind": "queue",
+              "system": "queue",
+              "access": "send",
+              "calls": [
+                "queue.Enqueue"
+              ]
+            }
+          ]
+        },
+        "timing": [],
+        "summary": "Runs when a client calls POST /api/v2/internal-token/exchange. Exchanges an internal token for a new signed internal JWT scoped to the target domain. Source token is taken from the raw Authorization header and validated in Domain (not via ASP. Along the way it calls queue."
+      }
+    },
+    {
+      "id": "flow-454976638efc",
+      "service": "Waters.Authorization.AuthorizationAS.Server",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /jwks.json"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /jwks.json",
+          "label": "GET /jwks.json",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+          "line": 37,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "WellKnownController.GetOpenIdConfiguration",
+          "label": "WellKnownController.GetOpenIdConfiguration",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+          "line": 69,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Returns a minimal subset of OpenID Provider metadata for token validation middleware."
+        },
+        {
+          "kind": "call",
+          "symbol": "ErrorResponseMapper.MapExceptionToResponse",
+          "label": "ErrorResponseMapper.MapExceptionToResponse",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+          "line": 77,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type IErrorResponseMapper resolves to ErrorResponseMapper"
+          ],
+          "doc": "Maps an unhandled Exception to an IActionResult containing a ProblemDetails body."
+        },
+        {
+          "kind": "call",
+          "symbol": "ApiException.ToString",
+          "label": "ApiException.ToString",
+          "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+          "line": 31,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ]
+        }
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Returns a minimal subset of OpenID Provider metadata for token validation middleware.",
+          "source": "WellKnownController.GetOpenIdConfiguration",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+          "line": 69
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /jwks.json"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /jwks.json. Returns a minimal subset of OpenID Provider metadata for token validation middleware."
+      }
+    },
+    {
+      "id": "flow-ce3e4a4f1f55",
+      "service": "Waters.Authorization.AuthorizationAS.Server",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /.well-known/openid-configuration"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /.well-known/openid-configuration",
+          "label": "GET /.well-known/openid-configuration",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+          "line": 66,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "WellKnownController.GetOpenIdConfiguration",
+          "label": "WellKnownController.GetOpenIdConfiguration",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+          "line": 69,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ],
+          "doc": "Returns a minimal subset of OpenID Provider metadata for token validation middleware."
+        },
+        {
+          "kind": "call",
+          "symbol": "ErrorResponseMapper.MapExceptionToResponse",
+          "label": "ErrorResponseMapper.MapExceptionToResponse",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+          "line": 77,
+          "confidence": "high",
+          "evidence": [
+            "Receiver type IErrorResponseMapper resolves to ErrorResponseMapper"
+          ],
+          "doc": "Maps an unhandled Exception to an IActionResult containing a ProblemDetails body."
+        },
+        {
+          "kind": "call",
+          "symbol": "ApiException.ToString",
+          "label": "ApiException.ToString",
+          "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+          "line": 31,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ]
+        }
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Returns a minimal subset of OpenID Provider metadata for token validation middleware.",
+          "source": "WellKnownController.GetOpenIdConfiguration",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+          "line": 69
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /.well-known/openid-configuration"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": []
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /.well-known/openid-configuration. Returns a minimal subset of OpenID Provider metadata for token validation middleware."
+      }
+    },
+    {
+      "id": "flow-2d35170e63d1",
+      "service": "Waters.Authorization.AuthorizationAS.Server",
+      "trigger": {
+        "kind": "api",
+        "label": "GET /health"
+      },
+      "confidence": "medium",
+      "steps": [
+        {
+          "kind": "api-trigger",
+          "symbol": "GET /health",
+          "label": "GET /health",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+          "line": 69,
+          "confidence": "high",
+          "evidence": [
+            "Framework entry-point evidence is bound to the nearest callable declaration"
+          ]
+        },
+        {
+          "kind": "handler",
+          "symbol": "Startup",
+          "label": "Startup",
+          "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+          "line": 15,
+          "confidence": "high",
+          "evidence": [
+            "Route registration or controller annotation binds this handler"
+          ]
+        },
+        {
+          "kind": "call",
+          "symbol": "ServiceCollectionExtensions.AddSecondaryAdapters",
+          "label": "ServiceCollectionExtensions.AddSecondaryAdapters",
+          "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+          "line": 37,
+          "confidence": "medium",
+          "evidence": [
+            "Method name has one repository definition"
+          ],
+          "doc": "Adds secondary adapters to the service collection."
+        },
+        {
+          "kind": "external",
+          "symbol": "services.AddHttpClient",
+          "label": "HTTP via services.AddHttpClient",
+          "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+          "line": 59,
+          "confidence": "medium",
+          "evidence": [
+            "HTTP/API client receiver evidence; source call: services.AddHttpClient; receiver type: IServiceCollection"
+          ]
+        }
+      ],
+      "branches": [
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "label": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+            "line": 37,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Adds secondary adapters to the service collection."
+          },
+          {
+            "kind": "call",
+            "symbol": "ComplianceASProxy.GetRetryPolicy",
+            "label": "ComplianceASProxy.GetRetryPolicy",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+            "line": 96,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "label": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+            "line": 37,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Adds secondary adapters to the service collection."
+          },
+          {
+            "kind": "call",
+            "symbol": "ComplianceASProxy.GetRetryPolicy",
+            "label": "ComplianceASProxy.GetRetryPolicy",
+            "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+            "line": 96,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "label": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+            "line": 37,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Adds secondary adapters to the service collection."
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.BuildBaseAddress",
+            "label": "ServiceCollectionExtensions.BuildBaseAddress",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+            "line": 72,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "label": "ServiceCollectionExtensions.AddSecondaryAdapters",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+            "line": 37,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ],
+            "doc": "Adds secondary adapters to the service collection."
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.BuildBaseAddress",
+            "label": "ServiceCollectionExtensions.BuildBaseAddress",
+            "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+            "line": 72,
+            "confidence": "high",
+            "evidence": [
+              "Unqualified call resolves uniquely within the class"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ApiException.ToString",
+            "label": "ApiException.ToString",
+            "file": "current/Private/Interface/Waters.AuthorizationAS.Private.Interface/Exceptions/ApiException.cs",
+            "line": 31,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.AddBusinessLogic",
+            "label": "ServiceCollectionExtensions.AddBusinessLogic",
+            "file": "next/Waters.Authorization.AuthorizationAS.Domain/Extensions/ServiceCollectionExtensions.cs",
+            "line": 21,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "api-trigger",
+            "symbol": "GET /health",
+            "label": "GET /health",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 69,
+            "confidence": "high",
+            "evidence": [
+              "Framework entry-point evidence is bound to the nearest callable declaration"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "Startup",
+            "label": "Startup",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+            "line": 15,
+            "confidence": "high",
+            "evidence": [
+              "Route registration or controller annotation binds this handler"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "ServiceCollectionExtensions.AddPrimaryAdapters",
+            "label": "ServiceCollectionExtensions.AddPrimaryAdapters",
+            "file": "next/Waters.Authorization.AuthorizationAS.Server/Extensions/ServiceCollectionExtensions.cs",
+            "line": 14,
+            "confidence": "medium",
+            "evidence": [
+              "Method name has one repository definition"
+            ]
+          }
+        ]
+      ],
+      "story": {
+        "category": "user-request",
+        "purpose": {
+          "text": "Adds secondary adapters to the service collection.",
+          "source": "ServiceCollectionExtensions.AddSecondaryAdapters",
+          "file": "next/Waters.Authorization.AuthorizationAS.SecondaryAdapters/Extensions/ServiceCollectionExtensions.cs",
+          "line": 37
+        },
+        "triggeredBy": {
+          "kind": "http",
+          "label": "An HTTP client, such as the web UI or another service",
+          "outsideRepo": true,
+          "evidence": "Route GET /health"
+        },
+        "fanOut": [],
+        "produces": {
+          "metrics": [],
+          "boundaries": [
+            {
+              "kind": "external",
+              "system": "HTTP",
+              "access": "send",
+              "calls": [
+                "services.AddHttpClient"
+              ]
+            }
+          ]
+        },
+        "timing": [],
+        "summary": "Runs when a client calls GET /health. Adds secondary adapters to the service collection. Along the way it calls HTTP."
+      }
+    }
+  ],
+  "warnings": [],
+  "glossary": {
+    "flow": "One evidence-backed path from an entry point toward a meaningful boundary.",
+    "trigger": "The API route, CLI command, or queue message that starts work.",
+    "API": "An application programming interface exposed for another program to call.",
+    "OData": "A standard for querying and changing data through HTTP APIs.",
+    "cli": "A command-line command registered by the application.",
+    "handler": "The first function or method directly bound to a trigger.",
+    "call": "A direct source-code call whose target was resolved heuristically.",
+    "database": "A call that appears to cross into persistent storage; traversal stops here.",
+    "external": "A call that appears to leave the process over a network client; traversal stops here.",
+    "queue": "A publish or enqueue call; downstream processing is a separate flow.",
+    "tenant": "A customer or organizational boundary whose data and configuration are isolated.",
+    "adapter": "Code that translates between an application-facing interface and an external technology.",
+    "provider": "A component that supplies data or operations behind an interface.",
+    "port": "An application-owned interface through which core logic communicates with adapters.",
+    "entity provider": "A provider that loads or stores domain entities, often through a search or database system.",
+    "OpenSearch": "A search and document-storage engine; named only when matching source or type evidence exists.",
+    "IoT thing": "A cloud representation of a physical or logical Internet of Things device.",
+    "Greengrass": "AWS edge software used to deploy and run workloads near IoT devices.",
+    "SQS": "Amazon Simple Queue Service, used for asynchronous message delivery.",
+    "EventBridge": "An AWS event bus used to route events between producers and consumers.",
+    "MQTT": "A lightweight publish/subscribe protocol commonly used by IoT devices.",
+    "SPOF": "Single point of failure: one component whose loss can stop a larger workflow.",
+    "confidence": "High means direct binding or unique typed resolution; medium means a conservative naming heuristic.",
+    "evidence": "The concrete source relationship supporting a step. It is not runtime proof.",
+    "warning": "A place where evidence was insufficient or an output safety limit was reached."
+  }
+}

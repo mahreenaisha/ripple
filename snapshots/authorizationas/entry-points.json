@@ -1,0 +1,457 @@
+{
+  "Waters.AuthorizationAS.Service": {
+    "entries": [
+      {
+        "type": "export",
+        "endpoint": "UserLogoutAuditLogEntry.Send",
+        "file": "current/Services/Waters.AuthorizationAS.Service/APIModels/AuditLogEntries/UserLogoutAuditLogEntry.cs",
+        "line": 21
+      },
+      {
+        "type": "export",
+        "endpoint": "UserLogoutInfo.SetUser",
+        "file": "current/Services/Waters.AuthorizationAS.Service/APIModels/UserLogoutInfo.cs",
+        "line": 31
+      },
+      {
+        "type": "export",
+        "endpoint": "SupportCodeExceptionFilterAttribute.OnException",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Attributes/SupportCodeExceptionFilterAttribute.cs",
+        "line": 27
+      },
+      {
+        "type": "export",
+        "endpoint": "SupportCodeExceptionFilterAttribute.CreateErrorModel",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Attributes/SupportCodeExceptionFilterAttribute.cs",
+        "line": 73
+      },
+      {
+        "type": "export",
+        "endpoint": "SupportCodeExceptionFilterAttribute.GetErrorModel",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Attributes/SupportCodeExceptionFilterAttribute.cs",
+        "line": 85
+      },
+      {
+        "type": "export",
+        "endpoint": "ValidationDetailsFilterAttribute.OnActionExecuting",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Attributes/ValidationDetailsFilterAttribute.cs",
+        "line": 22
+      },
+      {
+        "type": "export",
+        "endpoint": "ValidationDetailsFilterAttribute.CreateErrorModel",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Attributes/ValidationDetailsFilterAttribute.cs",
+        "line": 52
+      },
+      {
+        "type": "export",
+        "endpoint": "AutofacModule.Load",
+        "file": "current/Services/Waters.AuthorizationAS.Service/AutofacModule.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "AutofacModule.RegisterComponents",
+        "file": "current/Services/Waters.AuthorizationAS.Service/AutofacModule.cs",
+        "line": 48
+      },
+      {
+        "type": "export",
+        "endpoint": "AutofacModule.GetAwsRegion",
+        "file": "current/Services/Waters.AuthorizationAS.Service/AutofacModule.cs",
+        "line": 76
+      },
+      {
+        "type": "export",
+        "endpoint": "AutofacModule.GetRegionFromEnvironment",
+        "file": "current/Services/Waters.AuthorizationAS.Service/AutofacModule.cs",
+        "line": 101
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /device-token",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+        "line": 52
+      },
+      {
+        "type": "export",
+        "endpoint": "DevicesController.RequestAccessToken",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+        "line": 63
+      },
+      {
+        "type": "export",
+        "endpoint": "DevicesController.GetLoggingScope",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/DevicesController.cs",
+        "line": 75
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Permissions",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+        "line": 40
+      },
+      {
+        "type": "export",
+        "endpoint": "PermissionsController.Claims",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+        "line": 42
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /api/v{version:apiVersion}/Permissions/get-user",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+        "line": 65
+      },
+      {
+        "type": "export",
+        "endpoint": "PermissionsController.GetUser",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/PermissionsController.cs",
+        "line": 70
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v{version:apiVersion}/Users",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+        "line": 44
+      },
+      {
+        "type": "export",
+        "endpoint": "UsersController.LogoutEvent",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Controllers/UsersController.cs",
+        "line": 50
+      },
+      {
+        "type": "export",
+        "endpoint": "AuditLogHelpers.GenerateSoftwareSystemAuditEntry",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Helpers/AuditLogHelpers.cs",
+        "line": 36
+      },
+      {
+        "type": "export",
+        "endpoint": "DateTimeFormatAttribute.IsValid",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Helpers/DateTimeFormatAttribute.cs",
+        "line": 28
+      },
+      {
+        "type": "export",
+        "endpoint": "Validators.ValidateDateTimeIsIso8601",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Helpers/Validators.cs",
+        "line": 17
+      },
+      {
+        "type": "export",
+        "endpoint": "Validators.ValidateRequestUtcExpiryTime",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Helpers/Validators.cs",
+        "line": 27
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUserAsync",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 47
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetUserClaimsAsync",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 74
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetRetryPolicy",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 96
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.OnFallbackAsync",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 113
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.FallbackAction",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 124
+      },
+      {
+        "type": "export",
+        "endpoint": "ComplianceASProxy.GetResponseMessageOrThrow",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 134
+      },
+      {
+        "type": "export",
+        "endpoint": "ClaimConverter.CanConvert",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 142
+      },
+      {
+        "type": "export",
+        "endpoint": "ClaimConverter.ReadJson",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 149
+      },
+      {
+        "type": "export",
+        "endpoint": "ClaimConverter.WriteJson",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 177
+      },
+      {
+        "type": "export",
+        "endpoint": "ClaimConverter.GetRequiredString",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 184
+      },
+      {
+        "type": "export",
+        "endpoint": "ClaimConverter.ChangePropertiesToLowerCase",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Proxies/ComplianceASProxy.cs",
+        "line": 196
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationExtensions.GetEnableSwaggerValue",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Settings/ConfigurationExtensions.cs",
+        "line": 15
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.ConfigureServices",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 73
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.ConfigureContainer",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 154
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.Configure",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 174
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /health",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 208
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.ResolveAuthorizationProvider",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 219
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.ConfigureSwaggerOptions",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 229
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.AddInvalidModelResponseHandler",
+        "file": "current/Services/Waters.AuthorizationAS.Service/Startup.cs",
+        "line": 281
+      }
+    ]
+  },
+  "Waters.AuthorizationAS.Utils": {
+    "entries": []
+  },
+  "Waters.Authorization.AuthorizationAS.Server": {
+    "entries": [
+      {
+        "type": "API",
+        "endpoint": "POST /api/v2/internal-token/create-token",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+        "line": 47
+      },
+      {
+        "type": "export",
+        "endpoint": "InternalTokensController.CreateToken",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+        "line": 55
+      },
+      {
+        "type": "API",
+        "endpoint": "POST /api/v2/internal-token/exchange",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+        "line": 101
+      },
+      {
+        "type": "export",
+        "endpoint": "InternalTokensController.ExchangeToken",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/InternalTokensController.cs",
+        "line": 109
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /jwks.json",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+        "line": 37
+      },
+      {
+        "type": "export",
+        "endpoint": "WellKnownController.GetJwks",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+        "line": 41
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /.well-known/openid-configuration",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+        "line": 66
+      },
+      {
+        "type": "export",
+        "endpoint": "WellKnownController.GetOpenIdConfiguration",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Controllers/WellKnownController.cs",
+        "line": 69
+      },
+      {
+        "type": "export",
+        "endpoint": "ErrorResponseMapper.MapErrorToResponse",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+        "line": 16
+      },
+      {
+        "type": "export",
+        "endpoint": "ErrorResponseMapper.MapExceptionToResponse",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ErrorHandling/ErrorResponseMapper.cs",
+        "line": 77
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationBuilderExtensions.AddClusterConfiguration",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Extensions/ConfigurationBuilderExtensions.cs",
+        "line": 9
+      },
+      {
+        "type": "export",
+        "endpoint": "ConfigurationBuilderExtensions.AddDomainConfiguration",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Extensions/ConfigurationBuilderExtensions.cs",
+        "line": 22
+      },
+      {
+        "type": "export",
+        "endpoint": "ServiceCollectionExtensions.AddPrimaryAdapters",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Extensions/ServiceCollectionExtensions.cs",
+        "line": 14
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.BindModelAsync",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 54
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.TryExtractFromXfcc",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 68
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.TryExtractFromOverrideHeader",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 98
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.LogSpiffeIdExtractedFromXfcc",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 139
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.LogSpiffeIdOverrideUsed",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 145
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.LogSpiffeIdOverrideIgnored",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 152
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinder.LogSpiffeIdOverrideInProduction",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinder.cs",
+        "line": 158
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinderProvider.GetBinder",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinderProvider.cs",
+        "line": 30
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinderProvider.HasSpiffeIdModelBinderAttribute",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinderProvider.cs",
+        "line": 45
+      },
+      {
+        "type": "export",
+        "endpoint": "SpiffeIdModelBinderProvider.IsSpiffeIdParameter",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/ModelBinders/SpiffeIdModelBinderProvider.cs",
+        "line": 50
+      },
+      {
+        "type": "export",
+        "endpoint": "Program.Main",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Program.cs",
+        "line": 15
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.ConfigureServices",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+        "line": 20
+      },
+      {
+        "type": "export",
+        "endpoint": "Startup.Configure",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+        "line": 52
+      },
+      {
+        "type": "API",
+        "endpoint": "GET /health",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Startup.cs",
+        "line": 69
+      },
+      {
+        "type": "export",
+        "endpoint": "RequestIdentityContextAdapter.ApplyValidatedIdentity",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Telemetry/RequestIdentityContextAdapter.cs",
+        "line": 39
+      },
+      {
+        "type": "export",
+        "endpoint": "RequestIdentityContextAdapter.AddIfPresent",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Telemetry/RequestIdentityContextAdapter.cs",
+        "line": 65
+      },
+      {
+        "type": "export",
+        "endpoint": "TokenTelemetryScope.Begin",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Telemetry/TokenTelemetryScope.cs",
+        "line": 31
+      },
+      {
+        "type": "export",
+        "endpoint": "TokenTelemetryScope.TryAddCorrelationId",
+        "file": "next/Waters.Authorization.AuthorizationAS.Server/Telemetry/TokenTelemetryScope.cs",
+        "line": 50
+      }
+    ]
+  }
+}

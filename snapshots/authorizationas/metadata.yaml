@@ -1,0 +1,20 @@
+# Human-maintained architecture metadata.
+# Edit this file and commit it; scanner regeneration preserves your values.
+services:
+  "Waters.Authorization.AuthorizationAS.Server":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+  "Waters.AuthorizationAS.Service":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+  "Waters.AuthorizationAS.Utils":
+    status: "active"
+    is_spof: false
+    gotchas: null
+    owner: null
+deployment_order: []
+known_issues: []

@@ -1,0 +1,38 @@
+[
+  {
+    "from": "Waters.AuthorizationAS.Service",
+    "to": "cognito-idp.",
+    "type": "external_api",
+    "evidence": "current/Services/Waters.AuthorizationAS.Service/appsettings.json:20: \"MetadataDocFormat\": \"https://cognito-idp.{0}.amazonaws.com/{1}/.well-known/openid-configuration\""
+  },
+  {
+    "from": "Waters.AuthorizationAS.Service",
+    "to": "complianceas-service",
+    "type": "http_call",
+    "evidence": "current/Services/Waters.AuthorizationAS.Service/appsettings.Development.json:9: \"ComplianceASUri\": \"http://complianceas-service\","
+  },
+  {
+    "from": "Waters.AuthorizationAS.Service",
+    "to": "complianceas-service",
+    "type": "http_call",
+    "evidence": "current/Services/Waters.AuthorizationAS.Service/appsettings.json:30: \"ComplianceASUri\": \"http://complianceas-service\""
+  },
+  {
+    "from": "Waters.AuthorizationAS.Service",
+    "to": "tenancyas-service",
+    "type": "http_call",
+    "evidence": "current/Private/Repositories/Waters.AuthorizationAS.Private.DeviceTokenProvider/ServiceCollectionExtensions.cs:19: private const string tenancyAsHost = \"http://tenancyas-service:80\";"
+  },
+  {
+    "from": "Waters.AuthorizationAS.Service",
+    "to": "tools.ietf.org",
+    "type": "external_api",
+    "evidence": "current/Services/Waters.AuthorizationAS.Service/Attributes/Constants.cs:6: internal const string BadRequestProblemDetailsType = \"https://tools.ietf.org/html/rfc7231#section-6.5.1\";"
+  },
+  {
+    "from": "Waters.AuthorizationAS.Service",
+    "to": "watersconnect.com",
+    "type": "external_api",
+    "evidence": "current/Services/Waters.AuthorizationAS.Service/Attributes/Constants.cs:5: internal const string SupportCodeDetailsType = \"https://watersconnect.com/support-codes/{0}\";"
+  }
+]
