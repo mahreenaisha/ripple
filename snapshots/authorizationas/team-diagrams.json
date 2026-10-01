@@ -1,0 +1,68 @@
+{
+  "diagrams": [
+    {
+      "title": "ADR-001: Transitioning to V2 AuthorizationAS Deployment (diagram 1)",
+      "path": "Docs/decisions/001-transitioning-to-v2-authorizationas-deployment.md",
+      "line": 43,
+      "format": "mermaid",
+      "code": "graph TD\r\n    A[External Client] -->|\"/auth/token\"| B[Public Ingress]\r\n    B --> C[api.authorization.svc.cluster.local/*]\r\n    \r\n    subgraph \"Authorization K8s Namespace\"\r\n        C --> D[Internal API Gateway]\r\n        D -->|\"internal-token/ or .well-known/ or jwks.json\"| E[Virtual Service V2]\r\n        \r\n        E --> G[Service V2]\r\n        G --> H[Deployment V2]\r\n        H --> I[\"image: authorizationas:2.0.0\"]\r\n    end\r\n\r\n    \r\n    subgraph \"Default K8s Namespace\"\r\n        D -->|\"/device-token or /token or /permissions\"| F[Virtual Service V1]\r\n        F --> J[Service V1]\r\n        J --> K[Deployment V1]\r\n        K --> L[\"image: authorizationas:1.2.3\"]\r\n    end\r\n    \r\n    M[Dev Proxy] -->|\"authorization-service/token\"| J\r\n    N[Public Ingress V1] -->|\"dev-eu.scalars-access.com/auth/token\"| J\r\n"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Agentic Workflow Guide",
+      "path": "Docs/agentic-workflow-guide.md",
+      "lines": 111
+    },
+    {
+      "title": "ADR-001: Transitioning to V2 AuthorizationAS Deployment",
+      "path": "Docs/decisions/001-transitioning-to-v2-authorizationas-deployment.md",
+      "lines": 104
+    },
+    {
+      "title": "ADR 002 — DDD Business Rule Validation Pattern",
+      "path": "Docs/decisions/002-ddd-business-rule-validation-pattern.md",
+      "lines": 127
+    },
+    {
+      "title": "ADR 003 — RFC 7807 ProblemDetails for API Error Responses",
+      "path": "Docs/decisions/003-rfc7807-problemdetails-api-error-responses.md",
+      "lines": 132
+    },
+    {
+      "title": "ADR 004 — Support Codes for Traceable Error Identification",
+      "path": "Docs/decisions/004-support-codes-for-traceable-error-identification.md",
+      "lines": 20
+    },
+    {
+      "title": "ADR 005 — SPIFFE ID Extraction via ASP.NET Core Model Binder",
+      "path": "Docs/decisions/005-spiffe-id-extraction-via-aspnet-model-binder.md",
+      "lines": 48
+    },
+    {
+      "title": "ADR 006 — Exchange Source Token Validated in Domain",
+      "path": "Docs/decisions/006-exchange-source-token-validated-in-domain.md",
+      "lines": 57
+    },
+    {
+      "title": "ADR 007 — Bounded Transitive Closure for Permission Mapping",
+      "path": "Docs/decisions/007-bounded-transitive-closure-for-permission-mapping.md",
+      "lines": 99
+    },
+    {
+      "title": "ADR 0001: Tier-1 exchange expiry grace override",
+      "path": "next/Docs/ADR/0001-tier1-exchange-expiry-grace-override.md",
+      "lines": 24
+    },
+    {
+      "title": "HTTP request environments",
+      "path": "next/Docs/Requests/README.md",
+      "lines": 65
+    },
+    {
+      "title": "Validation of Tier 2 JSON Web Tokens (JWTs)",
+      "path": "next/Docs/tier-2-token-validation.md",
+      "lines": 51
+    }
+  ]
+}

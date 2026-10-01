@@ -1,0 +1,30 @@
+flowchart LR
+  subgraph service [Services]
+    node4["Waters.Authorization.AuthorizationAS.Server<br/>5 entry points"]
+    node5["Waters.AuthorizationAS.Service<br/>5 entry points"]
+    node6["Waters.AuthorizationAS.Utils<br/>0 entry points"]
+  end
+  subgraph externalapi [External systems]
+    node0["AWS Cognito"]
+    node1["complianceas-service"]
+    node2["tenancyas-service"]
+    node3["tools.ietf.org"]
+    node7["watersconnect.com"]
+  end
+  node5 -->|"calls ×1 (medium)"| node0
+  node5 -->|"calls ×2 (high)"| node1
+  node5 -->|"calls ×1 (medium)"| node2
+  node5 -->|"calls ×1 (medium)"| node3
+  node5 -->|"calls ×1 (medium)"| node7
+  classDef service fill:#dbeafe,stroke:#2563eb,color:#172554
+  classDef database fill:#d1fae5,stroke:#059669,color:#064e3b
+  classDef external fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef danger fill:#fecaca,stroke:#dc2626,color:#7f1d1d,stroke-width:3px
+  class node0 external
+  class node1 external
+  class node2 external
+  class node3 external
+  class node4 service
+  class node5 service
+  class node6 service
+  class node7 external

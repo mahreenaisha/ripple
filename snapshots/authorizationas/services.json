@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Waters.AuthorizationAS.Service",
+    "path": "current/Services/Waters.AuthorizationAS.Service",
+    "language": "C#",
+    "entry_file": "current/Services/Waters.AuthorizationAS.Service/Program.cs",
+    "kind": "api-service",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.AuthorizationAS.Service.csproj",
+      "entrypoint: Program.cs",
+      "project SDK: Microsoft.NET.Sdk.Web"
+    ]
+  },
+  {
+    "name": "Waters.AuthorizationAS.Utils",
+    "path": "current/Utils/Waters.AuthorizationAS.Utils",
+    "language": "C#",
+    "entry_file": "current/Utils/Waters.AuthorizationAS.Utils/Program.cs",
+    "kind": "application",
+    "confidence": "medium",
+    "evidence": [
+      "manifest: Waters.AuthorizationAS.Utils.csproj",
+      "entrypoint: Program.cs",
+      "project output: Exe"
+    ]
+  },
+  {
+    "name": "Waters.Authorization.AuthorizationAS.Server",
+    "path": "next/Waters.Authorization.AuthorizationAS.Server",
+    "language": "C#",
+    "entry_file": "next/Waters.Authorization.AuthorizationAS.Server/Program.cs",
+    "kind": "api-service",
+    "confidence": "high",
+    "evidence": [
+      "manifest: Waters.Authorization.AuthorizationAS.Server.csproj",
+      "entrypoint: Program.cs",
+      "project SDK: Microsoft.NET.Sdk.Web"
+    ]
+  }
+]

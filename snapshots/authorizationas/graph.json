@@ -1,0 +1,202 @@
+{
+  "nodes": [
+    {
+      "id": "AWS Cognito",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.AuthorizationAS.Service"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "complianceas-service",
+      "type": "external_api",
+      "confidence": "high",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.AuthorizationAS.Service"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "tenancyas-service",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.AuthorizationAS.Service"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "tools.ietf.org",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.AuthorizationAS.Service"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    },
+    {
+      "id": "Waters.Authorization.AuthorizationAS.Server",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "spof_source": null,
+      "language": "C#",
+      "entry_points_count": 5,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-09-23T19:15:11+05:30",
+        "lines_of_code": 947,
+        "status": "active",
+        "is_spof": false,
+        "gotchas": null,
+        "owner": null
+      }
+    },
+    {
+      "id": "Waters.AuthorizationAS.Service",
+      "type": "service",
+      "confidence": "high",
+      "spof_candidate": false,
+      "spof_source": null,
+      "language": "C#",
+      "entry_points_count": 5,
+      "databases": [],
+      "dependencies_on": [
+        "AWS Cognito",
+        "complianceas-service",
+        "tenancyas-service",
+        "tools.ietf.org",
+        "watersconnect.com"
+      ],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-06-19T20:12:14+02:00",
+        "lines_of_code": 1379,
+        "status": "active",
+        "is_spof": false,
+        "gotchas": null,
+        "owner": null
+      }
+    },
+    {
+      "id": "Waters.AuthorizationAS.Utils",
+      "type": "service",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "spof_source": null,
+      "language": "C#",
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [],
+      "metadata": {
+        "last_modified": "2026-06-19T15:25:46+02:00",
+        "lines_of_code": 65,
+        "status": "active",
+        "is_spof": false,
+        "gotchas": null,
+        "owner": null
+      }
+    },
+    {
+      "id": "watersconnect.com",
+      "type": "external_api",
+      "confidence": "medium",
+      "spof_candidate": false,
+      "language": null,
+      "entry_points_count": 0,
+      "databases": [],
+      "dependencies_on": [],
+      "dependents": [
+        "Waters.AuthorizationAS.Service"
+      ],
+      "metadata": {
+        "last_modified": null,
+        "lines_of_code": 0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "Waters.AuthorizationAS.Service",
+      "to": "AWS Cognito",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.AuthorizationAS.Service",
+      "to": "complianceas-service",
+      "type": "calls",
+      "count": 2,
+      "confidence": "high"
+    },
+    {
+      "from": "Waters.AuthorizationAS.Service",
+      "to": "tenancyas-service",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.AuthorizationAS.Service",
+      "to": "tools.ietf.org",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    },
+    {
+      "from": "Waters.AuthorizationAS.Service",
+      "to": "watersconnect.com",
+      "type": "calls",
+      "count": 1,
+      "confidence": "medium"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-09-24T11:41:52.715Z",
+    "repo_url": "git@github.com:WatersConnectCloud/wcc-authorizationas.git",
+    "total_services": 3,
+    "total_nodes": 8,
+    "total_edges": 5,
+    "edge_count_semantics": "unique source operation/evidence locations",
+    "deployment_order": [],
+    "known_issues": []
+  }
+}
