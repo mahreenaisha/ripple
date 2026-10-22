@@ -1,12 +1,8 @@
-name: Ripple scan
+name: Manual Ripple scan
 
-# Keeps the Ripple snapshot of a target repo in step with its latest commit.
-# Runs on a schedule, on demand for any repo, or when the target repo sends a
-# repository_dispatch event from its own push-to-main workflow.
+# Generates a snapshot only when someone starts the workflow manually.
 
 on:
-  schedule:
-    - cron: "0 6 * * 1-5"
   workflow_dispatch:
     inputs:
       target_repo:
@@ -20,9 +16,6 @@ on:
       name:
         description: "Display name in Ripple (blank = infer from the repo)"
         required: false
-  repository_dispatch:
-    types: [target-pushed]
-
 permissions:
   contents: read
 
@@ -31,9 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      TARGET_REPO: ${{ github.event.inputs.target_repo || github.event.client_payload.repo || 'WatersConnectCloud/wcc-deviceas' }}
-      TARGET_REF: ${{ github.event.inputs.target_ref || github.event.client_payload.ref || 'main' }}
-      TARGET_NAME: ${{ github.event.inputs.name || github.event.client_payload.name || '' }}
+      TARGET_REPO: ${{ github.event.inputs.target_repo }}
+      TARGET_REF: ${{ github.event.inputs.target_ref }}
+      TARGET_NAME: ${{ github.event.inputs.name }}
     steps:
       - name: Check out Ripple
         uses: actions/checkout@v4
