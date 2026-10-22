@@ -6,10 +6,10 @@ entry points, request flows, databases, queues, external systems, and
 dependencies. Every snapshot records the source commit, branch, and scan time so
 engineers can see how current the architecture information is.
 
-Unlike a manually maintained diagram, Ripple can be regenerated locally or in CI
-whenever a repository changes. Its findings link back to source files and line
-numbers and clearly distinguish direct evidence from lower-confidence static
-inference.
+Unlike a manually maintained diagram, Ripple can be regenerated on demand when
+someone chooses to rescan a repository. Its findings link back to source files
+and line numbers and clearly distinguish direct evidence from lower-confidence
+static inference.
 
 > Ripple currently uses static repository analysis. It does not ingest
 > OpenTelemetry or other runtime telemetry, and a detected path is not proof of
@@ -141,6 +141,32 @@ writes sanitized snapshot artifacts that the web app loads through FastAPI.
 
 ## Run the application
 
+### One-click runner
+
+From the Ripple root, run:
+
+```bash
+./run-ripple.sh
+```
+
+The script creates missing Python and frontend dependencies, starts both
+services, waits for them to become ready, and opens `http://localhost:4200` in
+Google Chrome.
+Keep its terminal open while using Ripple; press `Ctrl+C` to stop both services.
+Logs are written to `.ripple-run/`.
+
+If Chrome is installed in a non-standard location, provide it explicitly:
+
+```bash
+CHROME_PATH="/path/to/chrome" ./run-ripple.sh
+```
+
+To start without opening a browser:
+
+```bash
+./run-ripple.sh --no-browser
+```
+
 ### Backend
 
 ```bash
@@ -216,18 +242,6 @@ RIPPLE_REPO_PATH=/path/to/repository \
 RIPPLE_SNAPSHOT=example \
 uvicorn main:app --reload --port 8000
 ```
-
-## Continuous scanning
-
-`.github/workflows/ripple-scan.yml` supports:
-
-- weekday scheduled scans;
-- manual scans for a repository and ref; and
-- `repository_dispatch` scans initiated by a target repository.
-
-Private repositories require a `RIPPLE_TARGET_TOKEN` secret with read access.
-The workflow tests the scanner and uploads the generated snapshot as a build
-artifact.
 
 ## Validation
 
