@@ -1,0 +1,16 @@
+.ripple-run/
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.sqlite3
+.ripple/
+
+frontend/.angular/
+frontend/dist/
+frontend/node_modules/
+
+.env
+.env.*
+!.env.example
+

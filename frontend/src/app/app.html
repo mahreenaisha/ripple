@@ -1,0 +1,398 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Ripple home">
+      <span class="brand-mark" aria-hidden="true">R</span>
+      <span>
+        <strong>Ripple</strong>
+        <small>Codebase explorer</small>
+      </span>
+    </a>
+    <div class="model-pill" [class.ready]="modelStatus()?.available">
+      <span class="status-dot"></span>
+      <span>{{ modelStatus()?.model || 'Checking Ollama…' }}</span>
+      <span class="model-state">{{ modelStatus()?.available ? 'Ready' : 'Offline' }}</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Grounded repository intelligence</p>
+        <h1>See what your codebase defines.</h1>
+        <p class="lede">
+          Explore folders as an architecture surface. Every AI interpretation stays connected to the exact
+          source evidence used to produce it.
+        </p>
+      </div>
+      <div class="privacy-note">
+        <span aria-hidden="true">⌂</span>
+        <div><strong>Local by design</strong><small>Source code stays on this machine</small></div>
+      </div>
+    </section>
+
+    <section class="repository-bar" aria-labelledby="repository-heading">
+      <div class="repository-select">
+        <label id="repository-heading" for="repository">Source repository</label>
+        <select
+          id="repository"
+          [value]="selectedRepositoryId()"
+          (change)="selectRepository($any($event.target).value)"
+        >
+          <option value="" disabled>Choose a repository</option>
+          @for (repository of repositories(); track repository.id) {
+            <option [value]="repository.id">{{ repository.name }}</option>
+          }
+        </select>
+        @if (selectedRepository()) {
+          <span class="path">{{ selectedRepository()?.path }}</span>
+        }
+      </div>
+
+      <form class="add-repository" [formGroup]="addRepositoryForm" (ngSubmit)="registerRepository()">
+        <div>
+          <label for="repo-path">Add a local Git repository</label>
+          <input
+            id="repo-path"
+            formControlName="path"
+            placeholder="/mnt/c/Users/you/git/project"
+            autocomplete="off"
+          />
+        </div>
+        <div class="name-field">
+          <label for="repo-name">Display name <span>optional</span></label>
+          <input id="repo-name" formControlName="name" placeholder="DeviceAS" autocomplete="off" />
+        </div>
+        <button type="submit" [disabled]="registering()">
+          {{ registering() ? 'Validating…' : 'Add repository' }}
+        </button>
+      </form>
+    </section>
+
+    @if (error()) {
+      <div class="error-banner" role="alert">
+        <strong>Could not complete that request.</strong>
+        <span>{{ error() }}</span>
+        <button type="button" (click)="error.set('')" aria-label="Dismiss error">×</button>
+      </div>
+    }
+
+    @if (!repositories().length && !loadingInventory()) {
+      <section class="empty-state">
+        <span class="empty-icon" aria-hidden="true">⌘</span>
+        <h2>Connect your first repository</h2>
+        <p>Enter a local Git repository path above. Ripple reads it in place and never changes its files.</p>
+      </section>
+    } @else if (loadingInventory()) {
+      <section class="loading-state" aria-live="polite">
+        <span class="spinner"></span>
+        <p>Building a deterministic repository inventory…</p>
+      </section>
+    } @else if (inventory()) {
+      <section class="journey-progress" aria-labelledby="journey-title">
+        <div class="journey-intro">
+          <p class="eyebrow">Guided understanding</p>
+          <h2 id="journey-title">Understand {{ inventory()?.repository?.name }}</h2>
+          <p>Start with the authors' context, then connect it to the structure defined in code.</p>
+        </div>
+        <div class="journey-count">
+          <strong>{{ journeyProgress() }} of 2</strong>
+          <span>steps complete</span>
+        </div>
+        <nav class="journey-steps" aria-label="Repository understanding steps">
+          <button
+            type="button"
+            class="journey-step"
+            [class.active]="activeJourneyStep() === 1"
+            [class.complete]="readmeReviewed()"
+            (click)="goToJourneyStep(1)"
+          >
+            <span class="step-number">{{ readmeReviewed() ? '✓' : '01' }}</span>
+            <span><strong>Read the repository overview</strong><small>Purpose, setup, and vocabulary</small></span>
+          </button>
+          <span class="step-line" [class.complete]="readmeReviewed()"></span>
+          <button
+            type="button"
+            class="journey-step"
+            [class.active]="activeJourneyStep() === 2"
+            [class.complete]="exploredFolders().length > 0"
+            (click)="goToJourneyStep(2)"
+          >
+            <span class="step-number">{{ exploredFolders().length ? '✓' : '02' }}</span>
+            <span><strong>Explore the folder structure</strong><small>Observed facts and grounded explanations</small></span>
+          </button>
+        </nav>
+      </section>
+
+      @if (activeJourneyStep() === 1) {
+        <section class="readme-workspace">
+          @if (loadingReadme()) {
+            <div class="loading-state compact" aria-live="polite">
+              <span class="spinner"></span>
+              <p>Preparing the repository reading view…</p>
+            </div>
+          } @else if (readme()?.found) {
+            <aside class="readme-toc">
+              <p class="eyebrow">Step 1</p>
+              <h2>Repository README</h2>
+              <div class="reading-meta">
+                <span>{{ readme()?.reading_minutes }} min read</span>
+                <span>{{ readme()?.word_count }} words</span>
+              </div>
+              <p class="readme-guidance">
+                Read the authors' explanation first. Treat it as useful context—not proof that the current code
+                behaves exactly as documented.
+              </p>
+              <nav aria-label="README sections">
+                @for (section of readme()?.sections; track section.id) {
+                  <button type="button" (click)="scrollToReadmeSection(section.id)">
+                    <span>{{ $index + 1 }}</span>{{ section.heading }}
+                  </button>
+                }
+              </nav>
+              <button type="button" class="skip-button" (click)="skipToFolderStructure()">
+                Skip for now
+              </button>
+            </aside>
+
+            <article class="readme-reader">
+              <header>
+                <div>
+                  <p class="eyebrow">Developer-written context</p>
+                  <h2>{{ readme()?.path }}</h2>
+                </div>
+                <span class="source-label">Source documentation</span>
+              </header>
+              <div class="readme-sections">
+                @for (section of readme()?.sections; track section.id) {
+                  <section [id]="'readme-' + section.id" class="readme-section">
+                    <span class="line-reference">Lines {{ section.start_line }}–{{ section.end_line }}</span>
+                    @if (section.level <= 2) {
+                      <h2>{{ section.heading }}</h2>
+                    } @else {
+                      <h3>{{ section.heading }}</h3>
+                    }
+                    @if (section.content) {
+                      <div class="readme-body">{{ section.content }}</div>
+                    }
+                  </section>
+                }
+              </div>
+              <footer class="readme-complete">
+                <div>
+                  <strong>Finished the README?</strong>
+                  <span>Next, compare its explanation with the structure Ripple observes in the repository.</span>
+                </div>
+                <button type="button" (click)="completeReadmeStep()">
+                  {{ readmeReviewed() ? 'Continue to folder structure' : 'I’ve reviewed it · Continue' }}
+                </button>
+              </footer>
+            </article>
+          } @else {
+            <div class="missing-readme">
+              <span class="empty-icon" aria-hidden="true">?</span>
+              <p class="eyebrow">Step 1</p>
+              <h2>No root README was found</h2>
+              <p>
+                Ripple checked the repository root for README.md, README, README.txt, and README.rst. Continue
+                with the folder structure and keep this documentation gap visible.
+              </p>
+              <button type="button" (click)="completeReadmeStep()">Continue to folder structure</button>
+            </div>
+          }
+        </section>
+      } @else {
+      <section class="workspace">
+        <div class="canvas-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Project root</p>
+              <h2>{{ inventory()?.repository?.name }}</h2>
+            </div>
+            <div class="freshness">
+              <span>{{ inventory()?.branch || 'detached' }}</span>
+              <code>{{ shortCommit() }}</code>
+              @if (inventory()?.dirty) { <span class="dirty">Uncommitted changes</span> }
+            </div>
+          </div>
+
+          <div class="legend" aria-label="Diagram legend">
+            <span><i class="folder-swatch"></i> Folder</span>
+            <span><i class="file-swatch"></i> Root file</span>
+            <span>Hover for overview · Select for evidence</span>
+          </div>
+
+          <div class="folder-grid" aria-label="Root folders">
+            @for (entry of folders(); track entry.path) {
+              <button
+                type="button"
+                class="folder-card"
+                [class.selected]="selectedEntry()?.path === entry.path"
+                (mouseenter)="beginPreview(entry)"
+                (mouseleave)="endPreview(entry)"
+                (focus)="beginPreview(entry)"
+                (blur)="endPreview(entry)"
+                (click)="openFolder(entry)"
+                [attr.aria-describedby]="hoveredPath() === entry.path ? 'preview-' + $index : null"
+              >
+                <span class="folder-tab"></span>
+                <span class="folder-icon" aria-hidden="true"></span>
+                <span class="folder-name">{{ entry.name }}</span>
+                <span class="folder-meta">{{ entry.file_count }} files · {{ entry.directory_count }} folders</span>
+                @if (entry.languages.length) {
+                  <span class="language">{{ entry.languages[0].language }}</span>
+                }
+                <span class="arrow" aria-hidden="true">↗</span>
+
+                @if (hoveredPath() === entry.path) {
+                  <span class="preview-card" [id]="'preview-' + $index" role="tooltip">
+                    <span class="preview-label">Observed</span>
+                    <strong>{{ entry.file_count }} files</strong>
+                    <span>
+                      {{ entry.languages[0]?.language || 'No dominant language' }}
+                      @if (entry.manifests.length) { · {{ entry.manifests.length }} manifest(s) }
+                    </span>
+                    <span class="preview-divider"></span>
+                    @if (loadingPreview() === entry.path) {
+                      <span class="preview-loading"><i class="spinner small"></i> Building grounded overview…</span>
+                    } @else if (previews()[entry.path]; as preview) {
+                      <span class="preview-label">AI interpretation</span>
+                      <span>{{ preview.explanation?.summary || preview.error }}</span>
+                      <span class="preview-flags">
+                        <b>{{ preview.explanation?.evidence?.length || 0 }} cited</b>
+                        <b>{{ preview.explanation?.uncertainties?.length || 0 }} uncertainties</b>
+                      </span>
+                    } @else {
+                      <span>Pause here to generate an evidence-grounded overview.</span>
+                    }
+                  </span>
+                }
+              </button>
+            }
+          </div>
+
+          @if (rootFiles().length) {
+            <div class="root-files">
+              <h3>Root files</h3>
+              <div class="file-list">
+                @for (file of rootFiles(); track file.path) {
+                  <span class="file-chip"><i></i>{{ file.name }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <aside class="details-panel" aria-live="polite">
+          @if (loadingDetails()) {
+            <div class="details-placeholder">
+              <span class="spinner"></span>
+              <h3>Reading selected evidence</h3>
+              <p>Qwen is interpreting bounded excerpts, not the entire repository.</p>
+            </div>
+          } @else if (details(); as result) {
+            <div class="details-header">
+              <div>
+                <p class="eyebrow">Folder interpretation</p>
+                <h2>{{ result.folder }}</h2>
+              </div>
+              <span class="review-badge" [class.reviewed]="result.review_state === 'reviewed'">
+                {{ result.review_state === 'reviewed' ? 'Human reviewed' : 'Not reviewed' }}
+              </span>
+            </div>
+
+            <section class="detail-section facts">
+              <h3>Observed facts</h3>
+              <div class="fact-grid">
+                <span><strong>{{ result.facts.file_count }}</strong> files</span>
+                <span><strong>{{ result.facts.directory_count }}</strong> subfolders</span>
+                <span><strong>{{ result.facts.manifests.length }}</strong> manifests</span>
+                <span><strong>{{ result.facts.entry_points.length }}</strong> entry points</span>
+              </div>
+              <div class="language-list">
+                @for (language of result.facts.languages; track language.language) {
+                  <span>{{ language.language }} <b>{{ language.files }}</b></span>
+                }
+              </div>
+            </section>
+
+            <section class="detail-section interpretation">
+              <div class="section-title-row">
+                <h3>AI interpretation</h3>
+                <span>{{ result.model }}</span>
+              </div>
+              @if (result.explanation) {
+                <p class="summary">{{ result.explanation.summary }}</p>
+                @if (result.explanation.responsibilities.length) {
+                  <ul>
+                    @for (responsibility of result.explanation.responsibilities; track responsibility) {
+                      <li>{{ responsibility }}</li>
+                    }
+                  </ul>
+                }
+              } @else {
+                <p class="unavailable">{{ result.error }}</p>
+              }
+            </section>
+
+            <section class="detail-section">
+              <div class="section-title-row">
+                <h3>Source evidence</h3>
+                <span [class.verified]="result.verified_citations">
+                  {{ result.verified_citations ? 'Citations verified' : 'Needs attention' }}
+                </span>
+              </div>
+              @if (result.explanation?.evidence?.length) {
+                <div class="citations">
+                  @for (citation of result.explanation?.evidence; track citation.evidence_id) {
+                    @if (evidenceFor(citation.evidence_id); as source) {
+                      <details>
+                        <summary>
+                          <span class="evidence-id">{{ citation.evidence_id }}</span>
+                          <span>{{ source.file }}:{{ source.start_line }}–{{ source.end_line }}</span>
+                          <a [href]="sourceHref(source)" (click)="$event.stopPropagation()">Open</a>
+                        </summary>
+                        <p>{{ citation.reason }}</p>
+                        <pre>{{ source.content }}</pre>
+                      </details>
+                    }
+                  }
+                </div>
+              } @else {
+                <p class="muted">No model citations are available. Observed facts above remain usable.</p>
+              }
+            </section>
+
+            <section class="detail-section uncertainty">
+              <h3>Uncertainties</h3>
+              @if (result.explanation?.uncertainties?.length) {
+                <ul>
+                  @for (uncertainty of result.explanation?.uncertainties; track uncertainty) {
+                    <li>{{ uncertainty }}</li>
+                  }
+                </ul>
+              } @else {
+                <p>No uncertainties were returned. This does not make the interpretation a verified fact.</p>
+              }
+            </section>
+
+            <div class="provenance">
+              <span>Commit <code>{{ result.commit.slice(0, 8) }}</code></span>
+              <span>Prompt {{ result.prompt_version }}</span>
+              <span>{{ result.cached ? 'From cache' : 'Generated now' }}</span>
+            </div>
+            <button type="button" class="review-button" (click)="toggleReviewed()">
+              {{ result.review_state === 'reviewed' ? 'Remove review mark' : 'Mark as reviewed' }}
+            </button>
+          } @else {
+            <div class="details-placeholder">
+              <span class="select-icon" aria-hidden="true">↖</span>
+              <h3>Select a folder</h3>
+              <p>See its observed structure, grounded interpretation, exact source evidence, and uncertainties.</p>
+            </div>
+          }
+        </aside>
+      </section>
+      }
+    }
+  </main>
+</div>

@@ -1,0 +1,22 @@
+html {
+  color-scheme: dark;
+  background: #0b0f12;
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #0b0f12;
+}
+
+* {
+  scrollbar-color: #3b4a51 #11171b;
+  scrollbar-width: thin;
+}
+
+::selection {
+  background: rgba(126, 197, 187, 0.3);
+  color: #fff;
+}

@@ -1,0 +1,17 @@
+{
+  "description": "Reviewed structural contract for a representative DeviceAS-shaped fixture",
+  "expected_root_entries": [
+    "README.md",
+    "docker-compose.yml",
+    "infrastructure",
+    "server",
+    "tests",
+    "utilities"
+  ],
+  "server_evidence_anchors": [
+    "server/Waters.DeviceAS.Server/Program.cs",
+    "server/Waters.DeviceAS.Server/Waters.DeviceAS.Server.csproj",
+    "server/Waters.DeviceAS.Server/Controllers/DevicesController.cs"
+  ]
+}
+
