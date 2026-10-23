@@ -6,8 +6,9 @@ import { SnapshotViewComponent } from './snapshot-view';
 import { ChatPanelComponent } from './chat-panel';
 import { RequestFlowsViewComponent } from './request-flows-view';
 import { RequestFlowSelectionContext } from './request-flow.types';
+import { RepositoryExplorerComponent } from './repository-explorer';
 
-export type AppTab = 'map' | 'flows' | 'snapshot' | 'simulate';
+export type AppTab = 'explore' | 'map' | 'flows' | 'snapshot' | 'simulate';
 
 export interface ScannedSnapshot {
   slug: string;
@@ -56,6 +57,7 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
     SimulationViewComponent,
     SnapshotViewComponent,
     ChatPanelComponent,
+    RepositoryExplorerComponent,
   ],
   selector: 'app-root',
   styleUrl: './app.scss',

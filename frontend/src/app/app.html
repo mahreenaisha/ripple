@@ -42,6 +42,9 @@
   }
 
   <nav class="tabs" aria-label="Main">
+    <button type="button" class="tab" [class.active]="activeTab() === 'explore'" (click)="setTab('explore')">
+      Explore
+    </button>
     <button type="button" class="tab" [class.active]="activeTab() === 'map'" (click)="setTab('map')">
       Map
     </button>
@@ -74,7 +77,9 @@
 <div class="body">
   @for (version of [dataVersion()]; track version) {
   <main class="content">
-    @if (activeTab() === 'map') {
+    @if (activeTab() === 'explore') {
+      <app-repository-explorer />
+    } @else if (activeTab() === 'map') {
       <section class="panel">
         <div class="panel-head">
           <div>

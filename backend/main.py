@@ -29,6 +29,7 @@ from request_flows import (
     load_request_flows,
     request_flow_catalog,
 )
+from explorer import app as repository_explorer_app
 
 load_dotenv()
 
@@ -40,6 +41,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.mount("/explorer", repository_explorer_app)
 
 BACKEND_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BACKEND_DIR.parent
