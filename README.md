@@ -32,6 +32,17 @@ Ripple provides one place to:
 
 ## Features
 
+### Guided repository explorer
+
+Choose any local Git repository directly in the **Explore** tab. Ripple first
+presents its root README as developer-written context, then visualizes root
+folders and files as an interactive structure. Folder explanations use bounded
+source evidence, native Ollama structured output, validated evidence IDs,
+content-aware caching, explicit uncertainties, and optional human review.
+
+The selected repository is registered locally; it is not hardcoded to DeviceAS
+and its source code is not uploaded.
+
 ### Interactive architecture map
 
 Explore services, databases, message queues, external systems, and their
@@ -149,9 +160,9 @@ From the Ripple root, run:
 ./run-ripple.sh
 ```
 
-The script creates missing Python and frontend dependencies, starts both
-services, waits for them to become ready, and opens `http://localhost:4200` in
-Google Chrome.
+The script creates missing Python and frontend dependencies, starts Ollama when
+available, starts both application services, waits for them to become ready,
+and opens `http://localhost:4200` in Google Chrome.
 Keep its terminal open while using Ripple; press `Ctrl+C` to stop both services.
 Logs are written to `.ripple-run/`.
 
@@ -244,6 +255,12 @@ uvicorn main:app --reload --port 8000
 ```
 
 ## Validation
+
+Run the complete backend, frontend, and production-build verification:
+
+```bash
+./test-all.sh
+```
 
 Run all scanner tests:
 
