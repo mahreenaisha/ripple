@@ -256,14 +256,6 @@ function triggeredBy(flow, context) {
       evidence: `Route ${flow.trigger.label}`,
     };
   }
-  if (kind === "cli") {
-    return {
-      kind: "cli",
-      label: "An engineer or pipeline running the command",
-      outsideRepo: true,
-      evidence: `CLI command ${flow.trigger.label}`,
-    };
-  }
   const messageType = flow.trigger.message_type || flow.trigger.label;
   if (csharp.types.has(messageType)) {
     const creation = new RegExp(`\\bnew\\s+${messageType}\\s*[({]`);
@@ -306,7 +298,6 @@ function triggeredBy(flow, context) {
 
 function category(flow, trigger) {
   if (flow.trigger.kind === "api") return "user-request";
-  if (flow.trigger.kind === "cli") return "cli-tool";
   const text = `${flow.trigger.label} ${flow.steps[1]?.symbol || ""}`;
   if (BACKGROUND_PATTERN.test(text)) return "background-job";
   if (DEVICE_PATTERN.test(text)) return "device-event";
@@ -512,8 +503,6 @@ function summarize(flow, story, repoName) {
     parts.push(trigger.outsideRepo
       ? `Runs when ${trigger.ownerHint || "another service"} sends a "${flow.trigger.label}" message${trigger.ownerHint ? ", outside this repo" : ""}.`
       : `Runs when ${repoName} itself publishes a "${flow.trigger.label}" message.`);
-  } else if (flow.trigger.kind === "cli") {
-    parts.push(`Runs when someone executes the "${flow.trigger.label}" command.`);
   } else {
     parts.push(`Runs when a client calls ${flow.trigger.label}.`);
   }

@@ -6,10 +6,7 @@ const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
 
-const {
-  SCHEMA_VERSION,
-  extractRequestFlows,
-} = require("./extract-request-flows");
+const { extractRequestFlows } = require("./extract-request-flows");
 
 function fixture(t) {
   const repository = fs.mkdtempSync(path.join(os.tmpdir(), "request-flows-"));
@@ -27,47 +24,6 @@ function fixture(t) {
 function service(name, servicePath, language) {
   return { name, path: servicePath, language, kind: "api-service" };
 }
-
-test("extracts deterministic Express and FastAPI request paths", (t) => {
-  const repo = fixture(t);
-  repo.write(
-    "node/app.js",
-    `app.get("/users", listUsers);
-async function listUsers(req, res) { return loadUsers(); }
-async function loadUsers() { return db.queryAsync("select * from users"); }
-`,
-  );
-  repo.write(
-    "python/app.py",
-    `@app.post("/orders")
-async def create_order(order):
-    return save_order(order)
-
-def save_order(order):
-    return repository.insert(order)
-`,
-  );
-
-  const services = [
-    service("node", "node", "Node.js"),
-    service("python", "python", "Python"),
-  ];
-  const first = extractRequestFlows(repo.repository, services);
-  const second = extractRequestFlows(repo.repository, services);
-
-  assert.deepEqual(first, second);
-  assert.equal(first.schema_version, SCHEMA_VERSION);
-  assert.deepEqual(
-    first.flows.map((flow) => flow.trigger.label),
-    ["GET /users", "POST /orders"],
-  );
-  assert.deepEqual(
-    first.flows[0].steps.map((step) => step.kind),
-    ["api-trigger", "handler", "call", "database"],
-  );
-  assert.ok(first.flows.flatMap((flow) => flow.steps).every((step) =>
-    step.file && step.line > 0 && step.confidence && step.evidence.length));
-});
 
 test("binds ASP.NET controllers through interface injection", (t) => {
   const repo = fixture(t);
@@ -242,55 +198,29 @@ await _deviceClient.GetAsync();
   assert.ok(labels.some((label) => /HTTP via _deviceClient\.GetAsync/.test(label)));
 });
 
-test("uses scanner entry evidence for Java, Ruby, and CLI handlers", (t) => {
+test("honors depth and flow caps and ignores test/generated/vendor code", (t) => {
   const repo = fixture(t);
   repo.write(
-    "java/AppController.java",
-    `class AppController {
-@GetMapping("/items")
-public void listItems() { repository.queryAsync(); }
+    "app/App.cs",
+    `class App {
+public void Ok() { Next(); }
+private void Next() { Last(); }
+private void Last() {}
 }
 `,
   );
-  repo.write("ruby/app.rb", 'get "/reports" do\n  Report.all\nend\n');
-  repo.write(
-    "tool/cli.py",
-    '@click.command("sync")\ndef sync():\n    publish()\n\ndef publish():\n    queue.publish()\n',
-  );
-  const entries = {
-    java: { entries: [{ type: "API", endpoint: "GET /items", file: "java/AppController.java", line: 2 }] },
-    ruby: { entries: [{ type: "API", endpoint: "GET /reports", file: "ruby/app.rb", line: 1 }] },
-    tool: { entries: [{ type: "CLI", endpoint: "sync", file: "tool/cli.py", line: 1 }] },
-  };
+  repo.write("app/tests/Bad.cs", "class Bad { public void TestHandler() {} }\n");
+  repo.write("app/generated/Bad.cs", "class Bad { public void Generated() {} }\n");
+  repo.write("app/vendor/Bad.cs", "class Bad { public void Vendor() {} }\n");
 
   const result = extractRequestFlows(
     repo.repository,
-    [
-      service("java", "java", "Java"),
-      service("ruby", "ruby", "Ruby"),
-      { ...service("tool", "tool", "Python"), kind: "cli" },
-    ],
-    entries,
-  );
-  assert.deepEqual(
-    result.flows.map((flow) => [flow.trigger.kind, flow.trigger.label]),
-    [["api", "GET /items"], ["api", "GET /reports"], ["cli", "sync"]],
-  );
-  assert.equal(result.flows[1].steps[1].symbol, "inline-route-handler");
-  assert.equal(result.flows[2].steps[0].kind, "cli-trigger");
-});
-
-test("honors depth and flow caps and ignores test/generated/vendor code", (t) => {
-  const repo = fixture(t);
-  repo.write("app/app.js", 'app.get("/ok", ok);\nfunction ok() { next(); }\nfunction next() { last(); }\nfunction last() {}\n');
-  repo.write("app/tests/bad.js", 'app.get("/test", testHandler);\nfunction testHandler() {}\n');
-  repo.write("app/generated/bad.js", 'app.get("/generated", generated);\nfunction generated() {}\n');
-  repo.write("app/vendor/bad.js", 'app.get("/vendor", vendor);\nfunction vendor() {}\n');
-
-  const result = extractRequestFlows(
-    repo.repository,
-    [service("app", "app", "Node.js")],
-    {},
+    [service("app", "app", "C#")],
+    {
+      app: {
+        entries: [{ type: "API", endpoint: "GET /ok", file: "app/App.cs", line: 1 }],
+      },
+    },
     { maxDepth: 2, maxFlows: 1 },
   );
   assert.equal(result.flows.length, 1);
@@ -453,12 +383,27 @@ public class StatusPublisher
 }
 `,
   );
-  repo.write("web/app.js", 'app.get("/health", health);\nfunction health() { return 1; }\n');
+  repo.write(
+    "server/HealthController.cs",
+    "class HealthController { public int Get() { return 1; } }\n",
+  );
 
-  const result = extractRequestFlows(repo.repository, [
-    service("server", "server", "C#"),
-    service("web", "web", "Node.js"),
-  ]);
+  const result = extractRequestFlows(
+    repo.repository,
+    [service("server", "server", "C#")],
+    {
+      server: {
+        entries: [
+          {
+            type: "API",
+            endpoint: "GET /health",
+            file: "server/HealthController.cs",
+            line: 1,
+          },
+        ],
+      },
+    },
+  );
   const queue = result.flows.find((flow) => flow.trigger.kind === "queue");
   const api = result.flows.find((flow) => flow.trigger.kind === "api");
 

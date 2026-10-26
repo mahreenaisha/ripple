@@ -1,7 +1,7 @@
 # Ripple
 
-Ripple is an evidence-backed Request Flow Explorer. Point it at a local source
-repository to trace API, CLI, and queue triggers through handlers and calls to
+Ripple is an evidence-backed ASP.NET Core Request Flow Explorer. Point it at a
+C# repository to trace HTTP and queue triggers through handlers and calls to
 databases, queues, and external systems.
 
 Every step links to a source file and line, records its confidence, and explains
@@ -32,7 +32,7 @@ Ripple provides one place to:
 
 ### Request Flow Explorer
 
-Browse API, CLI, and queue-triggered flows. Each step includes its source file,
+Browse API and queue-triggered flows. Each step includes its source file,
 line number, evidence, and confidence. Mermaid sequence diagrams provide a
 compact view of the selected path.
 
@@ -57,7 +57,8 @@ knowledge to request flows.
 
 - Angular, TypeScript, and SCSS
 - Mermaid.js for request-flow sequence diagrams
-- Node.js for deterministic static scanning
+- Node.js for the current deterministic C# scanner
+- Roslyn semantic analysis is the planned scanner replacement
 - Python and FastAPI for the API
 - Ollama or OpenRouter for optional LLM responses
 - Git metadata, JSON, and YAML for traceable snapshots and team knowledge
@@ -88,7 +89,7 @@ docs/                    Release criteria and engineering notes
 From the Ripple root:
 
 ```bash
-node scanner/scan-repo.js /path/to/repository --flows-only
+node scanner/scan-repo.js /path/to/csharp-repository
 ```
 
 Ripple infers the display name and writes the result under `snapshots/`. You can
@@ -96,7 +97,6 @@ set them explicitly:
 
 ```bash
 node scanner/scan-repo.js /path/to/repository \
-  --flows-only \
   --out snapshots/example \
   --name Example
 ```
@@ -104,15 +104,12 @@ node scanner/scan-repo.js /path/to/repository \
 The generated directory contains:
 
 ```text
-services.json
-entry-points.json
 request-flows.json
 snapshot.json
 ```
 
 Re-run the same command to refresh the snapshot after the source repository
-changes. Omit `--flows-only` only when working with the archived multi-feature
-application.
+changes.
 
 The browser does not receive unrestricted access to local files. The Node.js
 scanner reads the repository using the permissions of the local process and
@@ -151,7 +148,7 @@ On native Windows, use two PowerShell terminals and follow the backend and
 frontend commands below. The scanner itself is cross-platform:
 
 ```powershell
-node scanner/scan-repo.js C:\path\to\repository --flows-only
+node scanner/scan-repo.js C:\path\to\csharp-repository
 ```
 
 ### Backend

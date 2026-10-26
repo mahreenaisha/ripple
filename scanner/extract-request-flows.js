@@ -8,10 +8,7 @@ const crypto = require("node:crypto");
 const { buildStories } = require("./flow-story");
 
 const SCHEMA_VERSION = "1.0.0";
-const SOURCE_EXTENSIONS = new Set([
-  ".cs", ".go", ".java", ".js", ".jsx", ".mjs", ".cjs",
-  ".py", ".rb", ".ts", ".tsx",
-]);
+const SOURCE_EXTENSIONS = new Set([".cs"]);
 const IGNORED_DIRECTORIES = new Set([
   ".git", ".hg", ".svn", ".idea", ".vscode", ".venv", "venv",
   "__pycache__", "node_modules", ".angular", ".next", ".nuxt", ".cache", ".turbo", ".parcel-cache", ".terraform", "vendor", "generated", "dist", "build",
@@ -90,34 +87,13 @@ function braceBody(text, openOffset) {
   return { body: text.slice(openOffset + 1), end: text.length };
 }
 
-function pythonBody(text, startOffset) {
-  const before = text.slice(0, startOffset);
-  const startLine = before.split(/\r?\n/).length;
-  const lines = text.split(/\r?\n/);
-  const declaration = lines[startLine - 1] || "";
-  const indent = declaration.match(/^\s*/)[0].length;
-  let end = startLine;
-  while (end < lines.length) {
-    const line = lines[end];
-    if (line.trim() && line.match(/^\s*/)[0].length <= indent) break;
-    end += 1;
-  }
-  return lines.slice(startLine, end).join("\n");
-}
-
-function classRanges(text, extension) {
+function classRanges(text) {
   const ranges = [];
-  const pattern = extension === ".py"
-    ? /^(\s*)class\s+([A-Za-z_]\w*)[^\n]*:/gm
-    : /\bclass\s+([A-Za-z_]\w*)[^{]*\{/g;
+  const pattern = /\bclass\s+([A-Za-z_]\w*)[^{]*\{/g;
   for (const match of text.matchAll(pattern)) {
-    if (extension === ".py") {
-      ranges.push({ name: match[2], start: match.index, end: text.length });
-    } else {
-      const open = match.index + match[0].lastIndexOf("{");
-      const body = braceBody(text, open);
-      ranges.push({ name: match[1], start: match.index, end: body.end });
-    }
+    const open = match.index + match[0].lastIndexOf("{");
+    const body = braceBody(text, open);
+    ranges.push({ name: match[1], start: match.index, end: body.end });
   }
   return ranges;
 }
@@ -127,22 +103,11 @@ function enclosingClass(ranges, offset) {
 }
 
 function parseFunctions(source) {
-  const { text, extension } = source;
-  const ranges = classRanges(text, extension);
-  const patterns = [];
-  if ([".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx"].includes(extension)) {
-    patterns.push(/(?:export\s+)?(?:async\s+)?function\s+([A-Za-z_$]\w*)\s*\([^)]*\)\s*\{/g);
-    patterns.push(/(?:const|let|var)\s+([A-Za-z_$]\w*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>\s*\{/g);
-    patterns.push(/(?:async\s+)?([A-Za-z_$]\w*)\s*\([^)]*\)\s*\{/g);
-  } else if (extension === ".py") {
-    patterns.push(/^\s*(?:async\s+)?def\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*:/gm);
-  } else if (extension === ".go") {
-    patterns.push(/^func\s+(?:\([^)]*\)\s*)?([A-Za-z_]\w*)\s*\([^)]*\)[^{]*\{/gm);
-  } else if (extension === ".rb") {
-    patterns.push(/^\s*def\s+(?:self\.)?([A-Za-z_]\w*[!?=]?)\b/gm);
-  } else {
-    patterns.push(/\b(?:public|private|protected|internal|static|virtual|override|sealed|async|\s)+(?:[\w.<>,?[\]]+\s+)+([A-Za-z_]\w*)\s*\([^;{}]*\)\s*(?:=>[^{;\n]*;|\{)/g);
-  }
+  const { text } = source;
+  const ranges = classRanges(text);
+  const patterns = [
+    /\b(?:public|private|protected|internal|static|virtual|override|sealed|async|\s)+(?:[\w.<>,?[\]]+\s+)+([A-Za-z_]\w*)\s*\([^;{}]*\)\s*(?:=>[^{;\n]*;|\{)/g,
+  ];
 
   const functions = [];
   const seen = new Set();
@@ -157,12 +122,7 @@ function parseFunctions(source) {
       seen.add(key);
       const declaration = match[0];
       let body = "";
-      if (extension === ".py") {
-        body = pythonBody(text, match.index);
-      } else if (extension === ".rb") {
-        const rest = text.slice(match.index + declaration.length);
-        body = rest.slice(0, Math.max(0, rest.search(/^\s*end\b/m)));
-      } else if (declaration.includes("{")) {
+      if (declaration.includes("{")) {
         body = braceBody(text, match.index + declaration.lastIndexOf("{")).body;
       } else {
         body = declaration;
@@ -302,51 +262,16 @@ function makeStep(kind, symbol, file, line, confidence, evidence, label) {
   };
 }
 
-function routeTriggers(sources) {
-  const triggers = [];
-  function add(source, match, method, route, handler, evidence) {
-    triggers.push({
-      type: "api", label: `${method.toUpperCase()} ${route}`, handler,
-      file: source.file, line: lineAt(source.text, match.index),
-      evidence,
-    });
-  }
-  for (const source of sources) {
-    const text = source.text;
-    if ([".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx"].includes(source.extension)) {
-      for (const match of text.matchAll(/\b(?:app|router|server)\s*\.\s*(get|post|put|patch|delete|options|head)\s*\(\s*["'`]([^"'`]+)["'`]\s*,\s*(?:[A-Za-z_$]\w*\s*,\s*)*([A-Za-z_$]\w*)/gi)) {
-        add(source, match, match[1], match[2], match[3], "Express-style route registration names the handler");
-      }
-    } else if (source.extension === ".py") {
-      for (const match of text.matchAll(/@(?:app|router|blueprint)\.(get|post|put|patch|delete)\(\s*["']([^"']+)["'][^)]*\)\s*\n\s*(?:async\s+)?def\s+([A-Za-z_]\w*)/g)) {
-        add(source, match, match[1], match[2], match[3], "FastAPI/Flask decorator is directly attached to the handler");
-      }
-    } else if (source.extension === ".go") {
-      for (const match of text.matchAll(/\b(?:router|r|engine)\.(GET|POST|PUT|PATCH|DELETE)\(\s*"([^"]+)"\s*,\s*([A-Za-z_]\w*)/g)) {
-        add(source, match, match[1], match[2], match[3], "Go router registration names the handler");
-      }
-      for (const match of text.matchAll(/\bhttp\.HandleFunc\(\s*"([^"]+)"\s*,\s*([A-Za-z_]\w*)/g)) {
-        add(source, match, "ANY", match[1], match[2], "net/http registration names the handler");
-      }
-    } else if (source.extension === ".rb") {
-      for (const match of text.matchAll(/^\s*(get|post|put|patch|delete)\s+["']([^"']+)["'][^\n]*\bto:\s*["']([^#]+)#([^"']+)/gmi)) {
-        add(source, match, match[1], match[2], match[4], "Ruby route names a controller action");
-      }
-    }
-  }
-  return triggers;
-}
-
 function entryPointTriggers(functions, entryPoints) {
   const triggers = [];
   for (const [service, value] of Object.entries(entryPoints || {})) {
     for (const entry of value.entries || []) {
-      if (!["API", "CLI"].includes(entry.type)) continue;
+      if (entry.type !== "API") continue;
       const candidates = functions.filter((fn) => fn.file === entry.file);
       let handler = candidates
         .filter((fn) => fn.line >= entry.line)
         .sort((a, b) => a.line - b.line)[0] || candidates[0];
-      if (!handler && entry.type === "API") {
+      if (!handler) {
         handler = {
           name: "inline-route-handler",
           symbol: "inline-route-handler",
@@ -359,16 +284,14 @@ function entryPointTriggers(functions, entryPoints) {
       }
       if (!handler) continue;
       triggers.push({
-        type: entry.type === "CLI" ? "cli" : "api",
+        type: "api",
         label: entry.endpoint,
         handler: handler.symbol,
         handlerFn: handler,
         file: entry.file,
         line: entry.line,
         service,
-        evidence: entry.type === "CLI"
-          ? "CLI registration evidence is bound to the nearest callable declaration"
-          : "Framework entry-point evidence is bound to the nearest callable declaration",
+        evidence: "ASP.NET entry-point evidence is bound to the nearest callable declaration",
       });
     }
   }
@@ -479,7 +402,6 @@ function extractRequestFlows(repoPath, services = [], entryPoints = {}, options 
   const implementations = parseRegistrations(sources);
   const receiverTypesByFile = new Map(sources.map((source) => [source.file, csharpReceiverTypes(source)]));
   const triggers = [
-    ...routeTriggers(sources),
     ...entryPointTriggers(functions, entryPoints),
     ...queueTriggers(sources, functions),
   ].sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.label.localeCompare(b.label))
@@ -546,16 +468,14 @@ function extractRequestFlows(repoPath, services = [], entryPoints = {}, options 
       continue;
     }
     const triggerStep = makeStep(
-      trigger.type === "queue" ? "queue-trigger" : trigger.type === "cli" ? "cli-trigger" : "api-trigger",
+      trigger.type === "queue" ? "queue-trigger" : "api-trigger",
       trigger.label, trigger.file, trigger.line, "high", trigger.evidence,
     );
     const handlerStep = makeStep(
       "handler", handler.symbol, handler.file, handler.line, "high",
       trigger.type === "queue"
         ? "Message type evidence binds the queue event to this handler"
-        : trigger.type === "cli"
-          ? "CLI registration evidence binds this handler"
-          : "Route registration or controller annotation binds this handler",
+        : "ASP.NET route registration or controller annotation binds this handler",
     );
     const tails = pathsFrom(handler, 1, new Set([`${handler.file}:${handler.line}`]));
     const paths = (tails.length ? tails : [[]]).sort(comparePaths);
@@ -608,10 +528,9 @@ function extractRequestFlows(repoPath, services = [], entryPoints = {}, options 
       String(a.file).localeCompare(String(b.file)) || (a.line || 0) - (b.line || 0)),
     glossary: {
       flow: "One evidence-backed path from an entry point toward a meaningful boundary.",
-      trigger: "The API route, CLI command, or queue message that starts work.",
+      trigger: "The ASP.NET route or queue message that starts work.",
       API: "An application programming interface exposed for another program to call.",
       OData: "A standard for querying and changing data through HTTP APIs.",
-      cli: "A command-line command registered by the application.",
       handler: "The first function or method directly bound to a trigger.",
       call: "A direct source-code call whose target was resolved heuristically.",
       database: "A call that appears to cross into persistent storage; traversal stops here.",

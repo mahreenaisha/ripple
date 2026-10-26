@@ -62,7 +62,7 @@ jobs:
             const c = m.counts;
             console.log(`### Ripple scanned ${m.name} @ ${(m.source.commit || "").slice(0, 7)}`);
             console.log(`Branch ${m.source.branch}, scanned ${m.source.scannedAt} in ${Math.round(m.durationMs / 1000)}s.`);
-            console.log(`${c.services} services, ${c.nodes} nodes, ${c.edges} edges, ${c.flows} request flows.`);
+            console.log(`${c.services} C# services, ${c.flows} request flows.`);
           ' "$manifest" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload snapshot

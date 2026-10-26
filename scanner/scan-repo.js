@@ -8,17 +8,20 @@ const { execFileSync } = require("node:child_process");
 
 const { identifyServices } = require("./identify-services");
 const { extractEntryPoints } = require("./extract-entry-points");
-const { extractDependencies } = require("./extract-dependencies");
 const { extractRequestFlows } = require("./extract-request-flows");
-const { buildDependencyGraph } = require("./build-dependency-graph");
-const { generateDiagram } = require("./generate-diagram");
-const { collectTeamDiagrams } = require("./team-diagrams");
-const {
-  loadAndMergeMetadata,
-  metadataToYaml,
-} = require("./metadata-yaml");
 
 const SNAPSHOTS_DIRECTORY = path.resolve(__dirname, "..", "snapshots");
+const LEGACY_ARTIFACTS = [
+  "architecture.html",
+  "architecture.mmd",
+  "architecture.svg",
+  "dependencies.json",
+  "entry-points.json",
+  "graph.json",
+  "metadata.yaml",
+  "services.json",
+  "team-diagrams.json",
+];
 
 function writeJson(outputDirectory, name, value) {
   fs.writeFileSync(
@@ -75,15 +78,12 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "repo";
 }
 
-function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
+function scanRepository(repoPath, outputPath, options = {}) {
   const startedAt = Date.now();
   const services = identifyServices(repoPath);
   const name = options.name || inferRepoName(repoPath, services);
   const outputDirectory = path.resolve(
     outputPath || path.join(SNAPSHOTS_DIRECTORY, slugify(name)),
-  );
-  const resolvedMetadataPath = path.resolve(
-    metadataPath || path.join(outputDirectory, "metadata.yaml"),
   );
 
   // Compute request-flow inputs before writing so output files cannot affect the scan.
@@ -105,36 +105,13 @@ function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
   };
 
   fs.mkdirSync(outputDirectory, { recursive: true });
-  writeJson(outputDirectory, "services.json", services);
-  writeJson(outputDirectory, "entry-points.json", entryPoints);
+  for (const artifact of LEGACY_ARTIFACTS) {
+    fs.rmSync(path.join(outputDirectory, artifact), { force: true });
+  }
   writeJson(outputDirectory, "request-flows.json", {
     ...requestFlows,
     generator: { ...requestFlows.generator, source },
   });
-
-  if (!options.flowsOnly) {
-    const metadata = loadAndMergeMetadata(resolvedMetadataPath, services);
-    const dependencies = extractDependencies(repoPath, services);
-    const graph = buildDependencyGraph(
-      repoPath,
-      services,
-      entryPoints,
-      dependencies,
-      { metadata },
-    );
-    const teamDiagrams = collectTeamDiagrams(repoPath);
-    Object.assign(counts, {
-      dependencies: dependencies.length,
-      nodes: graph.nodes.length,
-      edges: graph.edges.length,
-    });
-    writeJson(outputDirectory, "dependencies.json", dependencies);
-    writeJson(outputDirectory, "graph.json", graph);
-    writeJson(outputDirectory, "team-diagrams.json", teamDiagrams);
-    fs.mkdirSync(path.dirname(resolvedMetadataPath), { recursive: true });
-    fs.writeFileSync(resolvedMetadataPath, metadataToYaml(metadata));
-    generateDiagram(graph, outputDirectory, entryPoints);
-  }
 
   writeJson(outputDirectory, "snapshot.json", {
     schema_version: 1,
@@ -147,7 +124,6 @@ function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
 
   return {
     outputDirectory,
-    metadataPath: options.flowsOnly ? null : resolvedMetadataPath,
     name,
     source,
     ...counts,
@@ -159,10 +135,8 @@ function parseArgs(argv) {
   const options = {};
   for (let index = 2; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === "--out" || arg === "--name" || arg === "--metadata") {
+    if (arg === "--out" || arg === "--name") {
       options[arg.slice(2)] = argv[++index];
-    } else if (arg === "--flows-only") {
-      options.flowsOnly = true;
     } else {
       positional.push(arg);
     }
@@ -170,9 +144,7 @@ function parseArgs(argv) {
   return {
     repoPath: positional[0],
     out: options.out || positional[1],
-    metadata: options.metadata || positional[2],
     name: options.name,
-    flowsOnly: options.flowsOnly ?? false,
   };
 }
 
@@ -180,27 +152,21 @@ function runCli(argv) {
   const args = parseArgs(argv);
   if (!args.repoPath) {
     console.error(
-      "Usage: node scanner/scan-repo.js <repo-path> [--flows-only] [--out snapshots/<name>] [--name DisplayName] [--metadata file.yaml]",
+      "Usage: node scanner/scan-repo.js <repo-path> [--out snapshots/<name>] [--name DisplayName]",
     );
     process.exitCode = 1;
     return;
   }
 
   try {
-    const result = scanRepository(args.repoPath, args.out, args.metadata, {
-      name: args.name,
-      flowsOnly: args.flowsOnly,
-    });
+    const result = scanRepository(args.repoPath, args.out, { name: args.name });
     console.log(
-      `Scan complete for ${result.name}: ${result.services} service(s), ${result.nodes} node(s), ${result.edges} edge(s), ${result.flows} request flow(s)`,
+      `Scan complete for ${result.name}: ${result.services} service(s), ${result.flows} request flow(s)`,
     );
     if (result.source.commit) {
       console.log(`Commit: ${result.source.commit.slice(0, 7)} on ${result.source.branch}`);
     }
     console.log(`Output: ${result.outputDirectory}`);
-    if (result.metadataPath) {
-      console.log(`Metadata: ${result.metadataPath}`);
-    }
   } catch (error) {
     console.error(error.message);
     process.exitCode = 1;

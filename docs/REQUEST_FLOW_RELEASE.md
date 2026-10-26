@@ -9,8 +9,8 @@ passes. A green build is necessary, but it is not enough by itself.
   line number, non-empty evidence, and an explicit confidence.
 - Repeated scans of the same commit produce byte-equivalent request-flow data
   except for documented scan timestamps.
-- Supported framework fixtures detect all directly registered API, CLI, and
-  queue triggers.
+- Supported framework fixtures detect all directly registered ASP.NET API and
+  C# queue triggers.
 - The curated benchmark set maintains at least 90% precision for reported
   trigger-to-boundary paths. Recall is reported separately; a missing flow is
   preferable to a fabricated path.
@@ -23,13 +23,13 @@ passes. A green build is necessary, but it is not enough by itself.
 The first trusted release supports the framework patterns represented by the
 scanner fixtures:
 
-- Express and FastAPI route bindings;
-- ASP.NET controller routes and interface injection;
-- evidence-backed C# queue discriminator and handler bindings; and
-- CLI triggers already covered by scanner tests.
+- ASP.NET Core controller and minimal API routes;
+- built-in .NET dependency-injection registrations and interface dispatch; and
+- evidence-backed C# queue discriminator and handler bindings.
 
-Other frameworks are unsupported until they have both a positive fixture and a
-near-miss fixture that proves the scanner does not overmatch.
+Other languages and frameworks are unsupported until the C# baseline is trusted
+and they have both a positive fixture and a near-miss fixture that proves the
+scanner does not overmatch.
 
 ## Failure behavior
 
