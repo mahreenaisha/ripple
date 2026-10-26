@@ -86,19 +86,9 @@ function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
     metadataPath || path.join(outputDirectory, "metadata.yaml"),
   );
 
-  // Compute everything before writing so output files cannot affect the scan.
-  const metadata = loadAndMergeMetadata(resolvedMetadataPath, services);
+  // Compute request-flow inputs before writing so output files cannot affect the scan.
   const entryPoints = extractEntryPoints(repoPath, services);
-  const dependencies = extractDependencies(repoPath, services);
   const requestFlows = extractRequestFlows(repoPath, services, entryPoints);
-  const graph = buildDependencyGraph(
-    repoPath,
-    services,
-    entryPoints,
-    dependencies,
-    { metadata },
-  );
-  const teamDiagrams = collectTeamDiagrams(repoPath);
   const source = {
     ...readGitSource(repoPath),
     localPath: path.resolve(repoPath),
@@ -111,25 +101,41 @@ function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
       (total, service) => total + service.entries.length,
       0,
     ),
-    dependencies: dependencies.length,
     flows: requestFlows.flows.length,
-    nodes: graph.nodes.length,
-    edges: graph.edges.length,
   };
 
   fs.mkdirSync(outputDirectory, { recursive: true });
   writeJson(outputDirectory, "services.json", services);
   writeJson(outputDirectory, "entry-points.json", entryPoints);
-  writeJson(outputDirectory, "dependencies.json", dependencies);
   writeJson(outputDirectory, "request-flows.json", {
     ...requestFlows,
     generator: { ...requestFlows.generator, source },
   });
-  writeJson(outputDirectory, "graph.json", graph);
-  writeJson(outputDirectory, "team-diagrams.json", teamDiagrams);
-  fs.mkdirSync(path.dirname(resolvedMetadataPath), { recursive: true });
-  fs.writeFileSync(resolvedMetadataPath, metadataToYaml(metadata));
-  generateDiagram(graph, outputDirectory, entryPoints);
+
+  if (!options.flowsOnly) {
+    const metadata = loadAndMergeMetadata(resolvedMetadataPath, services);
+    const dependencies = extractDependencies(repoPath, services);
+    const graph = buildDependencyGraph(
+      repoPath,
+      services,
+      entryPoints,
+      dependencies,
+      { metadata },
+    );
+    const teamDiagrams = collectTeamDiagrams(repoPath);
+    Object.assign(counts, {
+      dependencies: dependencies.length,
+      nodes: graph.nodes.length,
+      edges: graph.edges.length,
+    });
+    writeJson(outputDirectory, "dependencies.json", dependencies);
+    writeJson(outputDirectory, "graph.json", graph);
+    writeJson(outputDirectory, "team-diagrams.json", teamDiagrams);
+    fs.mkdirSync(path.dirname(resolvedMetadataPath), { recursive: true });
+    fs.writeFileSync(resolvedMetadataPath, metadataToYaml(metadata));
+    generateDiagram(graph, outputDirectory, entryPoints);
+  }
+
   writeJson(outputDirectory, "snapshot.json", {
     schema_version: 1,
     name,
@@ -141,7 +147,7 @@ function scanRepository(repoPath, outputPath, metadataPath, options = {}) {
 
   return {
     outputDirectory,
-    metadataPath: resolvedMetadataPath,
+    metadataPath: options.flowsOnly ? null : resolvedMetadataPath,
     name,
     source,
     ...counts,
@@ -155,6 +161,8 @@ function parseArgs(argv) {
     const arg = argv[index];
     if (arg === "--out" || arg === "--name" || arg === "--metadata") {
       options[arg.slice(2)] = argv[++index];
+    } else if (arg === "--flows-only") {
+      options.flowsOnly = true;
     } else {
       positional.push(arg);
     }
@@ -164,6 +172,7 @@ function parseArgs(argv) {
     out: options.out || positional[1],
     metadata: options.metadata || positional[2],
     name: options.name,
+    flowsOnly: options.flowsOnly ?? false,
   };
 }
 
@@ -171,14 +180,17 @@ function runCli(argv) {
   const args = parseArgs(argv);
   if (!args.repoPath) {
     console.error(
-      "Usage: node scanner/scan-repo.js <repo-path> [--out snapshots/<name>] [--name DisplayName] [--metadata file.yaml]",
+      "Usage: node scanner/scan-repo.js <repo-path> [--flows-only] [--out snapshots/<name>] [--name DisplayName] [--metadata file.yaml]",
     );
     process.exitCode = 1;
     return;
   }
 
   try {
-    const result = scanRepository(args.repoPath, args.out, args.metadata, { name: args.name });
+    const result = scanRepository(args.repoPath, args.out, args.metadata, {
+      name: args.name,
+      flowsOnly: args.flowsOnly,
+    });
     console.log(
       `Scan complete for ${result.name}: ${result.services} service(s), ${result.nodes} node(s), ${result.edges} edge(s), ${result.flows} request flow(s)`,
     );
@@ -186,7 +198,9 @@ function runCli(argv) {
       console.log(`Commit: ${result.source.commit.slice(0, 7)} on ${result.source.branch}`);
     }
     console.log(`Output: ${result.outputDirectory}`);
-    console.log(`Metadata: ${result.metadataPath}`);
+    if (result.metadataPath) {
+      console.log(`Metadata: ${result.metadataPath}`);
+    }
   } catch (error) {
     console.error(error.message);
     process.exitCode = 1;

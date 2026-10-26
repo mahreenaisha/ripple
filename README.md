@@ -1,52 +1,34 @@
 # Ripple
 
-Ripple turns evolving source repositories into evidence-backed architecture maps.
-It scans code and configuration to identify executable services, API and message
-entry points, request flows, databases, queues, external systems, and
-dependencies. Every snapshot records the source commit, branch, and scan time so
-engineers can see how current the architecture information is.
+Ripple is an evidence-backed Request Flow Explorer. Point it at a local source
+repository to trace API, CLI, and queue triggers through handlers and calls to
+databases, queues, and external systems.
 
-Unlike a manually maintained diagram, Ripple can be regenerated on demand when
-someone chooses to rescan a repository. Its findings link back to source files
-and line numbers and clearly distinguish direct evidence from lower-confidence
-static inference.
+Every step links to a source file and line, records its confidence, and explains
+the evidence used by the deterministic scanner. Ripple records the scanned Git
+commit so engineers know exactly which source revision a flow describes.
 
 > Ripple currently uses static repository analysis. It does not ingest
 > OpenTelemetry or other runtime telemetry, and a detected path is not proof of
 > runtime behavior.
 
-## Why Ripple
+## Product focus
 
-Enterprise systems change faster than their architecture documentation. Static
-diagrams become stale, while important implementation details remain scattered
-across code, configuration, and team knowledge.
+Request flows are the only active product surface on `main`. Architecture maps,
+change impact, and the guided repository explorer remain in Git history and on
+the `archive/full-ripple` branch, but they are intentionally not loaded by the
+focused application.
 
 Ripple provides one place to:
 
-- explore the current service and dependency map;
-- trace requests from an entry point toward meaningful system boundaries;
-- inspect architecture tied to a specific repository commit;
-- evaluate direct and transitive change impact;
-- ask architecture questions using grounded scan evidence; and
-- attach verified team knowledge that cannot be inferred safely from code.
+- browse and filter detected request flows;
+- inspect every step and its source evidence;
+- compare alternate branches and meaningful system boundaries;
+- render a compact sequence diagram;
+- attach verified team knowledge; and
+- ask questions constrained to the selected flow.
 
 ## Features
-
-### Guided repository explorer
-
-Choose any local Git repository directly in the **Explore** tab. Ripple first
-presents its root README as developer-written context, then visualizes root
-folders and files as an interactive structure. Folder explanations use bounded
-source evidence, native Ollama structured output, validated evidence IDs,
-content-aware caching, explicit uncertainties, and optional human review.
-
-The selected repository is registered locally; it is not hardcoded to DeviceAS
-and its source code is not uploaded.
-
-### Interactive architecture map
-
-Explore services, databases, message queues, external systems, and their
-dependency direction. Select a node to inspect its entry points and evidence.
 
 ### Request Flow Explorer
 
@@ -54,24 +36,16 @@ Browse API, CLI, and queue-triggered flows. Each step includes its source file,
 line number, evidence, and confidence. Mermaid sequence diagrams provide a
 compact view of the selected path.
 
-### Architecture snapshots
+### Repository snapshots
 
-Switch between scanned repositories from the UI. A snapshot includes its source
-commit, branch, remote, scan time, architecture graph, request flows, generated
-diagrams, and discovered team documentation.
+Switch between any locally scanned repositories from the UI. A focused snapshot
+contains request flows plus source commit, branch, remote, and scan time.
 
-### Change Impact
+### Grounded flow guide
 
-Inspect which components directly or transitively depend on a selected service
-or system. This is static dependency impact analysis, not infrastructure-failure
-prediction.
-
-### LLM architecture querying
-
-Ask plain-language questions about the active architecture or selected request
-flow. Flow answers are constrained to scanner evidence and attached team
-knowledge. Ripple supports a local Ollama model or an OpenRouter model through
-an OpenAI-compatible client.
+Ask questions about the selected flow or step. Answers are constrained to scan
+evidence and attached team knowledge. Without an LLM provider, Ripple uses a
+deterministic evidence-only response.
 
 ### Team knowledge
 
@@ -82,10 +56,9 @@ knowledge to request flows.
 ## Technology
 
 - Angular, TypeScript, and SCSS
-- Cytoscape.js for interactive graph visualization
-- Mermaid.js and ELK for architecture and request-flow diagrams
-- Node.js for deterministic repository scanning
-- Python, FastAPI, and NetworkX for the API and graph operations
+- Mermaid.js for request-flow sequence diagrams
+- Node.js for deterministic static scanning
+- Python and FastAPI for the API
 - Ollama or OpenRouter for optional LLM responses
 - Git metadata, JSON, and YAML for traceable snapshots and team knowledge
 
@@ -94,12 +67,12 @@ OpenTelemetry is not part of the current implementation.
 ## Repository layout
 
 ```text
-backend/                 FastAPI API, graph operations, chat, and knowledge
+backend/                 FastAPI API, flow chat, and team knowledge
 frontend/                Angular application
-scanner/                 Static repository scanner and diagram generator
-snapshots/<repo>/        Generated architecture artifacts per repository
+scanner/                 Deterministic request-flow scanner
+snapshots/<repo>/        Generated request-flow artifacts per repository
 knowledge/<repo>.yaml    Human-maintained, verified team knowledge
-.github/workflows/       Scheduled and on-demand scanning workflow
+docs/                    Release criteria and engineering notes
 ```
 
 ## Prerequisites
@@ -115,7 +88,7 @@ knowledge/<repo>.yaml    Human-maintained, verified team knowledge
 From the Ripple root:
 
 ```bash
-node scanner/scan-repo.js /path/to/repository
+node scanner/scan-repo.js /path/to/repository --flows-only
 ```
 
 Ripple infers the display name and writes the result under `snapshots/`. You can
@@ -123,6 +96,7 @@ set them explicitly:
 
 ```bash
 node scanner/scan-repo.js /path/to/repository \
+  --flows-only \
   --out snapshots/example \
   --name Example
 ```
@@ -132,19 +106,13 @@ The generated directory contains:
 ```text
 services.json
 entry-points.json
-dependencies.json
 request-flows.json
-graph.json
 snapshot.json
-metadata.yaml
-team-diagrams.json
-architecture.mmd
-architecture.svg
-architecture.html
 ```
 
 Re-run the same command to refresh the snapshot after the source repository
-changes. Human edits in `metadata.yaml` are preserved.
+changes. Omit `--flows-only` only when working with the archived multi-feature
+application.
 
 The browser does not receive unrestricted access to local files. The Node.js
 scanner reads the repository using the permissions of the local process and
@@ -154,15 +122,16 @@ writes sanitized snapshot artifacts that the web app loads through FastAPI.
 
 ### One-click runner
 
-From the Ripple root, run:
+On Linux, WSL, or macOS, run:
 
 ```bash
 ./run-ripple.sh
 ```
 
-The script creates missing Python and frontend dependencies, starts Ollama when
-available, starts both application services, waits for them to become ready,
-and opens `http://localhost:4200` in Google Chrome.
+The script creates missing Python and frontend dependencies, starts both
+application services, waits for them to become ready, and opens
+`http://localhost:4200` in Google Chrome. Ollama is optional and is not started
+automatically.
 Keep its terminal open while using Ripple; press `Ctrl+C` to stop both services.
 Logs are written to `.ripple-run/`.
 
@@ -176,6 +145,13 @@ To start without opening a browser:
 
 ```bash
 ./run-ripple.sh --no-browser
+```
+
+On native Windows, use two PowerShell terminals and follow the backend and
+frontend commands below. The scanner itself is cross-platform:
+
+```powershell
+node scanner/scan-repo.js C:\path\to\repository --flows-only
 ```
 
 ### Backend
@@ -238,7 +214,7 @@ Do not commit `.env` or API keys.
 
 ## Select snapshots and local source
 
-Every directory under `snapshots/` containing `graph.json` appears in the
+Every directory under `snapshots/` containing `request-flows.json` appears in the
 repository dropdown. The backend defaults to `deviceas`; override it with:
 
 ```bash
@@ -301,5 +277,6 @@ reliability.
 - Generated clients and code not present at scan time cannot be analyzed.
 - LLM answers are limited by the available scan evidence and model capability.
 
-Use Ripple as an architecture discovery and change-impact aid, and verify
-medium-confidence findings before making production decisions.
+Use Ripple as a discovery aid, not proof of runtime behavior. Verify
+medium-confidence findings before making production decisions. The release gate
+for the focused product is documented in `docs/REQUEST_FLOW_RELEASE.md`.

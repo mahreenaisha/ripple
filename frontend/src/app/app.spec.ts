@@ -2,20 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { App, SnapshotList, timeAgo } from './app';
-import { GraphViewComponent } from './graph-view';
-import { Component, Input } from '@angular/core';
-import { GraphData } from './graph-view';
 import { By } from '@angular/platform-browser';
 import { ChatPanelComponent } from './chat-panel';
 import { RequestFlowsViewComponent } from './request-flows-view';
-
-@Component({
-  selector: 'app-graph-view',
-  template: '',
-})
-class GraphViewStubComponent {
-  @Input() graph!: GraphData;
-}
 
 const snapshotList: SnapshotList = {
   active: 'deviceas',
@@ -34,6 +23,17 @@ function flushSnapshots(httpTesting: HttpTestingController, list: SnapshotList =
   httpTesting.expectOne('http://localhost:8000/snapshots').flush(list);
 }
 
+function flushEmptyFlows(httpTesting: HttpTestingController): void {
+  httpTesting.expectOne('http://localhost:8000/request-flows').flush({
+    schema_version: '1.0.0',
+    generator: {},
+    limits: {},
+    flows: [],
+    warnings: [],
+    glossary: {},
+  });
+}
+
 describe('timeAgo', () => {
   it('describes scan age in short human units', () => {
     const now = Date.parse('2026-09-23T10:00:00Z');
@@ -50,12 +50,7 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideHttpClient(), provideHttpClientTesting()],
-    })
-      .overrideComponent(App, {
-        remove: { imports: [GraphViewComponent] },
-        add: { imports: [GraphViewStubComponent] },
-      })
-      .compileComponents();
+    }).compileComponents();
   });
 
   it('should create the app', () => {
@@ -64,37 +59,31 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should show graph counts from the API', async () => {
+  it('shows request flows as the only product surface', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
     fixture.detectChanges();
-
     flushSnapshots(httpTesting);
-    const req = httpTesting.expectOne('http://localhost:8000/graph');
-    expect(req.request.method).toBe('GET');
-    req.flush({
-      nodes: [{ id: 'a' }, { id: 'b' }],
-      edges: [{ source: 'a', target: 'b', call_count: 1, avg_latency_ms: 2, error_rate: 0 }],
-    });
-
-    await fixture.whenStable();
+    flushEmptyFlows(httpTesting);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('2 nodes');
-    expect(compiled.textContent).toContain('1 dependencies');
+    expect(compiled.textContent).toContain('Request Flow Explorer');
+    expect(compiled.textContent).toContain('No matching flows');
+    expect(compiled.querySelector('.tabs')).toBeNull();
+    expect(compiled.textContent).not.toContain('Architecture map');
+    expect(compiled.textContent).not.toContain('Change impact');
     httpTesting.verify();
   });
 
-  it('shows the scanned commit and reloads data when switching repos', async () => {
+  it('shows scan freshness and reloads flows when switching repositories', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
     fixture.detectChanges();
-    httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [{ id: 'a' }], edges: [] });
     flushSnapshots(httpTesting);
-    await fixture.whenStable();
+    flushEmptyFlows(httpTesting);
     fixture.detectChanges();
 
     const host = fixture.nativeElement as HTMLElement;
@@ -111,75 +100,21 @@ describe('App', () => {
       current: { slug: 'tenancyas', name: 'TenancyAS', source: { commit: 'abcdef1234', scannedAt: new Date().toISOString() } },
     };
     post.flush(tenancy);
-    httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [{ id: 'x' }, { id: 'y' }], edges: [] });
-    flushSnapshots(httpTesting, tenancy);
-    await fixture.whenStable();
+    fixture.detectChanges();
+    flushEmptyFlows(httpTesting);
     fixture.detectChanges();
 
     expect(host.querySelector('.freshness')?.textContent).toContain('TenancyAS @ abcdef1');
-    expect(host.textContent).toContain('2 nodes');
     httpTesting.verify();
   });
 
-  it('should place Explore before the existing tabs and open Flows', async () => {
+  it('passes the selected flow context to the flow-only guide', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
     fixture.detectChanges();
-    httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [], edges: [] });
     flushSnapshots(httpTesting);
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    const tabLabels = Array.from(
-      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),
-    ).map((tab) => tab.textContent?.trim());
-    expect(tabLabels).toEqual(['Explore', 'Map', 'Flows', 'Snapshot', 'Impact']);
-
-    const flowsTab = Array.from(
-      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),
-    ).find((tab) => tab.textContent?.trim() === 'Flows')!;
-    flowsTab.click();
-    fixture.detectChanges();
-
-    httpTesting.expectOne('http://localhost:8000/request-flows').flush({
-      schema_version: '1.0.0',
-      generator: {},
-      limits: {},
-      flows: [],
-      warnings: [],
-      glossary: {},
-    });
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('No request flows found');
-    httpTesting.verify();
-  });
-
-  it('passes flow mode and selection to the Flow guide sidebar', async () => {
-    const fixture = TestBed.createComponent(App);
-    const httpTesting = TestBed.inject(HttpTestingController);
-
-    fixture.detectChanges();
-    httpTesting.expectOne('http://localhost:8000/graph').flush({ nodes: [], edges: [] });
-    flushSnapshots(httpTesting);
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    const buttons = Array.from(
-      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
-    );
-    buttons.find((button) => button.textContent?.trim() === 'Flows')!.click();
-    fixture.detectChanges();
-    httpTesting.expectOne('http://localhost:8000/request-flows').flush({
-      schema_version: '1.0.0',
-      generator: {},
-      limits: {},
-      flows: [],
-      warnings: [],
-      glossary: {},
-    });
+    flushEmptyFlows(httpTesting);
     fixture.detectChanges();
 
     const flowsView = fixture.debugElement.query(
@@ -188,7 +123,10 @@ describe('App', () => {
     flowsView.selectionContext.emit({ flowId: 'flow-orders', stepId: 'step-1' });
     fixture.detectChanges();
 
-    buttons.find((button) => button.textContent?.trim() === 'Chat')!.click();
+    const guideButton = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ).find((button) => button.textContent?.trim() === 'Flow guide')!;
+    guideButton.click();
     fixture.detectChanges();
     httpTesting.expectOne('http://localhost:8000/chat/status').flush({
       provider: 'openrouter',
@@ -204,14 +142,6 @@ describe('App', () => {
       .componentInstance as ChatPanelComponent;
     expect(chat.mode).toBe('flow');
     expect(chat.context).toEqual({ flowId: 'flow-orders', stepId: 'step-1' });
-
-    buttons.find((button) => button.textContent?.trim() === 'Map')!.click();
-    fixture.detectChanges();
-    expect(chat.mode).toBe('architecture');
-    expect(chat.context).toBeNull();
-    expect((fixture.nativeElement as HTMLElement).querySelector('.chat-head h2')?.textContent).toContain(
-      'Assistant',
-    );
     httpTesting.verify();
   });
 });

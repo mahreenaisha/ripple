@@ -8,14 +8,11 @@ FRONTEND_DIR="$ROOT_DIR/frontend"
 RUN_DIR="$ROOT_DIR/.ripple-run"
 BACKEND_LOG="$RUN_DIR/backend.log"
 FRONTEND_LOG="$RUN_DIR/frontend.log"
-OLLAMA_LOG="$RUN_DIR/ollama.log"
 BACKEND_URL="http://localhost:8000"
 APP_URL="http://localhost:4200"
-OLLAMA_URL="http://localhost:11434"
 
 BACKEND_PID=""
 FRONTEND_PID=""
-OLLAMA_PID=""
 OPEN_BROWSER=true
 
 if [[ "${1:-}" == "--no-browser" ]]; then
@@ -50,7 +47,6 @@ cleanup() {
   echo "Stopping Ripple..."
   stop_group "$FRONTEND_PID"
   stop_group "$BACKEND_PID"
-  stop_group "$OLLAMA_PID"
 }
 
 wait_until_ready() {
@@ -116,8 +112,7 @@ require_command setsid
 
 mkdir -p "$RUN_DIR"
 
-if is_ready "$BACKEND_URL" && is_ready "$APP_URL" \
-  && { ! command -v ollama >/dev/null 2>&1 || is_ready "$OLLAMA_URL/api/tags"; }; then
+if is_ready "$BACKEND_URL" && is_ready "$APP_URL"; then
   echo "Ripple is already running."
   echo "App:      $APP_URL"
   echo "API:      $BACKEND_URL"
@@ -138,21 +133,6 @@ if [[ ! -d "$FRONTEND_DIR/node_modules" ]]; then
 fi
 
 trap cleanup EXIT INT TERM
-
-if command -v ollama >/dev/null 2>&1; then
-  if ! is_ready "$OLLAMA_URL/api/tags"; then
-    echo "Starting Ollama for repository explanations..."
-    : >"$OLLAMA_LOG"
-    setsid ollama serve >"$OLLAMA_LOG" 2>&1 &
-    OLLAMA_PID=$!
-    wait_until_ready "Ollama" "$OLLAMA_URL/api/tags" "$OLLAMA_PID" "$OLLAMA_LOG"
-  fi
-  if ! ollama list 2>/dev/null | grep -q "qwen2.5-coder:7b"; then
-    echo "Repository facts will work, but AI folder explanations need: ollama pull qwen2.5-coder:7b" >&2
-  fi
-else
-  echo "Ollama is not installed. Repository facts will work without AI explanations." >&2
-fi
 
 if is_ready "$BACKEND_URL"; then
   echo "Backend is already running at $BACKEND_URL."

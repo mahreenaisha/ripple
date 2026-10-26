@@ -1,14 +1,8 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GraphData, GraphViewComponent } from './graph-view';
-import { SimulationViewComponent } from './simulation-view';
-import { SnapshotViewComponent } from './snapshot-view';
 import { ChatPanelComponent } from './chat-panel';
 import { RequestFlowsViewComponent } from './request-flows-view';
 import { RequestFlowSelectionContext } from './request-flow.types';
-import { RepositoryExplorerComponent } from './repository-explorer';
-
-export type AppTab = 'explore' | 'map' | 'flows' | 'snapshot' | 'simulate';
 
 export interface ScannedSnapshot {
   slug: string;
@@ -51,14 +45,7 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
 }
 
 @Component({
-  imports: [
-    GraphViewComponent,
-    RequestFlowsViewComponent,
-    SimulationViewComponent,
-    SnapshotViewComponent,
-    ChatPanelComponent,
-    RepositoryExplorerComponent,
-  ],
+  imports: [RequestFlowsViewComponent, ChatPanelComponent],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -66,8 +53,6 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
 export class App implements OnInit {
   private readonly http = inject(HttpClient);
 
-  protected readonly graph = signal<GraphData | null>(null);
-  protected readonly activeTab = signal<AppTab>('map');
   protected readonly chatOpen = signal(false);
   protected readonly flowSelectionContext = signal<RequestFlowSelectionContext | null>(null);
   protected readonly snapshots = signal<SnapshotList | null>(null);
@@ -98,21 +83,7 @@ export class App implements OnInit {
   });
 
   ngOnInit(): void {
-    this.loadData();
-  }
-
-  protected setTab(tab: AppTab): void {
-    if (tab !== 'flows') {
-      this.flowSelectionContext.set(null);
-    }
-    this.activeTab.set(tab);
-  }
-
-  protected readonly pendingFlowId = signal<string | null>(null);
-
-  protected openFlow(flowId: string): void {
-    this.pendingFlowId.set(flowId);
-    this.setTab('flows');
+    this.loadSnapshots();
   }
 
   protected setFlowSelectionContext(context: RequestFlowSelectionContext | null): void {
@@ -134,19 +105,15 @@ export class App implements OnInit {
       .subscribe({
         next: (list) => {
           this.snapshots.set(list);
-          this.pendingFlowId.set(null);
           this.flowSelectionContext.set(null);
-          this.graph.set(null);
           this.dataVersion.update((version) => version + 1);
           this.switching.set(false);
-          this.loadData();
         },
         error: () => this.switching.set(false),
       });
   }
 
-  private loadData(): void {
-    this.http.get<GraphData>('http://localhost:8000/graph').subscribe((graph) => this.graph.set(graph));
+  private loadSnapshots(): void {
     this.http.get<SnapshotList>('http://localhost:8000/snapshots').subscribe({
       next: (list) => this.snapshots.set(list),
       error: () => this.snapshots.set(null),

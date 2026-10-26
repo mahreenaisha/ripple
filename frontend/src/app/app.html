@@ -13,171 +13,77 @@
     </svg>
     <div class="brand-text">
       <h1>Ripple</h1>
-      <p>architecture from the source of truth</p>
+      <p>request flows from source evidence</p>
     </div>
   </div>
 
-  @if (snapshots(); as list) {
-    <div class="repo">
-      <label class="repo-switch">
-        <span class="sr-only">Repository</span>
-        <select [value]="list.active" [disabled]="switching()" (change)="switchSnapshot($event)" aria-label="Repository">
-          @for (snapshot of list.snapshots; track snapshot.slug) {
-            <option [value]="snapshot.slug" [selected]="snapshot.slug === list.active">{{ snapshot.name }}</option>
-          }
-        </select>
-      </label>
-      @if (freshness(); as fresh) {
-        <span class="freshness" [class.stale]="fresh.stale" [attr.title]="fresh.detail">{{ fresh.label }}</span>
-      }
-      <button type="button" class="add-repo" aria-label="Add a repo" (click)="showAddRepo.set(!showAddRepo())">+</button>
-      @if (showAddRepo()) {
-        <div class="add-repo-pop" role="dialog" aria-label="Add a repo">
-          <strong>Add any repo in about 2 minutes</strong>
-          <code>node scanner/scan-repo.js /path/to/wcc-tenancyas</code>
-          <p>It writes <code>snapshots/tenancyas/</code>. Refresh and pick it here. Add <code>knowledge/tenancyas.yaml</code> for team facts.</p>
-        </div>
-      }
-    </div>
-  }
+  <div class="nav-actions">
+    @if (snapshots(); as list) {
+      <div class="repo">
+        <label class="repo-switch">
+          <span class="sr-only">Repository</span>
+          <select [value]="list.active" [disabled]="switching()" (change)="switchSnapshot($event)" aria-label="Repository">
+            @for (snapshot of list.snapshots; track snapshot.slug) {
+              <option [value]="snapshot.slug" [selected]="snapshot.slug === list.active">{{ snapshot.name }}</option>
+            }
+          </select>
+        </label>
+        @if (freshness(); as fresh) {
+          <span class="freshness" [class.stale]="fresh.stale" [attr.title]="fresh.detail">{{ fresh.label }}</span>
+        }
+        <button type="button" class="add-repo" aria-label="Scan another repository" (click)="showAddRepo.set(!showAddRepo())">+</button>
+        @if (showAddRepo()) {
+          <div class="add-repo-pop" role="dialog" aria-label="Scan another repository">
+            <strong>Scan any local repository</strong>
+            <code>node scanner/scan-repo.js /path/to/repo --flows-only</code>
+            <p>Refresh Ripple after the scan, then select the repository here.</p>
+          </div>
+        }
+      </div>
+    }
 
-  <nav class="tabs" aria-label="Main">
-    <button type="button" class="tab" [class.active]="activeTab() === 'explore'" (click)="setTab('explore')">
-      Explore
+    <button
+      type="button"
+      class="chat-toggle"
+      [class.active]="chatOpen()"
+      [attr.aria-pressed]="chatOpen()"
+      aria-label="Toggle flow guide"
+      (click)="toggleChat()"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+      <span>Flow guide</span>
     </button>
-    <button type="button" class="tab" [class.active]="activeTab() === 'map'" (click)="setTab('map')">
-      Map
-    </button>
-    <button type="button" class="tab" [class.active]="activeTab() === 'flows'" (click)="setTab('flows')">
-      Flows
-    </button>
-    <button type="button" class="tab" [class.active]="activeTab() === 'snapshot'" (click)="setTab('snapshot')">
-      Snapshot
-    </button>
-    <button type="button" class="tab" [class.active]="activeTab() === 'simulate'" (click)="setTab('simulate')">
-      Impact
-    </button>
-  </nav>
-
-  <button
-    type="button"
-    class="chat-toggle"
-    [class.active]="chatOpen()"
-    [attr.aria-pressed]="chatOpen()"
-    aria-label="Toggle chat"
-    (click)="toggleChat()"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-    <span>Chat</span>
-  </button>
+  </div>
 </header>
 
 <div class="body">
   @for (version of [dataVersion()]; track version) {
-  <main class="content">
-    @if (activeTab() === 'explore') {
-      <app-repository-explorer />
-    } @else if (activeTab() === 'map') {
+    <main class="content">
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Architecture map</h2>
-            <p>Services, databases, and external systems scanned from the repo</p>
+            <h2>Request Flow Explorer</h2>
+            <p>Trace API, CLI, and queue requests from their trigger to an evidence-backed boundary.</p>
           </div>
-          @if (graph(); as graphData) {
-            <div class="chips">
-              <span class="chip">{{ graphData.nodes.length }} nodes</span>
-              <span class="chip">{{ graphData.edges.length }} dependencies</span>
-              @if (graphData.source) {
-                <span class="chip accent">{{ graphData.source }}</span>
-              }
-            </div>
-          }
         </div>
+        <div class="panel-body">
+          <app-request-flows-view (selectionContext)="setFlowSelectionContext($event)" />
+        </div>
+      </section>
+    </main>
 
-        <div class="panel-body">
-          @if (graph(); as graphData) {
-            @if (graphData.nodes.length > 0) {
-              <app-graph-view [graph]="graphData" />
-            } @else {
-              <div class="empty">No services in this graph yet.</div>
-            }
-          } @else {
-            <div class="empty">
-              <span class="spinner" aria-hidden="true"></span>
-              Loading graph…
-            </div>
-          }
+    @if (chatOpen()) {
+      <aside class="chat" aria-label="Flow guide">
+        <div class="chat-head">
+          <h2>Flow guide</h2>
+          <button type="button" class="chat-close" aria-label="Close flow guide" (click)="toggleChat()">×</button>
         </div>
-      </section>
-    } @else if (activeTab() === 'flows') {
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Request flows</h2>
-            <p>Follow API, CLI, and queue requests from trigger to boundary</p>
-          </div>
+        <div class="chat-body">
+          <app-chat-panel mode="flow" [context]="flowSelectionContext()" />
         </div>
-        <div class="panel-body">
-          <app-request-flows-view
-            [initialFlowId]="pendingFlowId()"
-            (selectionContext)="setFlowSelectionContext($event)"
-          />
-        </div>
-      </section>
-    } @else if (activeTab() === 'snapshot') {
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Snapshot</h2>
-            <p>Layered view of entry points, services, data stores, and outside systems</p>
-          </div>
-        </div>
-        <div class="panel-body">
-          <app-snapshot-view (openFlow)="openFlow($event)" />
-        </div>
-      </section>
-    } @else {
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Change impact</h2>
-            <p>Select a service to reveal its direct and transitive dependents</p>
-          </div>
-        </div>
-        <div class="panel-body">
-          @if (graph(); as graphData) {
-            @if (graphData.nodes.length > 0) {
-              <app-simulation-view [graph]="graphData" />
-            } @else {
-              <div class="empty">No services in this graph yet.</div>
-            }
-          } @else {
-            <div class="empty">
-              <span class="spinner" aria-hidden="true"></span>
-              Loading graph…
-            </div>
-          }
-        </div>
-      </section>
+      </aside>
     }
-  </main>
-
-  @if (chatOpen()) {
-    <aside class="chat" [attr.aria-label]="activeTab() === 'flows' ? 'Flow guide' : 'Assistant'">
-      <div class="chat-head">
-        <h2>{{ activeTab() === 'flows' ? 'Flow guide' : 'Assistant' }}</h2>
-        <button type="button" class="chat-close" aria-label="Close chat" (click)="toggleChat()">×</button>
-      </div>
-      <div class="chat-body">
-        <app-chat-panel
-          [mode]="activeTab() === 'flows' ? 'flow' : 'architecture'"
-          [context]="activeTab() === 'flows' ? flowSelectionContext() : null"
-        />
-      </div>
-    </aside>
-  }
   }
 </div>

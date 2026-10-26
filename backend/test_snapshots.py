@@ -17,6 +17,17 @@ def write_snapshot(root: Path, slug: str, name: str, service: str) -> None:
         json.dumps({"nodes": [{"id": service, "type": "service"}], "edges": []}),
         encoding="utf-8",
     )
+    (directory / "request-flows.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "flows": [],
+                "warnings": [],
+                "glossary": {},
+            }
+        ),
+        encoding="utf-8",
+    )
     (directory / "snapshot.json").write_text(
         json.dumps(
             {
@@ -66,6 +77,33 @@ class SnapshotApiTests(unittest.TestCase):
             self.assertEqual(
                 self.client.post("/snapshots/active", json={"slug": bad}).status_code, 404
             )
+
+    def test_accepts_a_request_flow_only_snapshot(self):
+        root = Path(self.directory.name)
+        focused = root / "orders"
+        focused.mkdir()
+        (focused / "request-flows.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0.0",
+                    "flows": [],
+                    "warnings": [],
+                    "glossary": {},
+                }
+            ),
+            encoding="utf-8",
+        )
+        (focused / "snapshot.json").write_text(
+            json.dumps({"name": "Orders", "counts": {"flows": 0}}),
+            encoding="utf-8",
+        )
+
+        listed = self.client.get("/snapshots").json()["snapshots"]
+        self.assertIn("orders", [snapshot["slug"] for snapshot in listed])
+        self.assertEqual(
+            self.client.post("/snapshots/active", json={"slug": "orders"}).status_code,
+            200,
+        )
 
 
 if __name__ == "__main__":

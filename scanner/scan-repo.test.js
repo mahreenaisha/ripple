@@ -21,8 +21,10 @@ test("names a repo from its folder and matching service namespace", () => {
     out: "snapshots/x",
     metadata: undefined,
     name: "X",
+    flowsOnly: false,
   });
   assert.equal(parseArgs(["node", "scan", "/repo", "legacy-out"]).out, "legacy-out");
+  assert.equal(parseArgs(["node", "scan", "/repo", "--flows-only"]).flowsOnly, true);
 });
 
 test("writes a snapshot manifest with the scanned commit", (t) => {
@@ -52,6 +54,37 @@ test("writes a snapshot manifest with the scanned commit", (t) => {
   assert.equal(manifest.counts.flows, 1);
   const flows = JSON.parse(fs.readFileSync(path.join(output, "request-flows.json"), "utf8"));
   assert.equal(flows.generator.source.commit, manifest.source.commit);
+});
+
+test("flows-only scan writes the focused artifact without architecture outputs", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "scan-flows-only-"));
+  const repository = path.join(root, "orders");
+  const output = path.join(root, "snapshots", "orders");
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(repository, "api"), { recursive: true });
+  fs.writeFileSync(
+    path.join(repository, "api", "package.json"),
+    '{"name":"orders-api","dependencies":{"express":"1.0.0"}}',
+  );
+  fs.writeFileSync(
+    path.join(repository, "api", "index.js"),
+    'app.post("/orders", createOrder);\nfunction createOrder() { return db.insert("orders"); }\n',
+  );
+
+  const result = scanRepository(repository, output, undefined, { flowsOnly: true });
+  const flows = JSON.parse(
+    fs.readFileSync(path.join(output, "request-flows.json"), "utf8"),
+  );
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(output, "snapshot.json"), "utf8"),
+  );
+
+  assert.equal(result.flows, 1);
+  assert.equal(result.metadataPath, null);
+  assert.equal(flows.flows[0].trigger.label, "POST /orders");
+  assert.equal(manifest.counts.flows, 1);
+  assert.equal(fs.existsSync(path.join(output, "graph.json")), false);
+  assert.equal(fs.existsSync(path.join(output, "dependencies.json")), false);
 });
 
 test("one-command scan preserves metadata edits and feeds diagrams", (t) => {

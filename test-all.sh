@@ -9,6 +9,7 @@ fi
 "$ROOT/backend/venv/bin/pip" install -q -r "$ROOT/backend/requirements-dev.txt"
 npm --prefix "$ROOT/frontend" install --silent
 
+node --test "$ROOT"/scanner/*.test.js
 "$ROOT/backend/venv/bin/python" -m pytest "$ROOT/backend"
 npm --prefix "$ROOT/frontend" test -- --watch=false
 npm --prefix "$ROOT/frontend" run build

@@ -29,7 +29,6 @@ from request_flows import (
     load_request_flows,
     request_flow_catalog,
 )
-from explorer import app as repository_explorer_app
 
 load_dotenv()
 
@@ -41,7 +40,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.mount("/explorer", repository_explorer_app)
 
 BACKEND_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BACKEND_DIR.parent
@@ -59,11 +57,22 @@ def _snapshots_dir() -> Path:
 
 
 def _active_snapshot_name() -> str:
-    return (
-        _active_snapshot
-        or os.environ.get("RIPPLE_SNAPSHOT", "").strip()
-        or DEFAULT_SNAPSHOT
-    )
+    configured = _active_snapshot or os.environ.get("RIPPLE_SNAPSHOT", "").strip()
+    if configured:
+        return configured
+    root = _snapshots_dir()
+    preferred = root / DEFAULT_SNAPSHOT / "request-flows.json"
+    if preferred.is_file():
+        return DEFAULT_SNAPSHOT
+    if root.is_dir():
+        available = sorted(
+            directory.name
+            for directory in root.iterdir()
+            if directory.is_dir() and (directory / "request-flows.json").is_file()
+        )
+        if available:
+            return available[0]
+    return DEFAULT_SNAPSHOT
 
 
 def _snapshot_file(name: str) -> Path:
@@ -95,7 +104,7 @@ def _list_snapshots() -> list[dict]:
     return [
         _snapshot_summary(directory)
         for directory in sorted(root.iterdir())
-        if directory.is_dir() and (directory / "graph.json").is_file()
+        if directory.is_dir() and (directory / "request-flows.json").is_file()
     ]
 
 
@@ -743,20 +752,14 @@ def _load_mermaid(G) -> str:
 @app.get("/")
 def root():
     return {
-        "service": "ripple",
+        "service": "ripple-request-flows",
         "endpoints": [
-            "/graph",
-            "/graph/mermaid",
-            "/entry-points",
-            "/entry-points/{service_id}",
             "/request-flows",
             "/request-flows/{flow_id}",
             "/request-flows/{flow_id}/mermaid",
             "/knowledge",
-            "/team-diagrams",
             "/snapshots",
             "/snapshots/active",
-            "/simulate/failure/{node_id}",
             "/chat",
             "/chat/status",
             "/docs",
@@ -897,7 +900,9 @@ def get_snapshots():
 def set_active_snapshot(request: ActiveSnapshotRequest):
     global _active_snapshot
     slug = request.slug.strip().lower()
-    if not SNAPSHOT_SLUG.match(slug) or not (_snapshots_dir() / slug / "graph.json").is_file():
+    if not SNAPSHOT_SLUG.match(slug) or not (
+        _snapshots_dir() / slug / "request-flows.json"
+    ).is_file():
         raise HTTPException(status_code=404, detail=f"No scanned snapshot named '{slug}'")
     _active_snapshot = slug
     return get_snapshots()
@@ -963,8 +968,8 @@ def chat_status():
 
 @app.post("/chat")
 def chat(body: ChatRequest):
-    G = _load_graph()
     context = body.context or ChatContext()
+    G = None if context.type == "flow" else _load_graph()
     flows = _load_request_flows() if context.type == "flow" else None
     provider = _openai_client()
     if provider is None:
