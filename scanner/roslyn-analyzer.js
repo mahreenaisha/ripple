@@ -7,13 +7,27 @@ const { execFileSync, spawnSync } = require("node:child_process");
 
 const PROJECT_DIRECTORY = path.join(__dirname, "Ripple.CSharpAnalyzer");
 const PROJECT_FILE = path.join(PROJECT_DIRECTORY, "Ripple.CSharpAnalyzer.csproj");
+const ANALYZER_TARGET_FRAMEWORK = "net10.0";
+const MINIMUM_DOTNET_MAJOR = 10;
 const ANALYZER_DLL = path.join(
   PROJECT_DIRECTORY,
   "bin",
   "Release",
-  "net8.0",
+  ANALYZER_TARGET_FRAMEWORK,
   "Ripple.CSharpAnalyzer.dll",
 );
+
+function dotnetMajor(version) {
+  const match = String(version).trim().match(/^(\d+)\./);
+  return match ? Number(match[1]) : null;
+}
+
+function isWsl() {
+  return process.platform === "linux" && (
+    Boolean(process.env.WSL_DISTRO_NAME) ||
+    os.release().toLowerCase().includes("microsoft")
+  );
+}
 
 function dotnetExecutable() {
   const candidates = [
@@ -23,17 +37,28 @@ function dotnetExecutable() {
       : null,
     "dotnet",
   ].filter(Boolean);
+  const installed = [];
   for (const candidate of candidates) {
     const result = spawnSync(candidate, ["--version"], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
     });
     if (result.status === 0) {
-      return candidate;
+      const version = result.stdout.trim();
+      installed.push(`${candidate} (${version || "unknown version"})`);
+      if ((dotnetMajor(version) || 0) >= MINIMUM_DOTNET_MAJOR) {
+        return candidate;
+      }
     }
   }
+  const environment = isWsl() ? " inside WSL" : "";
+  const found = installed.length
+    ? ` Found only: ${installed.join(", ")}.`
+    : "";
   throw new Error(
-    "Ripple's C# scanner requires the .NET 8 SDK. Install it from https://dotnet.microsoft.com/download/dotnet/8.0 or set RIPPLE_DOTNET to the dotnet executable.",
+    `Ripple's C# scanner requires the .NET 10 SDK${environment}.${found} ` +
+    "A Windows .NET installation is separate from WSL. Install .NET 10 in the current environment " +
+    "or set RIPPLE_DOTNET to a .NET 10 dotnet executable.",
   );
 }
 
@@ -115,4 +140,4 @@ function analyzeWithRoslyn(repoPath, services, options = {}) {
   }
 }
 
-module.exports = { analyzeWithRoslyn, dotnetExecutable };
+module.exports = { analyzeWithRoslyn, dotnetExecutable, dotnetMajor };

@@ -149,8 +149,16 @@ internal sealed class RepositoryAnalyzer
         }
 
         using var workspace = MSBuildWorkspace.Create();
-        workspace.WorkspaceFailed += (_, eventArgs) =>
-            AddWarning("workspace-diagnostic", eventArgs.Diagnostic.Message, null, null);
+        workspace.RegisterWorkspaceFailedHandler(eventArgs =>
+            AddWarning(
+                eventArgs.Diagnostic.Kind == WorkspaceDiagnosticKind.Failure
+                    ? "project-load-failed"
+                    : "workspace-diagnostic",
+                eventArgs.Diagnostic.Message,
+                null,
+                null
+            )
+        );
 
         foreach (var projectFile in ProjectFiles())
         {

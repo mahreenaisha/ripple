@@ -24,7 +24,7 @@ function fixture(t) {
       `${directory}/${directory}.csproj`,
       `<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 </Project>
@@ -190,7 +190,7 @@ test("resolves DI calls across project references", (t) => {
   repo.write(
     "core/core.csproj",
     `<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><TargetFramework>net8.0</TargetFramework></PropertyGroup>
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
 </Project>
 `,
   );
@@ -207,7 +207,7 @@ public class OrderService : IOrderService {
     "server/server.csproj",
     `<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../core/core.csproj" /></ItemGroup>
@@ -413,6 +413,27 @@ private void Last() {}
   assert.equal(result.flows.length, 1);
   assert.equal(result.flows[0].trigger.label, "GET /ok");
   assert.equal(result.flows[0].steps.at(-1).kind, "inference-limit");
+});
+
+test("reports .NET project load failures without regex fallback", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "broken/broken.csproj",
+    '<Project Sdk="Missing.Company.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>',
+  );
+  repo.write("broken/Program.cs", "public static class Program { public static void Main() {} }\n");
+  repo.write(
+    "broken/FakeController.cs",
+    '[Route("should-not-appear")]\nclass FakeController { [HttpGet] public void Get() {} }\n',
+  );
+
+  const result = extractRequestFlows(
+    repo.repository,
+    [service("broken", "broken", "C#")],
+  );
+
+  assert.equal(result.flows.length, 0);
+  assert.ok(result.warnings.some((warning) => warning.code === "project-load-failed"));
 });
 
 test("builds a plain-English story for a background heartbeat job", (t) => {

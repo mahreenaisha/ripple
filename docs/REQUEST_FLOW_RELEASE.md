@@ -92,6 +92,6 @@ Run from the repository root:
 ```
 
 This command must run scanner tests, backend tests, frontend tests, and the
-production frontend build. It requires the .NET 8 SDK and builds the Roslyn
+production frontend build. It requires the .NET 10 SDK and builds the Roslyn
 analyzer before running scanner tests. Release changes are developed on short-lived
 `request-flow/*` branches and merged to `main` only after these gates pass.

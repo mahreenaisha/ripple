@@ -79,7 +79,7 @@ docs/                    Release criteria and engineering notes
 ## Prerequisites
 
 - Node.js 20 or newer
-- .NET 8 SDK
+- .NET 10 SDK
 - npm
 - Python 3 with `venv`
 - Git
@@ -153,6 +153,14 @@ node scanner/scan-repo.js C:\path\to\csharp-repository
 ```
 
 Set `RIPPLE_DOTNET` if `dotnet` is not on `PATH`.
+When Ripple runs in WSL, .NET must be installed inside WSL; a Windows .NET
+installation is a separate environment.
+
+For reliable `MSBuildWorkspace` results, scan a WSL-local clone that has been
+restored with the WSL .NET SDK. Reusing a Windows build tree through `/mnt/c`
+can leave `obj/project.assets.json` files containing Windows-only package paths;
+Ripple reports those as `project-load-failed` warnings and the snapshot must not
+be treated as complete.
 
 ### Backend
 

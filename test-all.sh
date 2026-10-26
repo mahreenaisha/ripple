@@ -5,7 +5,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTNET="${RIPPLE_DOTNET:-dotnet}"
 
 if ! command -v "$DOTNET" >/dev/null 2>&1; then
-  echo "Ripple scanner requires the .NET 8 SDK. Install it or set RIPPLE_DOTNET." >&2
+  echo "Ripple scanner requires the .NET 10 SDK in the current environment. Install it or set RIPPLE_DOTNET." >&2
+  exit 1
+fi
+
+DOTNET_VERSION="$("$DOTNET" --version)"
+DOTNET_MAJOR="${DOTNET_VERSION%%.*}"
+if [[ ! "$DOTNET_MAJOR" =~ ^[0-9]+$ ]] || (( DOTNET_MAJOR < 10 )); then
+  echo "Ripple scanner requires .NET 10 SDK or newer; found $DOTNET_VERSION at $DOTNET." >&2
   exit 1
 fi
 
