@@ -123,7 +123,7 @@ class RequestFlowApiTests(unittest.TestCase):
         self.environment.stop()
         self.directory.cleanup()
 
-    def test_catalog_lookup_404_mermaid_and_existing_graph(self):
+    def test_catalog_lookup_404_mermaid_and_no_legacy_routes(self):
         catalog = self.client.get("/request-flows")
         self.assertEqual(catalog.status_code, 200)
         self.assertEqual(len(catalog.json()["flows"]), 2)
@@ -137,20 +137,19 @@ class RequestFlowApiTests(unittest.TestCase):
         mermaid = self.client.get("/request-flows/flow-orders/mermaid")
         self.assertEqual(mermaid.status_code, 200)
         self.assertIn("sequenceDiagram", mermaid.json()["mermaid"])
-        self.assertEqual(self.client.get("/graph").status_code, 200)
-
-    def test_team_diagrams_are_served_and_default_to_empty(self):
-        team_path = Path(self.directory.name) / "team-diagrams.json"
-        with patch.dict(os.environ, {"TEAM_DIAGRAMS_PATH": str(team_path)}):
+        for path in (
+            "/graph",
+            "/graph/mermaid",
+            "/entry-points",
+            "/team-diagrams",
+            "/simulate/failure/service",
+        ):
             self.assertEqual(
-                self.client.get("/team-diagrams").json(), {"diagrams": [], "docs": []}
+                self.client.get(path).status_code
+                if not path.startswith("/simulate")
+                else self.client.post(path).status_code,
+                404,
             )
-            team_path.write_text(
-                json.dumps({"diagrams": [{"title": "Onboarding"}], "docs": []}),
-                encoding="utf-8",
-            )
-            body = self.client.get("/team-diagrams").json()
-        self.assertEqual(body["diagrams"][0]["title"], "Onboarding")
 
     def test_chat_status_has_no_secret_and_reports_unavailable(self):
         status = self.client.get("/chat/status")
@@ -176,7 +175,7 @@ class RequestFlowApiTests(unittest.TestCase):
         self.assertIn("create_order", body["response"])
         self.assertNotIn("TOP_SECRET_OTHER_FLOW", body["response"])
 
-    def test_offline_glossary_and_backward_compatible_architecture_chat(self):
+    def test_offline_glossary_and_rejects_architecture_chat(self):
         glossary = self.client.post(
             "/chat",
             json={
@@ -187,9 +186,18 @@ class RequestFlowApiTests(unittest.TestCase):
         self.assertEqual(glossary.status_code, 200)
         self.assertIn("directly bound", glossary.json()["response"])
 
-        architecture = self.client.post("/chat", json={"message": "Explain it"})
-        self.assertEqual(architecture.status_code, 200)
-        self.assertEqual(architecture.json()["mode"], "offline")
+        default_flow = self.client.post("/chat", json={"message": "Explain it"})
+        self.assertEqual(default_flow.status_code, 200)
+        self.assertIn("selected flow_id", default_flow.json()["response"])
+
+        architecture = self.client.post(
+            "/chat",
+            json={
+                "message": "Explain the architecture",
+                "context": {"type": "architecture"},
+            },
+        )
+        self.assertEqual(architecture.status_code, 422)
 
 
 if __name__ == "__main__":
