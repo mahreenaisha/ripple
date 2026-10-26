@@ -7,7 +7,6 @@ const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 
 const { identifyServices } = require("./identify-services");
-const { extractEntryPoints } = require("./extract-entry-points");
 const { extractRequestFlows } = require("./extract-request-flows");
 
 const SNAPSHOTS_DIRECTORY = path.resolve(__dirname, "..", "snapshots");
@@ -86,9 +85,8 @@ function scanRepository(repoPath, outputPath, options = {}) {
     outputPath || path.join(SNAPSHOTS_DIRECTORY, slugify(name)),
   );
 
-  // Compute request-flow inputs before writing so output files cannot affect the scan.
-  const entryPoints = extractEntryPoints(repoPath, services);
-  const requestFlows = extractRequestFlows(repoPath, services, entryPoints);
+  // Analyze before writing so output files cannot affect the scan.
+  const requestFlows = extractRequestFlows(repoPath, services);
   const source = {
     ...readGitSource(repoPath),
     localPath: path.resolve(repoPath),
@@ -97,10 +95,7 @@ function scanRepository(repoPath, outputPath, options = {}) {
 
   const counts = {
     services: services.length,
-    entryPoints: Object.values(entryPoints).reduce(
-      (total, service) => total + service.entries.length,
-      0,
-    ),
+    entryPoints: requestFlows.flows.filter((flow) => flow.trigger.kind === "api").length,
     flows: requestFlows.flows.length,
   };
 

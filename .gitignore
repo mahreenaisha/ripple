@@ -228,6 +228,10 @@ yarn-error.log*
 .ripple-run/
 .ripple/
 
+# .NET / Roslyn scanner
+**/bin/
+**/obj/
+
 # ===== Editor / OS =====
 .vscode/
 .idea/

@@ -57,8 +57,8 @@ knowledge to request flows.
 
 - Angular, TypeScript, and SCSS
 - Mermaid.js for request-flow sequence diagrams
-- Node.js for the current deterministic C# scanner
-- Roslyn semantic analysis is the planned scanner replacement
+- Roslyn syntax trees, semantic models, `IOperation`, and `MSBuildWorkspace`
+- Node.js for scanner orchestration and deterministic story enrichment
 - Python and FastAPI for the API
 - Ollama or OpenRouter for optional LLM responses
 - Git metadata, JSON, and YAML for traceable snapshots and team knowledge
@@ -79,6 +79,7 @@ docs/                    Release criteria and engineering notes
 ## Prerequisites
 
 - Node.js 20 or newer
+- .NET 8 SDK
 - npm
 - Python 3 with `venv`
 - Git
@@ -150,6 +151,8 @@ frontend commands below. The scanner itself is cross-platform:
 ```powershell
 node scanner/scan-repo.js C:\path\to\csharp-repository
 ```
+
+Set `RIPPLE_DOTNET` if `dotnet` is not on `PATH`.
 
 ### Backend
 
@@ -260,8 +263,9 @@ npm run build
 
 Confidence describes the strength of the scanner's static evidence:
 
-- **High:** direct framework binding or uniquely resolved typed relationship.
-- **Medium:** conservative inference based on names, types, or nearby calls.
+- **High:** direct Roslyn symbol, framework attribute, or explicit DI binding.
+- **Medium:** a compiler-resolved convention or a unique source implementation
+  without an explicit DI registration.
 
 Confidence is not a measure of code quality, service availability, or runtime
 reliability.
@@ -269,7 +273,8 @@ reliability.
 ## Current limitations
 
 - Static analysis can miss framework-generated or dynamically configured routes.
-- Similar method names can create incorrect paths across parallel implementations.
+- Reflection, `dynamic`, generated code, and runtime-only DI decisions are marked
+  unresolved rather than assigned a guessed target.
 - Runtime-only dependencies are invisible until runtime telemetry is added.
 - Generated clients and code not present at scan time cannot be analyzed.
 - LLM answers are limited by the available scan evidence and model capability.

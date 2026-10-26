@@ -13,7 +13,7 @@ vi.mock('mermaid', () => ({
 
 const catalog: RequestFlowCatalog = {
   schema_version: '1.0.0',
-  generator: { strategy: 'static-evidence-heuristics' },
+  generator: { strategy: 'roslyn-semantic-analysis' },
   limits: { max_depth: 6 },
   warnings: [],
   glossary: {
@@ -49,7 +49,7 @@ const catalog: RequestFlowCatalog = {
           file: 'src/orders.ts',
           line: 30,
           confidence: 'medium',
-          evidence: ['Call name matches a boundary heuristic'],
+          evidence: ['Roslyn resolved the repository abstraction and data operation'],
         },
       ],
     },

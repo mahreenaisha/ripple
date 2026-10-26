@@ -17,16 +17,23 @@ function csharpRepository(t, name = "Orders.Api") {
   fs.mkdirSync(path.join(repository, "src", name), { recursive: true });
   fs.writeFileSync(
     path.join(repository, "src", name, `${name}.csproj`),
-    '<Project Sdk="Microsoft.NET.Sdk.Web"></Project>',
+    `<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>`,
   );
   fs.writeFileSync(
     path.join(repository, "src", name, "Program.cs"),
-    "var app = WebApplication.Create();\n",
+    "var builder = WebApplication.CreateBuilder(args);\nvar app = builder.Build();\n",
   );
   fs.writeFileSync(
     path.join(repository, "src", name, "OrdersController.cs"),
-    `[Route("api/orders")]
-public class OrdersController {
+    `using Microsoft.AspNetCore.Mvc;
+public interface IOrderRepository { Task Save(); }
+[Route("api/orders")]
+public class OrdersController : ControllerBase {
   private readonly IOrderRepository _repository;
   [HttpPost]
   public async Task Create() { await _repository.Save(); }
@@ -70,6 +77,7 @@ test("writes only request-flow and snapshot artifacts", (t) => {
   assert.deepEqual(files, ["request-flows.json", "snapshot.json"]);
   assert.equal(result.services, 1);
   assert.equal(result.flows, 1);
+  assert.equal(artifact.generator.strategy, "roslyn-semantic-analysis");
   assert.equal(artifact.flows[0].trigger.label, "POST /api/orders");
   assert.match(manifest.source.commit, /^[0-9a-f]{40}$/);
   assert.equal(artifact.generator.source.commit, manifest.source.commit);

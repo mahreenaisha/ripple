@@ -11,7 +11,7 @@ const { extractRequestFlows } = require("./extract-request-flows");
 function fixture(t) {
   const repository = fs.mkdtempSync(path.join(os.tmpdir(), "request-flows-"));
   t.after(() => fs.rmSync(repository, { recursive: true, force: true }));
-  return {
+  const result = {
     repository,
     write(relativePath, contents) {
       const target = path.join(repository, relativePath);
@@ -19,6 +19,33 @@ function fixture(t) {
       fs.writeFileSync(target, contents);
     },
   };
+  for (const directory of ["server", "app"]) {
+    result.write(
+      `${directory}/${directory}.csproj`,
+      `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>
+`,
+    );
+    result.write(`${directory}/Program.cs`, "public static class Program { public static void Main() {} }\n");
+    result.write(
+      `${directory}/AspNetStubs.cs`,
+      `public sealed class RouteAttribute(string template) : Attribute { }
+public sealed class HttpGetAttribute : Attribute {
+  public HttpGetAttribute() { }
+  public HttpGetAttribute(string template) { }
+}
+public sealed class HttpPostAttribute : Attribute {
+  public HttpPostAttribute() { }
+  public HttpPostAttribute(string template) { }
+}
+`,
+    );
+  }
+  return result;
 }
 
 function service(name, servicePath, language) {
@@ -29,11 +56,21 @@ test("binds ASP.NET controllers through interface injection", (t) => {
   const repo = fixture(t);
   repo.write(
     "server/Startup.cs",
-    "services.AddScoped<IDeviceService, DeviceService>();\n",
+    `interface IServiceCollection { }
+static class ServiceCollectionExtensions {
+  public static void AddScoped<TContract, TImplementation>(this IServiceCollection services) { }
+}
+class Startup {
+  void Configure(IServiceCollection services) {
+    services.AddScoped<IDeviceService, DeviceService>();
+  }
+}
+`,
   );
   repo.write(
     "server/DevicesController.cs",
-    `class DevicesController {
+    `[Route("api/devices")]
+class DevicesController {
 private readonly IDeviceService _devices;
 public DevicesController(IDeviceService devices) { _devices = devices; }
 [HttpGet("{id}")]
@@ -43,7 +80,10 @@ public async Task Get(string id) { await _devices.Load(id); }
   );
   repo.write(
     "server/DeviceService.cs",
-    `class DeviceService {
+    `interface IDeviceService { Task Load(string id); }
+interface IDeviceRepository { Task FindAsync(string id); }
+class DeviceService : IDeviceService {
+private readonly IDeviceRepository _repository;
 public async Task Load(string id) { await _repository.FindAsync(id); }
 }
 `,
@@ -71,10 +111,139 @@ public async Task Load(string id) { await _repository.FindAsync(id); }
       "GET /api/devices/{id}",
       "DevicesController.Get",
       "DeviceService.Load",
-      "_repository.FindAsync",
+      "IDeviceRepository.FindAsync",
     ],
   );
   assert.equal(result.flows[0].steps.at(-1).kind, "database");
+});
+
+test("resolves minimal APIs and OData conventions with Roslyn symbols", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/Routes.cs",
+    `class RouteBuilder { }
+static class RouteExtensions {
+  public static void MapGet(this RouteBuilder app, string route, Func<Task> handler) { }
+  public static void AddOData(this object services, string prefix) { }
+}
+static class HealthEndpoint {
+  public static Task Handle() => Task.CompletedTask;
+}
+class Routes {
+  void Configure(RouteBuilder app, object services) {
+    app.MapGet("/health", HealthEndpoint.Handle);
+    services.AddOData("odata/v{version}");
+  }
+}
+`,
+  );
+  repo.write(
+    "server/OrdersController.cs",
+    `class ODataController { }
+class OrdersController : ODataController {
+  public Task Get() => Task.CompletedTask;
+}
+`,
+  );
+
+  const result = extractRequestFlows(
+    repo.repository,
+    [service("server", "server", "C#")],
+  );
+
+  assert.deepEqual(
+    result.flows.map((flow) => flow.trigger.label),
+    ["GET /odata/v{version}/Orders", "GET /health"],
+  );
+  assert.ok(result.flows.every((flow) => flow.steps[1].confidence === "high"));
+});
+
+test("uses overload symbols instead of matching method names", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/OverloadsController.cs",
+    `[Route("overloads")]
+class OverloadsController {
+  private readonly OverloadService _service;
+  [HttpGet("{id}")]
+  public Task Get(string id) => _service.Load(id);
+}
+class OverloadService {
+  public Task Load(int id) => Task.CompletedTask;
+  public Task Load(string id) => Task.CompletedTask;
+}
+`,
+  );
+
+  const flow = extractRequestFlows(
+    repo.repository,
+    [service("server", "server", "C#")],
+  ).flows[0];
+
+  assert.equal(flow.steps[2].symbol, "OverloadService.Load");
+  assert.equal(flow.steps[2].line, 9);
+  assert.match(flow.steps[2].evidence[0], /string/);
+});
+
+test("resolves DI calls across project references", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "core/core.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0</TargetFramework></PropertyGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "core/OrderService.cs",
+    `namespace Example.Core;
+public interface IOrderService { Task Load(string id); }
+public class OrderService : IOrderService {
+  public Task Load(string id) => Task.CompletedTask;
+}
+`,
+  );
+  repo.write(
+    "server/server.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../core/core.csproj" /></ItemGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "server/CrossProjectController.cs",
+    `using Example.Core;
+interface IServiceCollection { }
+static class ServiceCollectionExtensions {
+  public static void AddScoped<TContract, TImplementation>(this IServiceCollection services) { }
+}
+class Startup {
+  void Configure(IServiceCollection services) {
+    services.AddScoped<IOrderService, OrderService>();
+  }
+}
+[Route("cross-project")]
+class CrossProjectController {
+  private readonly IOrderService _orders;
+  [HttpGet("{id}")]
+  public Task Get(string id) => _orders.Load(id);
+}
+`,
+  );
+
+  const flow = extractRequestFlows(
+    repo.repository,
+    [service("server", "server", "C#")],
+  ).flows[0];
+
+  assert.equal(flow.steps[2].symbol, "OrderService.Load");
+  assert.equal(flow.steps[2].file, "core/OrderService.cs");
+  assert.equal(flow.steps[2].confidence, "high");
+  assert.match(flow.steps[2].evidence[0], /explicit \.NET DI registration/);
 });
 
 test("adds C# queue flows only with discriminator and handler evidence", (t) => {
@@ -91,7 +260,11 @@ _ => throw new Exception()
   );
   repo.write(
     "server/Queue/DeviceChangedHandler.cs",
-    `class DeviceChangedHandler : MessageHandler<DeviceChangedMessage> {
+    `class MessageHandler<T> { }
+class DeviceChangedMessage { }
+interface IQueuePublisher { Task Publish(object message); }
+class DeviceChangedHandler : MessageHandler<DeviceChangedMessage> {
+private readonly IQueuePublisher _publisher;
 protected async Task HandleMessage(DeviceChangedMessage message) {
 await Process(message);
 }
@@ -118,8 +291,12 @@ test("emits one flow per trigger, preserves branches, and scores useful primary 
   const repo = fixture(t);
   repo.write(
     "server/Controller.cs",
-    `class Controller {
+    `class Entity { }
+interface IEntityProvider { Task Query<T>(); }
+[Route("entities")]
+class Controller {
 private readonly IEntityProvider _entityProvider;
+[HttpGet]
 public async Task Get() {
 GetParameter();
 LoadEntities();
@@ -151,7 +328,7 @@ private async Task LoadEntities() { await _entityProvider.Query<Entity>(); }
   assert.equal(shallow.flows.length, 1);
   assert.equal(shallow.flows[0].id, deeper.flows[0].id);
   assert.equal(shallow.flows[0].steps.at(-1).kind, "database");
-  assert.match(shallow.flows[0].steps.at(-1).label, /OpenSearch/);
+  assert.match(shallow.flows[0].steps.at(-1).label, /data provider/);
   assert.ok(shallow.flows[0].branches.length >= 1);
   assert.ok(shallow.flows[0].branches.some((branch) =>
     branch.some((step) => step.kind === "inference-limit")));
@@ -161,13 +338,21 @@ test("names boundaries only from matching receiver and source evidence", (t) => 
   const repo = fixture(t);
   repo.write(
     "server/BoundaryController.cs",
-    `class BoundaryController {
+    `interface IDBRepository { Task Load(); }
+interface IAmazonIotData { Task Publish(); }
+interface IMqttPublisher { Task Publish(); }
+interface INotificationClient { Task Send(); }
+interface IEventBridgeJobQueuePublisher { Task Publish(string target); }
+interface IHttpClient { Task GetAsync(); }
+[Route("boundary")]
+class BoundaryController {
 private readonly IDBRepository _dbRepository;
 private readonly IAmazonIotData _iotData;
 private readonly IMqttPublisher _mqttPublisher;
 private readonly INotificationClient _notificationClient;
 private readonly IEventBridgeJobQueuePublisher _jobQueue;
 private readonly IHttpClient _deviceClient;
+[HttpPost]
 public async Task Post() {
 await _dbRepository.Load();
 await _iotData.Publish();
@@ -195,14 +380,16 @@ await _deviceClient.GetAsync();
   assert.ok(labels.some((label) => /MQTT/.test(label)));
   assert.ok(labels.some((label) => /notification service/.test(label)));
   assert.ok(labels.some((label) => /EventBridge target "DeviceProvisionEvents"/.test(label)));
-  assert.ok(labels.some((label) => /HTTP via _deviceClient\.GetAsync/.test(label)));
+  assert.ok(labels.some((label) => /HTTP via IHttpClient\.GetAsync/.test(label)));
 });
 
 test("honors depth and flow caps and ignores test/generated/vendor code", (t) => {
   const repo = fixture(t);
   repo.write(
     "app/App.cs",
-    `class App {
+    `[Route("ok")]
+class App {
+[HttpGet]
 public void Ok() { Next(); }
 private void Next() { Last(); }
 private void Last() {}
@@ -232,11 +419,25 @@ test("builds a plain-English story for a background heartbeat job", (t) => {
   const repo = fixture(t);
   repo.write(
     "server/Queue/JobQueueMessageTypeDiscriminator.cs",
-    `namespace Acme.DeviceAS.Server.Queue;
+    `using Acme.Shared.Models.TenancyMessages;
+namespace Acme.DeviceAS.Server.Queue;
 class JobQueueMessageTypeDiscriminator {
   static System.Type Resolve(string name) => name switch {
     "TenancyDevicesHeartbeat" => typeof(TenancyDevicesHeartbeat),
   };
+}
+`,
+  );
+  repo.write(
+    "server/Queue/HandlerContracts.cs",
+    `namespace Acme.Shared.Models.TenancyMessages {
+public class TenancyDevicesHeartbeat { public string TenantID { get; set; } = ""; }
+}
+namespace Acme.DeviceAS.Server.Queue.Handlers {
+public abstract class TenancyEventMessageHandlerBase<T> {
+    protected abstract Task<bool> HandleMessage(T message);
+}
+public interface IMetricsPublisher { void Histogram(string name, int value); }
 }
 `,
   );
@@ -302,6 +503,12 @@ public class CertificateRenewalValidator : IValidator
 `,
   );
   repo.write(
+    "server/Core/OpenSearchContracts.cs",
+    `namespace Acme.OpenSearch.Abstractions;
+public interface IEntityProvider { }
+`,
+  );
+  repo.write(
     "server/appsettings.json",
     `{
   "NotificationSettings": {
@@ -326,7 +533,7 @@ public class CertificateRenewalValidator : IValidator
       ownerHint: story.triggeredBy.ownerHint,
       namespace: story.triggeredBy.namespace,
     },
-    { outsideRepo: true, ownerHint: "TenancyAS", namespace: "Acme.Shared.Models.TenancyMessages" },
+    { outsideRepo: false, ownerHint: undefined, namespace: undefined },
   );
   assert.deepEqual(
     story.fanOut[0].members.map((member) => [member.label, member.summary]),
@@ -344,7 +551,7 @@ public class CertificateRenewalValidator : IValidator
     story.timing.map((item) => [item.key, item.human]),
     [["NotificationSettings:HeartbeatDelay", "2 minutes"]],
   );
-  assert.match(story.summary, /^Runs when TenancyAS sends a "TenancyDevicesHeartbeat" message, outside this repo\./);
+  assert.match(story.summary, /^Runs when DeviceAS itself publishes a "TenancyDevicesHeartbeat" message\./);
   assert.match(story.summary, /It runs 2 checks: certificate renewal and heartbeat\./);
   assert.match(story.summary, /Datadog as queue\.tenancy_devices_heartbeat/);
 });
@@ -385,7 +592,7 @@ public class StatusPublisher
   );
   repo.write(
     "server/HealthController.cs",
-    "class HealthController { public int Get() { return 1; } }\n",
+    '[Route("health")]\nclass HealthController { [HttpGet] public int Get() { return 1; } }\n',
   );
 
   const result = extractRequestFlows(

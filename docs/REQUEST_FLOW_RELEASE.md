@@ -27,6 +27,10 @@ scanner fixtures:
 - built-in .NET dependency-injection registrations and interface dispatch; and
 - evidence-backed C# queue discriminator and handler bindings.
 
+Structural evidence must come from the Roslyn analyzer. Regex-based route or
+call-name matching is not an accepted fallback when a project cannot be loaded;
+the scan must emit an actionable project-load warning instead.
+
 Other languages and frameworks are unsupported until the C# baseline is trusted
 and they have both a positive fixture and a near-miss fixture that proves the
 scanner does not overmatch.
@@ -88,5 +92,6 @@ Run from the repository root:
 ```
 
 This command must run scanner tests, backend tests, frontend tests, and the
-production frontend build. Release changes are developed on short-lived
+production frontend build. It requires the .NET 8 SDK and builds the Roslyn
+analyzer before running scanner tests. Release changes are developed on short-lived
 `request-flow/*` branches and merged to `main` only after these gates pass.

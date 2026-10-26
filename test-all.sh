@@ -2,6 +2,16 @@
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTNET="${RIPPLE_DOTNET:-dotnet}"
+
+if ! command -v "$DOTNET" >/dev/null 2>&1; then
+  echo "Ripple scanner requires the .NET 8 SDK. Install it or set RIPPLE_DOTNET." >&2
+  exit 1
+fi
+
+DOTNET_CLI_TELEMETRY_OPTOUT=1 "$DOTNET" build \
+  "$ROOT/scanner/Ripple.CSharpAnalyzer/Ripple.CSharpAnalyzer.csproj" \
+  -c Release --nologo --verbosity quiet
 
 if [[ ! -x "$ROOT/backend/venv/bin/python" ]]; then
   python3 -m venv "$ROOT/backend/venv"
