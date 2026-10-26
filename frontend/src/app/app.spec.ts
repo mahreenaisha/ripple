@@ -140,7 +140,6 @@ describe('App', () => {
     );
     const chat = fixture.debugElement.query(By.directive(ChatPanelComponent))
       .componentInstance as ChatPanelComponent;
-    expect(chat.mode).toBe('flow');
     expect(chat.context).toEqual({ flowId: 'flow-orders', stepId: 'step-1' });
     httpTesting.verify();
   });

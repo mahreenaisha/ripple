@@ -11,31 +11,8 @@ describe('ChatPanelComponent', () => {
     }).compileComponents();
   });
 
-  it('keeps architecture chat requests backward compatible', () => {
-    const fixture = TestBed.createComponent(ChatPanelComponent);
-    const httpTesting = TestBed.inject(HttpTestingController);
-    fixture.detectChanges();
-    httpTesting.expectOne('http://localhost:8000/chat/status').flush({
-      provider: 'openrouter',
-      model: 'openrouter/free',
-      available: true,
-    });
-
-    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
-    textarea.value = 'Explain the architecture';
-    textarea.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    (fixture.nativeElement.querySelector('.composer button') as HTMLButtonElement).click();
-
-    const request = httpTesting.expectOne('http://localhost:8000/chat');
-    expect(request.request.body).toEqual({ message: 'Explain the architecture' });
-    request.flush({ response: 'Architecture answer', mode: 'llm' });
-    httpTesting.verify();
-  });
-
   it('sends quick prompts immediately with the current flow context', () => {
     const fixture = TestBed.createComponent(ChatPanelComponent);
-    fixture.componentInstance.mode = 'flow';
     fixture.componentInstance.context = {
       flowId: 'flow-orders',
       stepId: 'step-1',
@@ -86,7 +63,6 @@ describe('ChatPanelComponent', () => {
 
   it('shows provider and offline evidence status without disabling chat', () => {
     const fixture = TestBed.createComponent(ChatPanelComponent);
-    fixture.componentInstance.mode = 'flow';
     fixture.componentInstance.context = { flowId: 'flow-orders' };
     const httpTesting = TestBed.inject(HttpTestingController);
     fixture.detectChanges();

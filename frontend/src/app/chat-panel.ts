@@ -2,8 +2,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, inject, Input, OnInit, signal, viewChild } from '@angular/core';
 import { RequestFlowSelectionContext } from './request-flow.types';
 
-export type ChatPanelMode = 'architecture' | 'flow';
-
 interface ChatMessage {
   role: 'user' | 'assistant' | 'error';
   text: string;
@@ -30,29 +28,8 @@ interface ChatResponse {
 export class ChatPanelComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly list = viewChild<ElementRef<HTMLDivElement>>('messageList');
-  private currentMode: ChatPanelMode = 'architecture';
   private currentContext: RequestFlowSelectionContext | null = null;
   private contextKey = '';
-  private readonly histories: Record<ChatPanelMode, ChatMessage[]> = {
-    architecture: [],
-    flow: [],
-  };
-
-  @Input()
-  set mode(value: ChatPanelMode | undefined) {
-    const next = value ?? 'architecture';
-    if (next === this.currentMode) {
-      return;
-    }
-    this.histories[this.currentMode] = this.messages();
-    this.currentMode = next;
-    this.messages.set(this.histories[next]);
-    this.queueScroll();
-  }
-
-  get mode(): ChatPanelMode {
-    return this.currentMode;
-  }
 
   @Input()
   set context(value: RequestFlowSelectionContext | null | undefined) {
@@ -61,10 +38,7 @@ export class ChatPanelComponent implements OnInit {
       ? `${next.flowId}\u0000${next.stepId ?? ''}\u0000${next.term ?? ''}`
       : '';
     if (nextKey !== this.contextKey) {
-      this.histories.flow = [];
-      if (this.currentMode === 'flow') {
-        this.messages.set([]);
-      }
+      this.messages.set([]);
       this.contextKey = nextKey;
     }
     this.currentContext = next;
@@ -117,10 +91,6 @@ export class ChatPanelComponent implements OnInit {
     this.sendMessage(prompt);
   }
 
-  protected isFlowMode(): boolean {
-    return this.currentMode === 'flow';
-  }
-
   protected contextSummary(): string {
     const context = this.currentContext;
     if (!context) {
@@ -141,58 +111,49 @@ export class ChatPanelComponent implements OnInit {
       return;
     }
 
-    const requestMode = this.currentMode;
-    this.appendMessage(requestMode, { role: 'user', text });
+    this.messages.update((history) => [...history, { role: 'user', text }]);
     this.draft.set('');
     this.thinking.set(true);
     this.queueScroll();
 
+    const selection = this.currentContext;
     const body: {
       message: string;
-      context?: {
+      context: {
         type: 'flow';
         flow_id?: string;
         step_id?: string;
         term?: string;
       };
-    } = { message: text };
-    if (requestMode === 'flow') {
-      const selection = this.currentContext;
-      body.context = {
+    } = {
+      message: text,
+      context: {
         type: 'flow',
         ...(selection?.flowId ? { flow_id: selection.flowId } : {}),
         ...(selection?.stepId ? { step_id: selection.stepId } : {}),
         ...(selection?.term ? { term: selection.term } : {}),
-      };
-    }
+      },
+    };
 
     this.http.post<ChatResponse>('http://localhost:8000/chat', body).subscribe({
       next: (body) => {
         this.thinking.set(false);
-        this.appendMessage(requestMode, {
+        this.messages.update((history) => [...history, {
           role: 'assistant',
           text: body.response || '(empty reply)',
           offline: body.mode === 'offline',
-        });
+        }]);
         this.queueScroll();
       },
       error: (error: HttpErrorResponse) => {
         this.thinking.set(false);
-        this.appendMessage(requestMode, {
+        this.messages.update((history) => [...history, {
           role: 'error',
           text: this.errorDetail(error),
-        });
+        }]);
         this.queueScroll();
       },
     });
-  }
-
-  private appendMessage(mode: ChatPanelMode, message: ChatMessage): void {
-    if (mode === this.currentMode) {
-      this.messages.update((history) => [...history, message]);
-      return;
-    }
-    this.histories[mode] = [...this.histories[mode], message];
   }
 
   private errorDetail(error: HttpErrorResponse): string {
