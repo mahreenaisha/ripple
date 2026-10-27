@@ -87,7 +87,20 @@ docs/                    Release criteria and engineering notes
 
 ## Scan a repository
 
-From the Ripple root:
+With Ripple running, select the `+` button beside the repository dropdown:
+
+1. enter an absolute path visible to the backend;
+2. check the repository and select a solution when more than one is found;
+3. leave **Restore packages first** enabled unless the repository is already
+   restored in the same environment; and
+4. start the scan and follow restore/scanner progress in the dialog.
+
+Ripple stages generated artifacts and activates them only after Roslyn loads
+every project successfully. Restore, authentication, cancellation, or
+`project-load-failed` errors leave the previous snapshot unchanged. Restore may
+write generated files under the selected repository's `obj/` directories.
+
+The command-line equivalent from the Ripple root is:
 
 ```bash
 node scanner/scan-repo.js /path/to/csharp-repository
@@ -113,8 +126,9 @@ Re-run the same command to refresh the snapshot after the source repository
 changes.
 
 The browser does not receive unrestricted access to local files. The Node.js
-scanner reads the repository using the permissions of the local process and
-writes sanitized snapshot artifacts that the web app loads through FastAPI.
+scanner and FastAPI backend read the selected repository using the permissions
+of the local Ripple process and write sanitized snapshot artifacts. Only
+configured localhost UI origins may start scans through the API.
 
 ## Run the application
 

@@ -26,13 +26,22 @@ from request_flows import (
     load_request_flows,
     request_flow_catalog,
 )
+from scans import ScanError, ScanManager
 
 load_dotenv()
 
 app = FastAPI()
+UI_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        "RIPPLE_UI_ORIGINS",
+        "http://localhost:4200,http://127.0.0.1:4200",
+    ).split(",")
+    if origin.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=UI_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -105,6 +114,11 @@ def _list_snapshots() -> list[dict]:
     ]
 
 
+def _activate_scanned_snapshot(slug: str) -> None:
+    global _active_snapshot
+    _active_snapshot = slug
+
+
 class ChatContext(BaseModel):
     type: Literal["flow"] = "flow"
     flow_id: str | None = None
@@ -117,6 +131,17 @@ class ChatRequest(BaseModel):
     context: ChatContext | None = None
 
 
+class ScanPreflightRequest(BaseModel):
+    repo_path: str
+
+
+class StartScanRequest(BaseModel):
+    repo_path: str
+    name: str | None = None
+    solution: str | None = None
+    restore_packages: bool = True
+
+
 def _resolve_path(env_name: str, default: Path) -> Path:
     raw = os.environ.get(env_name, "").strip()
     if not raw:
@@ -125,6 +150,9 @@ def _resolve_path(env_name: str, default: Path) -> Path:
     if not path.is_absolute():
         path = (BACKEND_DIR / path).resolve()
     return path
+
+
+scan_manager = ScanManager(REPO_ROOT, _snapshots_dir(), _activate_scanned_snapshot)
 
 
 def _load_knowledge() -> dict:
@@ -390,6 +418,9 @@ def root():
             "/knowledge",
             "/snapshots",
             "/snapshots/active",
+            "/scans/preflight",
+            "/scans",
+            "/scans/{job_id}",
             "/chat",
             "/chat/status",
             "/docs",
@@ -500,6 +531,40 @@ def set_active_snapshot(request: ActiveSnapshotRequest):
         raise HTTPException(status_code=404, detail=f"No scanned snapshot named '{slug}'")
     _active_snapshot = slug
     return get_snapshots()
+
+
+def _scan_response(action):
+    try:
+        return action()
+    except ScanError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=str(exc)) from exc
+
+
+@app.post("/scans/preflight")
+def preflight_scan(request: ScanPreflightRequest):
+    return _scan_response(lambda: scan_manager.preflight(request.repo_path))
+
+
+@app.post("/scans", status_code=202)
+def start_scan(request: StartScanRequest):
+    return _scan_response(
+        lambda: scan_manager.start(
+            request.repo_path,
+            request.name,
+            request.solution,
+            request.restore_packages,
+        )
+    )
+
+
+@app.get("/scans/{job_id}")
+def get_scan(job_id: str):
+    return _scan_response(lambda: scan_manager.status(job_id))
+
+
+@app.post("/scans/{job_id}/cancel")
+def cancel_scan(job_id: str):
+    return _scan_response(lambda: scan_manager.cancel(job_id))
 
 
 @app.get("/request-flows/{flow_id}")

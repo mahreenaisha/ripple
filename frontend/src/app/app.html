@@ -34,9 +34,110 @@
         <button type="button" class="add-repo" aria-label="Scan another repository" (click)="showAddRepo.set(!showAddRepo())">+</button>
         @if (showAddRepo()) {
           <div class="add-repo-pop" role="dialog" aria-label="Scan another repository">
-            <strong>Scan any local repository</strong>
-            <code>node scanner/scan-repo.js /path/to/csharp-repo</code>
-            <p>Refresh Ripple after the scan, then select the repository here.</p>
+            <div class="scan-title">
+              <strong>Scan a local C# repository</strong>
+              <button type="button" aria-label="Close repository scanner" [disabled]="scanRunning()" (click)="closeScanner()">×</button>
+            </div>
+
+            <label>
+              <span>Repository path</span>
+              <input
+                type="text"
+                [value]="repoPath()"
+                [disabled]="scanRunning()"
+                placeholder="/home/me/code/orders"
+                (input)="onRepoPathInput($event)"
+              />
+            </label>
+
+            <button
+              type="button"
+              class="scan-primary"
+              [disabled]="!repoPath().trim() || scanChecking() || scanRunning()"
+              (click)="preflightRepository()"
+            >
+              {{ scanChecking() ? 'Checking…' : 'Check repository' }}
+            </button>
+
+            @if (scanPreflight(); as preflight) {
+              <div class="scan-ready">
+                <span>.NET {{ preflight.dotnet.version }}</span>
+                <span>{{ preflight.solutions.length }} solution{{ preflight.solutions.length === 1 ? '' : 's' }}</span>
+              </div>
+
+              <label>
+                <span>Display name</span>
+                <input
+                  type="text"
+                  [value]="scanName()"
+                  [disabled]="scanRunning()"
+                  (input)="onScanNameInput($event)"
+                />
+              </label>
+
+              @if (preflight.solutions.length) {
+                <label>
+                  <span>Solution to restore</span>
+                  <select [value]="selectedSolution()" [disabled]="scanRunning()" (change)="onSolutionChange($event)">
+                    @if (preflight.solutions.length > 1) {
+                      <option value="">Choose a solution</option>
+                    }
+                    @for (solution of preflight.solutions; track solution) {
+                      <option [value]="solution">{{ solution }}</option>
+                    }
+                  </select>
+                </label>
+              }
+
+              <label class="restore-choice">
+                <input
+                  type="checkbox"
+                  [checked]="restorePackages()"
+                  [disabled]="scanRunning()"
+                  (change)="onRestoreChange($event)"
+                />
+                <span>
+                  Restore packages first
+                  <small>Runs dotnet restore and writes generated files under obj/.</small>
+                </span>
+              </label>
+
+              <button
+                type="button"
+                class="scan-primary"
+                [disabled]="
+                  scanRunning() ||
+                  !scanName().trim() ||
+                  (restorePackages() && !selectedSolution())
+                "
+                (click)="startRepositoryScan()"
+              >
+                Scan repository
+              </button>
+            }
+
+            @if (scanJob(); as job) {
+              <div class="scan-status" [class.failed]="job.phase === 'failed'" aria-live="polite">
+                <strong>{{ job.phase }}</strong>
+                @if (job.result; as result) {
+                  <span>
+                    {{ result.counts['flows'] ?? 0 }} flows · snapshot {{ result.snapshot }}
+                  </span>
+                }
+                @if (scanRunning() && job.phase !== 'cancelling') {
+                  <button type="button" class="scan-cancel" (click)="cancelRepositoryScan()">Cancel</button>
+                }
+                @if (job.logs.length) {
+                  <pre>@for (line of job.logs.slice(-8); track $index) {
+{{ line }}
+}</pre>
+                }
+              </div>
+            }
+
+            @if (scanError(); as error) {
+              <p class="scan-error" role="alert">{{ error }}</p>
+            }
           </div>
         }
       </div>

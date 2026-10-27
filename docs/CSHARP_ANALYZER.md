@@ -42,6 +42,17 @@ node scanner/scan-repo.js /path/to/csharp-repository
 If `dotnet` is not on `PATH`, set `RIPPLE_DOTNET` to the executable. The Node
 bridge builds the analyzer in Release mode when its source changes.
 
+The local UI provides the same workflow from the `+` button beside the
+repository selector. It validates the path and SDK, lets the user choose a
+solution, optionally runs `dotnet restore`, and shows progress from a background
+job. Package restore is enabled by default and may create or update `obj/`
+content in the selected repository.
+
+Scanning and restoration are staged. Ripple does not replace the active
+snapshot when restore fails, private NuGet authentication is unavailable, the
+user cancels, or Roslyn emits a `project-load-failed` warning. Configure private
+feed credentials for the backend environment before retrying.
+
 Windows and WSL installations are separate. When Ripple runs in WSL, install
 .NET 10 inside WSL even if `dotnet` is already available in PowerShell.
 Prefer a WSL-local clone restored by that SDK. Windows-generated `obj` assets

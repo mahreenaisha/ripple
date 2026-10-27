@@ -1,5 +1,5 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChatPanelComponent } from './chat-panel';
 import { RequestFlowsViewComponent } from './request-flows-view';
 import { RequestFlowSelectionContext } from './request-flow.types';
@@ -23,6 +23,37 @@ export interface SnapshotList {
   active: string;
   current: ScannedSnapshot | null;
   snapshots: ScannedSnapshot[];
+}
+
+export interface ScanPreflight {
+  repo_path: string;
+  name: string;
+  slug: string;
+  dotnet: { executable: string; version: string };
+  solutions: string[];
+  nuget_config: string | null;
+}
+
+export type ScanPhase =
+  | 'validating'
+  | 'restoring'
+  | 'scanning'
+  | 'publishing'
+  | 'cancelling'
+  | 'complete'
+  | 'failed'
+  | 'cancelled';
+
+export interface ScanJob {
+  id: string;
+  phase: ScanPhase;
+  repo_path: string;
+  name: string;
+  slug: string;
+  restore_packages: boolean;
+  logs: string[];
+  error: string | null;
+  result: { snapshot: string; counts: Record<string, number>; warnings: number } | null;
 }
 
 export function timeAgo(iso: string | null | undefined, now = Date.now()): string {
@@ -50,7 +81,7 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   private readonly http = inject(HttpClient);
 
   protected readonly chatOpen = signal(false);
@@ -59,6 +90,23 @@ export class App implements OnInit {
   protected readonly dataVersion = signal(0);
   protected readonly switching = signal(false);
   protected readonly showAddRepo = signal(false);
+  protected readonly repoPath = signal('');
+  protected readonly scanName = signal('');
+  protected readonly restorePackages = signal(true);
+  protected readonly selectedSolution = signal('');
+  protected readonly scanPreflight = signal<ScanPreflight | null>(null);
+  protected readonly scanJob = signal<ScanJob | null>(null);
+  protected readonly scanChecking = signal(false);
+  protected readonly scanError = signal<string | null>(null);
+  protected readonly scanRunning = computed(() => {
+    const phase = this.scanJob()?.phase;
+    return phase === 'validating' ||
+      phase === 'restoring' ||
+      phase === 'scanning' ||
+      phase === 'publishing' ||
+      phase === 'cancelling';
+  });
+  private scanPoll: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly freshness = computed(() => {
     const current = this.snapshots()?.current;
@@ -84,6 +132,12 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.loadSnapshots();
+  }
+
+  ngOnDestroy(): void {
+    if (this.scanPoll) {
+      clearTimeout(this.scanPoll);
+    }
   }
 
   protected setFlowSelectionContext(context: RequestFlowSelectionContext | null): void {
@@ -113,10 +167,139 @@ export class App implements OnInit {
       });
   }
 
-  private loadSnapshots(): void {
+  protected onRepoPathInput(event: Event): void {
+    this.repoPath.set((event.target as HTMLInputElement).value);
+    this.scanPreflight.set(null);
+    this.scanError.set(null);
+  }
+
+  protected onScanNameInput(event: Event): void {
+    this.scanName.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onSolutionChange(event: Event): void {
+    this.selectedSolution.set((event.target as HTMLSelectElement).value);
+  }
+
+  protected onRestoreChange(event: Event): void {
+    this.restorePackages.set((event.target as HTMLInputElement).checked);
+  }
+
+  protected preflightRepository(): void {
+    const repoPath = this.repoPath().trim();
+    if (!repoPath || this.scanChecking() || this.scanRunning()) {
+      return;
+    }
+    this.scanChecking.set(true);
+    this.scanError.set(null);
+    this.scanPreflight.set(null);
+    this.http
+      .post<ScanPreflight>('http://localhost:8000/scans/preflight', {
+        repo_path: repoPath,
+      })
+      .subscribe({
+        next: (preflight) => {
+          this.scanPreflight.set(preflight);
+          this.repoPath.set(preflight.repo_path);
+          if (!this.scanName().trim()) {
+            this.scanName.set(preflight.name);
+          }
+          this.selectedSolution.set(
+            preflight.solutions.length === 1 ? preflight.solutions[0] : '',
+          );
+          this.scanChecking.set(false);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.scanError.set(this.errorDetail(error));
+          this.scanChecking.set(false);
+        },
+      });
+  }
+
+  protected startRepositoryScan(): void {
+    const preflight = this.scanPreflight();
+    if (!preflight || this.scanRunning()) {
+      return;
+    }
+    this.scanError.set(null);
+    this.http
+      .post<ScanJob>('http://localhost:8000/scans', {
+        repo_path: preflight.repo_path,
+        name: this.scanName().trim() || preflight.name,
+        solution: this.selectedSolution() || null,
+        restore_packages: this.restorePackages(),
+      })
+      .subscribe({
+        next: (job) => {
+          this.scanJob.set(job);
+          this.scheduleScanPoll(job.id);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.scanError.set(this.errorDetail(error));
+        },
+      });
+  }
+
+  protected cancelRepositoryScan(): void {
+    const job = this.scanJob();
+    if (!job || !this.scanRunning()) {
+      return;
+    }
+    this.http
+      .post<ScanJob>(`http://localhost:8000/scans/${job.id}/cancel`, {})
+      .subscribe({
+        next: (status) => this.scanJob.set(status),
+        error: (error: HttpErrorResponse) => this.scanError.set(this.errorDetail(error)),
+      });
+  }
+
+  protected closeScanner(): void {
+    if (!this.scanRunning()) {
+      this.showAddRepo.set(false);
+    }
+  }
+
+  private scheduleScanPoll(jobId: string): void {
+    if (this.scanPoll) {
+      clearTimeout(this.scanPoll);
+    }
+    this.scanPoll = setTimeout(() => {
+      this.http.get<ScanJob>(`http://localhost:8000/scans/${jobId}`).subscribe({
+        next: (job) => {
+          this.scanJob.set(job);
+          if (job.phase === 'complete') {
+            this.loadSnapshots(true);
+          } else if (job.phase === 'failed' || job.phase === 'cancelled') {
+            this.scanError.set(job.error);
+          } else {
+            this.scheduleScanPoll(jobId);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.scanError.set(this.errorDetail(error));
+        },
+      });
+    }, 1000);
+  }
+
+  private loadSnapshots(reloadFlows = false): void {
     this.http.get<SnapshotList>('http://localhost:8000/snapshots').subscribe({
-      next: (list) => this.snapshots.set(list),
+      next: (list) => {
+        this.snapshots.set(list);
+        if (reloadFlows) {
+          this.flowSelectionContext.set(null);
+          this.dataVersion.update((version) => version + 1);
+        }
+      },
       error: () => this.snapshots.set(null),
     });
+  }
+
+  private errorDetail(error: HttpErrorResponse): string {
+    const detail = error.error?.detail;
+    if (typeof detail === 'string' && detail.trim()) {
+      return detail;
+    }
+    return 'Ripple could not complete that repository scan.';
   }
 }

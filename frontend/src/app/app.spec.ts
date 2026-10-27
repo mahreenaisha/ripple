@@ -5,6 +5,7 @@ import { App, SnapshotList, timeAgo } from './app';
 import { By } from '@angular/platform-browser';
 import { ChatPanelComponent } from './chat-panel';
 import { RequestFlowsViewComponent } from './request-flows-view';
+import { vi } from 'vitest';
 
 const snapshotList: SnapshotList = {
   active: 'deviceas',
@@ -141,6 +142,230 @@ describe('App', () => {
     const chat = fixture.debugElement.query(By.directive(ChatPanelComponent))
       .componentInstance as ChatPanelComponent;
     expect(chat.context).toEqual({ flowId: 'flow-orders', stepId: 'step-1' });
+    httpTesting.verify();
+  });
+
+  it('preflights, restores, scans, and activates a local repository', () => {
+    vi.useFakeTimers();
+    const fixture = TestBed.createComponent(App);
+    const httpTesting = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    flushSnapshots(httpTesting);
+    flushEmptyFlows(httpTesting);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    (host.querySelector('.add-repo') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const pathInput = host.querySelector<HTMLInputElement>(
+      '.add-repo-pop input[type="text"]',
+    )!;
+    pathInput.value = '/home/me/orders';
+    pathInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    const checkButton = Array.from(
+      host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'),
+    ).find((button) => button.textContent?.trim() === 'Check repository')!;
+    checkButton.click();
+
+    const preflight = httpTesting.expectOne('http://localhost:8000/scans/preflight');
+    expect(preflight.request.body).toEqual({ repo_path: '/home/me/orders' });
+    preflight.flush({
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      slug: 'orders',
+      dotnet: { executable: '/usr/bin/dotnet', version: '10.0.403' },
+      solutions: ['Orders.sln'],
+      nuget_config: 'nuget.config',
+    });
+    fixture.detectChanges();
+
+    expect(host.querySelector<HTMLInputElement>('.restore-choice input')?.checked).toBe(true);
+    const scanButton = Array.from(
+      host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'),
+    ).find((button) => button.textContent?.trim() === 'Scan repository')!;
+    scanButton.click();
+    const start = httpTesting.expectOne('http://localhost:8000/scans');
+    expect(start.request.body).toEqual({
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      solution: 'Orders.sln',
+      restore_packages: true,
+    });
+    start.flush({
+      id: 'job-1',
+      phase: 'restoring',
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      slug: 'orders',
+      restore_packages: true,
+      logs: [],
+      error: null,
+      result: null,
+    });
+
+    vi.advanceTimersByTime(1000);
+    httpTesting.expectOne('http://localhost:8000/scans/job-1').flush({
+      id: 'job-1',
+      phase: 'complete',
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      slug: 'orders',
+      restore_packages: true,
+      logs: ['Scan complete'],
+      error: null,
+      result: { snapshot: 'orders', counts: { flows: 4 }, warnings: 0 },
+    });
+    const orders: SnapshotList = {
+      active: 'orders',
+      current: { slug: 'orders', name: 'Orders', counts: { flows: 4 } },
+      snapshots: [...snapshotList.snapshots, { slug: 'orders', name: 'Orders' }],
+    };
+    httpTesting.expectOne('http://localhost:8000/snapshots').flush(orders);
+    fixture.detectChanges();
+    flushEmptyFlows(httpTesting);
+    fixture.detectChanges();
+
+    expect(host.textContent).toContain('4 flows · snapshot orders');
+    expect(host.querySelector<HTMLSelectElement>('.repo-switch select')?.value).toBe('orders');
+    httpTesting.verify();
+    vi.useRealTimers();
+  });
+
+  it('surfaces preflight errors and can cancel a running scan', () => {
+    const fixture = TestBed.createComponent(App);
+    const httpTesting = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    flushSnapshots(httpTesting);
+    flushEmptyFlows(httpTesting);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    (host.querySelector('.add-repo') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const pathInput = host.querySelector<HTMLInputElement>(
+      '.add-repo-pop input[type="text"]',
+    )!;
+    pathInput.value = '/missing';
+    pathInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    Array.from(host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'))
+      .find((button) => button.textContent?.trim() === 'Check repository')!
+      .click();
+    httpTesting
+      .expectOne('http://localhost:8000/scans/preflight')
+      .flush({ detail: 'Repository path is not accessible.' }, { status: 400, statusText: 'Bad Request' });
+    fixture.detectChanges();
+    expect(host.textContent).toContain('Repository path is not accessible.');
+
+    pathInput.value = '/home/me/orders';
+    pathInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    Array.from(host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'))
+      .find((button) => button.textContent?.trim() === 'Check repository')!
+      .click();
+    httpTesting.expectOne('http://localhost:8000/scans/preflight').flush({
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      slug: 'orders',
+      dotnet: { executable: '/usr/bin/dotnet', version: '10.0.403' },
+      solutions: ['Orders.sln'],
+      nuget_config: null,
+    });
+    fixture.detectChanges();
+    Array.from(host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'))
+      .find((button) => button.textContent?.trim() === 'Scan repository')!
+      .click();
+    httpTesting.expectOne('http://localhost:8000/scans').flush({
+      id: 'job-2',
+      phase: 'scanning',
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      slug: 'orders',
+      restore_packages: true,
+      logs: [],
+      error: null,
+      result: null,
+    });
+    fixture.detectChanges();
+
+    (host.querySelector('.scan-cancel') as HTMLButtonElement).click();
+    const cancel = httpTesting.expectOne('http://localhost:8000/scans/job-2/cancel');
+    cancel.flush({
+      id: 'job-2',
+      phase: 'cancelled',
+      repo_path: '/home/me/orders',
+      name: 'Orders',
+      slug: 'orders',
+      restore_packages: true,
+      logs: ['Cancellation requested.'],
+      error: null,
+      result: null,
+    });
+    fixture.destroy();
+    httpTesting.verify();
+  });
+
+  it('requires a solution for restore but supports scanning without restore', () => {
+    const fixture = TestBed.createComponent(App);
+    const httpTesting = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    flushSnapshots(httpTesting);
+    flushEmptyFlows(httpTesting);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    (host.querySelector('.add-repo') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const pathInput = host.querySelector<HTMLInputElement>(
+      '.add-repo-pop input[type="text"]',
+    )!;
+    pathInput.value = '/home/me/monorepo';
+    pathInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    Array.from(host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'))
+      .find((button) => button.textContent?.trim() === 'Check repository')!
+      .click();
+    httpTesting.expectOne('http://localhost:8000/scans/preflight').flush({
+      repo_path: '/home/me/monorepo',
+      name: 'Monorepo',
+      slug: 'monorepo',
+      dotnet: { executable: '/usr/bin/dotnet', version: '10.0.403' },
+      solutions: ['Api.sln', 'Worker.sln'],
+      nuget_config: null,
+    });
+    fixture.detectChanges();
+
+    const scanButton = Array.from(
+      host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'),
+    ).find((button) => button.textContent?.trim() === 'Scan repository')!;
+    expect(scanButton.disabled).toBe(true);
+    const restore = host.querySelector<HTMLInputElement>('.restore-choice input')!;
+    restore.checked = false;
+    restore.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(scanButton.disabled).toBe(false);
+    scanButton.click();
+
+    const request = httpTesting.expectOne('http://localhost:8000/scans');
+    expect(request.request.body).toEqual({
+      repo_path: '/home/me/monorepo',
+      name: 'Monorepo',
+      solution: null,
+      restore_packages: false,
+    });
+    request.flush({
+      id: 'job-3',
+      phase: 'validating',
+      repo_path: '/home/me/monorepo',
+      name: 'Monorepo',
+      slug: 'monorepo',
+      restore_packages: false,
+      logs: [],
+      error: null,
+      result: null,
+    });
+    fixture.destroy();
     httpTesting.verify();
   });
 });
