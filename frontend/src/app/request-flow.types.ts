@@ -95,6 +95,11 @@ export interface RequestFlowWarning {
 export interface RequestFlowCatalog {
   schema_version: string;
   generator: Record<string, unknown>;
+  analysis?: {
+    mode: 'verified' | 'study';
+    completeness: string;
+    limitations: string[];
+  };
   limits: Record<string, unknown>;
   flows: RequestFlow[];
   warnings: Array<RequestFlowWarning | string>;

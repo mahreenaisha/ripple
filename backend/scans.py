@@ -49,6 +49,7 @@ class ScanJob:
     slug: str
     solution: Path | None
     restore_packages: bool
+    analysis_mode: str
     phase: str = "validating"
     logs: list[str] = field(default_factory=list)
     error: str | None = None
@@ -64,6 +65,7 @@ class ScanJob:
             "name": self.name,
             "slug": self.slug,
             "restore_packages": self.restore_packages,
+            "analysis_mode": self.analysis_mode,
             "logs": list(self.logs),
             "error": self.error,
             "result": self.result,
@@ -115,7 +117,12 @@ class ScanManager:
         name: str | None,
         solution: str | None,
         restore_packages: bool,
+        analysis_mode: str = "verified",
     ) -> dict:
+        if analysis_mode not in {"verified", "study"}:
+            raise ScanError("Analysis mode must be 'verified' or 'study'.")
+        if analysis_mode == "study" and restore_packages:
+            raise ScanError("Study mode does not restore packages. Disable package restore.")
         preflight = self.preflight(repo_path)
         repository = Path(preflight["repo_path"])
         display_name = (name or preflight["name"]).strip()
@@ -138,6 +145,7 @@ class ScanManager:
                 slug=slug,
                 solution=selected_solution,
                 restore_packages=restore_packages,
+                analysis_mode=analysis_mode,
             )
             self._jobs[job.id] = job
         threading.Thread(target=self._execute, args=(job,), daemon=True).start()
@@ -193,17 +201,20 @@ class ScanManager:
                     str(output),
                     "--name",
                     job.name,
+                    "--mode",
+                    job.analysis_mode,
                 ],
                 self.repo_root,
             )
             self._set_phase(job, "publishing")
-            result = self._validate_output(output)
+            result = self._validate_output(output, job.analysis_mode)
             self._promote(job, output)
             with self._lock:
                 job.result = {
                     "snapshot": job.slug,
                     "counts": result["snapshot"].get("counts") or {},
                     "warnings": len(result["flows"].get("warnings") or []),
+                    "analysis": result["flows"].get("analysis"),
                 }
                 job.phase = "complete"
             if self.on_promoted:
@@ -265,7 +276,7 @@ class ScanManager:
                 "Review the scan log for restore, authentication, or build errors."
             )
 
-    def _validate_output(self, output: Path) -> dict:
+    def _validate_output(self, output: Path, expected_mode: str = "verified") -> dict:
         flows_path = output / "request-flows.json"
         snapshot_path = output / "snapshot.json"
         try:
@@ -279,12 +290,22 @@ class ScanManager:
             flows.get("warnings"), list
         ):
             raise ScanError("Scanner output does not match the request-flow contract.")
+        analysis = flows.get("analysis")
+        snapshot_analysis = snapshot.get("analysis")
+        if (
+            not isinstance(analysis, dict)
+            or analysis.get("mode") != expected_mode
+            or snapshot_analysis != analysis
+        ):
+            raise ScanError(
+                f"Scanner output analysis mode does not match requested mode '{expected_mode}'."
+            )
         failures = [
             warning
             for warning in flows["warnings"]
             if isinstance(warning, dict) and warning.get("code") == "project-load-failed"
         ]
-        if failures:
+        if failures and expected_mode == "verified":
             detail = str(failures[0].get("message") or "MSBuild could not load a project")
             raise ScanError(
                 f"Roslyn reported {len(failures)} project-load failure(s); the previous "

@@ -65,6 +65,38 @@
                 <span>{{ preflight.solutions.length }} solution{{ preflight.solutions.length === 1 ? '' : 's' }}</span>
               </div>
 
+              <fieldset class="mode-choice">
+                <legend>Analysis mode</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="analysis-mode"
+                    value="study"
+                    [checked]="analysisMode() === 'study'"
+                    [disabled]="scanRunning()"
+                    (change)="onAnalysisModeChange($event)"
+                  />
+                  <span>
+                    <strong>Study without build</strong>
+                    <small>Source-only and partial. No restore, build, or repository writes.</small>
+                  </span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="analysis-mode"
+                    value="verified"
+                    [checked]="analysisMode() === 'verified'"
+                    [disabled]="scanRunning()"
+                    (change)="onAnalysisModeChange($event)"
+                  />
+                  <span>
+                    <strong>Verified project analysis</strong>
+                    <small>Uses restored projects and MSBuild for stronger symbol resolution.</small>
+                  </span>
+                </label>
+              </fieldset>
+
               <label>
                 <span>Display name</span>
                 <input
@@ -75,7 +107,7 @@
                 />
               </label>
 
-              @if (preflight.solutions.length) {
+              @if (analysisMode() === 'verified' && preflight.solutions.length) {
                 <label>
                   <span>Solution to restore</span>
                   <select [value]="selectedSolution()" [disabled]="scanRunning()" (change)="onSolutionChange($event)">
@@ -93,12 +125,18 @@
                 <input
                   type="checkbox"
                   [checked]="restorePackages()"
-                  [disabled]="scanRunning()"
+                  [disabled]="scanRunning() || analysisMode() === 'study'"
                   (change)="onRestoreChange($event)"
                 />
                 <span>
                   Restore packages first
-                  <small>Runs dotnet restore and writes generated files under obj/.</small>
+                  <small>
+                    @if (analysisMode() === 'study') {
+                      Disabled in study mode.
+                    } @else {
+                      Runs dotnet restore and writes generated files under obj/.
+                    }
+                  </small>
                 </span>
               </label>
 
@@ -108,7 +146,7 @@
                 [disabled]="
                   scanRunning() ||
                   !scanName().trim() ||
-                  (restorePackages() && !selectedSolution())
+                  (analysisMode() === 'verified' && restorePackages() && !selectedSolution())
                 "
                 (click)="startRepositoryScan()"
               >
@@ -169,6 +207,12 @@
             <p>Trace ASP.NET API and C# queue requests from their trigger to an evidence-backed boundary.</p>
           </div>
         </div>
+        @if (snapshots()?.current?.analysis?.mode === 'study') {
+          <div class="study-banner" role="status">
+            <strong>Study snapshot — partial source-only analysis.</strong>
+            External packages, generated code, MSBuild conditions, and runtime choices may be missing.
+          </div>
+        }
         <div class="panel-body">
           <app-request-flows-view (selectionContext)="setFlowSelectionContext($event)" />
         </div>

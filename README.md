@@ -57,7 +57,7 @@ knowledge to request flows.
 
 - Angular, TypeScript, and SCSS
 - Mermaid.js for request-flow sequence diagrams
-- Roslyn syntax trees, semantic models, `IOperation`, and `MSBuildWorkspace`
+- Roslyn syntax trees, semantic models, `IOperation`, `AdhocWorkspace`, and `MSBuildWorkspace`
 - Node.js for scanner orchestration and deterministic story enrichment
 - Python and FastAPI for the API
 - Ollama or OpenRouter for optional LLM responses
@@ -90,20 +90,26 @@ docs/                    Release criteria and engineering notes
 With Ripple running, select the `+` button beside the repository dropdown:
 
 1. enter an absolute path visible to the backend;
-2. check the repository and select a solution when more than one is found;
-3. leave **Restore packages first** enabled unless the repository is already
-   restored in the same environment; and
-4. start the scan and follow restore/scanner progress in the dialog.
+2. check the repository;
+3. choose **Study without build** for source-only exploration, or **Verified
+   project analysis** when restored project dependencies are available; and
+4. start the scan and follow scanner progress in the dialog.
 
-Ripple stages generated artifacts and activates them only after Roslyn loads
-every project successfully. Restore, authentication, cancellation, or
+Study mode is the UI default. It never runs restore or MSBuild and does not
+write to the selected repository. Its snapshots are explicitly marked partial:
+external package symbols, generated sources, project conditions, and runtime
+dependency-injection choices may be missing.
+
+Verified mode optionally restores the selected solution and uses
+`MSBuildWorkspace`. Ripple activates a verified snapshot only after project
+loading succeeds. Restore, authentication, cancellation, or
 `project-load-failed` errors leave the previous snapshot unchanged. Restore may
 write generated files under the selected repository's `obj/` directories.
 
 The command-line equivalent from the Ripple root is:
 
 ```bash
-node scanner/scan-repo.js /path/to/csharp-repository
+node scanner/scan-repo.js /path/to/csharp-repository --mode study
 ```
 
 Ripple infers the display name and writes the result under `snapshots/`. You can
@@ -112,7 +118,8 @@ set them explicitly:
 ```bash
 node scanner/scan-repo.js /path/to/repository \
   --out snapshots/example \
-  --name Example
+  --name Example \
+  --mode verified
 ```
 
 The generated directory contains:

@@ -17,6 +17,15 @@ export interface ScannedSnapshot {
   counts?: Record<string, number> | null;
   durationMs?: number | null;
   has_knowledge?: boolean;
+  analysis?: AnalysisInfo | null;
+}
+
+export type AnalysisMode = 'study' | 'verified';
+
+export interface AnalysisInfo {
+  mode: AnalysisMode;
+  completeness: string;
+  limitations: string[];
 }
 
 export interface SnapshotList {
@@ -51,9 +60,15 @@ export interface ScanJob {
   name: string;
   slug: string;
   restore_packages: boolean;
+  analysis_mode: AnalysisMode;
   logs: string[];
   error: string | null;
-  result: { snapshot: string; counts: Record<string, number>; warnings: number } | null;
+  result: {
+    snapshot: string;
+    counts: Record<string, number>;
+    warnings: number;
+    analysis?: AnalysisInfo;
+  } | null;
 }
 
 export function timeAgo(iso: string | null | undefined, now = Date.now()): string {
@@ -92,7 +107,8 @@ export class App implements OnInit, OnDestroy {
   protected readonly showAddRepo = signal(false);
   protected readonly repoPath = signal('');
   protected readonly scanName = signal('');
-  protected readonly restorePackages = signal(true);
+  protected readonly analysisMode = signal<AnalysisMode>('study');
+  protected readonly restorePackages = signal(false);
   protected readonly selectedSolution = signal('');
   protected readonly scanPreflight = signal<ScanPreflight | null>(null);
   protected readonly scanJob = signal<ScanJob | null>(null);
@@ -185,6 +201,12 @@ export class App implements OnInit, OnDestroy {
     this.restorePackages.set((event.target as HTMLInputElement).checked);
   }
 
+  protected onAnalysisModeChange(event: Event): void {
+    const mode = (event.target as HTMLInputElement).value as AnalysisMode;
+    this.analysisMode.set(mode);
+    this.restorePackages.set(mode === 'verified');
+  }
+
   protected preflightRepository(): void {
     const repoPath = this.repoPath().trim();
     if (!repoPath || this.scanChecking() || this.scanRunning()) {
@@ -227,7 +249,8 @@ export class App implements OnInit, OnDestroy {
         repo_path: preflight.repo_path,
         name: this.scanName().trim() || preflight.name,
         solution: this.selectedSolution() || null,
-        restore_packages: this.restorePackages(),
+        restore_packages: this.analysisMode() === 'verified' && this.restorePackages(),
+        analysis_mode: this.analysisMode(),
       })
       .subscribe({
         next: (job) => {

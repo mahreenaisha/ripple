@@ -51,7 +51,7 @@ test("parses focused scan arguments and repository names", () => {
   assert.equal(slugify("Orders API"), "orders-api");
   assert.deepEqual(
     parseArgs(["node", "scan", "/repo", "--out", "snapshots/x", "--name", "X"]),
-    { repoPath: "/repo", out: "snapshots/x", name: "X" },
+    { repoPath: "/repo", out: "snapshots/x", name: "X", mode: "verified" },
   );
 });
 
@@ -78,6 +78,8 @@ test("writes only request-flow and snapshot artifacts", (t) => {
   assert.equal(result.services, 1);
   assert.equal(result.flows, 1);
   assert.equal(artifact.generator.strategy, "roslyn-semantic-analysis");
+  assert.equal(artifact.analysis.mode, "verified");
+  assert.deepEqual(manifest.analysis, artifact.analysis);
   assert.equal(artifact.flows[0].trigger.label, "POST /api/orders");
   assert.match(manifest.source.commit, /^[0-9a-f]{40}$/);
   assert.equal(artifact.generator.source.commit, manifest.source.commit);

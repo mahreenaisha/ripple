@@ -4,9 +4,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.CodeAnalysis.Text;
 
 if (args.Length != 2)
 {
@@ -39,6 +41,7 @@ catch (Exception error)
 
 internal sealed record AnalyzerConfig(
     IReadOnlyList<ServiceConfig> Services,
+    string Mode = "verified",
     int MaxDepth = 6,
     int MaxPathsPerTrigger = 8,
     int MaxFlows = 500
@@ -49,12 +52,18 @@ internal sealed record ServiceConfig(string Name, string Path);
 internal sealed record AnalyzerResult(
     string SchemaVersion,
     GeneratorInfo Generator,
+    AnalysisInfo Analysis,
     LimitInfo Limits,
     IReadOnlyList<Flow> Flows,
     IReadOnlyList<AnalyzerWarning> Warnings
 );
 
 internal sealed record GeneratorInfo(string Name, bool Deterministic, string Strategy);
+internal sealed record AnalysisInfo(
+    string Mode,
+    string Completeness,
+    IReadOnlyList<string> Limitations
+);
 internal sealed record LimitInfo(int MaxDepth, int MaxPathsPerTrigger, int MaxFlows);
 internal sealed record AnalyzerWarning(string Code, string Message, string? File, int? Line);
 internal sealed record TriggerInfo(string Kind, string Label, string? MessageType = null);
@@ -81,6 +90,7 @@ internal sealed record FlowStep(
 internal sealed record MethodNode(
     IMethodSymbol Symbol,
     IOperation Operation,
+    SemanticModel Model,
     string File,
     int Line
 );
@@ -101,6 +111,57 @@ internal sealed record ResolvedCall(MethodNode Method, string Confidence, string
 
 internal sealed class RepositoryAnalyzer
 {
+    private const string StudyFrameworkStubs = """
+        namespace Microsoft.AspNetCore.Mvc
+        {
+            public sealed class RouteAttribute(string template) : System.Attribute { }
+            public sealed class HttpGetAttribute : System.Attribute
+            {
+                public HttpGetAttribute() { }
+                public HttpGetAttribute(string template) { }
+            }
+            public sealed class HttpPostAttribute : System.Attribute
+            {
+                public HttpPostAttribute() { }
+                public HttpPostAttribute(string template) { }
+            }
+            public sealed class HttpPutAttribute : System.Attribute
+            {
+                public HttpPutAttribute() { }
+                public HttpPutAttribute(string template) { }
+            }
+            public sealed class HttpPatchAttribute : System.Attribute
+            {
+                public HttpPatchAttribute() { }
+                public HttpPatchAttribute(string template) { }
+            }
+            public sealed class HttpDeleteAttribute : System.Attribute
+            {
+                public HttpDeleteAttribute() { }
+                public HttpDeleteAttribute(string template) { }
+            }
+            public sealed class AcceptVerbsAttribute(params string[] verbs) : System.Attribute { }
+            public abstract class ControllerBase { }
+            public abstract class Controller : ControllerBase { }
+        }
+        namespace Microsoft.AspNetCore.Builder
+        {
+            public sealed class WebApplication
+            {
+                public static WebApplicationBuilder CreateBuilder(string[] args) => new();
+                public void MapGet(string route, System.Delegate handler) { }
+                public void MapPost(string route, System.Delegate handler) { }
+                public void MapPut(string route, System.Delegate handler) { }
+                public void MapPatch(string route, System.Delegate handler) { }
+                public void MapDelete(string route, System.Delegate handler) { }
+            }
+            public sealed class WebApplicationBuilder
+            {
+                public WebApplication Build() => new();
+            }
+        }
+        """;
+
     private static readonly HashSet<string> IgnoredDirectories = new(
         new[]
         {
@@ -137,11 +198,22 @@ internal sealed class RepositoryAnalyzer
         {
             throw new DirectoryNotFoundException($"Repository path is not a directory: {root}");
         }
+        if (config.Mode is not ("verified" or "study"))
+        {
+            throw new ArgumentException("Analyzer mode must be 'verified' or 'study'.");
+        }
         _root = root;
         _config = config;
     }
 
     public async Task<AnalyzerResult> AnalyzeAsync()
+    {
+        return IsStudyMode()
+            ? await AnalyzeStudyAsync()
+            : await AnalyzeVerifiedAsync();
+    }
+
+    private async Task<AnalyzerResult> AnalyzeVerifiedAsync()
     {
         if (!MSBuildLocator.IsRegistered)
         {
@@ -180,6 +252,52 @@ internal sealed class RepositoryAnalyzer
         var projects = workspace.CurrentSolution.Projects
             .OrderBy(project => project.FilePath, StringComparer.Ordinal)
             .ToArray();
+        return await AnalyzeProjectsAsync(projects);
+    }
+
+    private async Task<AnalyzerResult> AnalyzeStudyAsync()
+    {
+        using var workspace = new AdhocWorkspace();
+        var projectId = ProjectId.CreateNewId("ripple-study");
+        var projectInfo = ProjectInfo.Create(
+            projectId,
+            VersionStamp.Create(),
+            "Ripple source study",
+            "Ripple.SourceStudy",
+            LanguageNames.CSharp,
+            compilationOptions: new CSharpCompilationOptions(
+                OutputKind.DynamicallyLinkedLibrary,
+                nullableContextOptions: NullableContextOptions.Enable
+            ),
+            parseOptions: new CSharpParseOptions(LanguageVersion.Preview),
+            metadataReferences: StudyMetadataReferences()
+        );
+        workspace.AddProject(projectInfo);
+        var project = workspace.CurrentSolution.GetProject(projectId)
+            ?? throw new InvalidOperationException("Could not create the study workspace.");
+        foreach (var file in StudySourceFiles())
+        {
+            project = project.AddDocument(
+                Path.GetFileName(file),
+                SourceText.From(await File.ReadAllTextAsync(file), Encoding.UTF8),
+                filePath: file
+            ).Project;
+        }
+        project = project.AddDocument(
+            "Ripple.StudyFrameworkStubs.g.cs",
+            SourceText.From(StudyFrameworkStubs, Encoding.UTF8)
+        ).Project;
+        AddWarning(
+            "study-mode-partial",
+            "Study mode analyzes source without MSBuild, package restore, generated sources, project conditions, or external package symbols.",
+            null,
+            null
+        );
+        return await AnalyzeProjectsAsync([project]);
+    }
+
+    private async Task<AnalyzerResult> AnalyzeProjectsAsync(IReadOnlyList<Project> projects)
+    {
         foreach (var project in projects)
         {
             await IndexProjectAsync(project);
@@ -198,7 +316,22 @@ internal sealed class RepositoryAnalyzer
         var flows = BuildFlows(limits);
         return new AnalyzerResult(
             "1.0.0",
-            new GeneratorInfo("ripple-csharp-roslyn", true, "roslyn-semantic-analysis"),
+            new GeneratorInfo(
+                "ripple-csharp-roslyn",
+                true,
+                IsStudyMode() ? "roslyn-source-study" : "roslyn-semantic-analysis"
+            ),
+            new AnalysisInfo(
+                IsStudyMode() ? "study" : "verified",
+                IsStudyMode() ? "partial" : "verified",
+                IsStudyMode()
+                    ? [
+                        "External package symbols are unavailable.",
+                        "Generated sources and MSBuild conditions are unavailable.",
+                        "Runtime dependency injection and dynamic behavior remain unresolved.",
+                    ]
+                    : []
+            ),
             limits,
             flows,
             _warnings
@@ -208,6 +341,9 @@ internal sealed class RepositoryAnalyzer
                 .ToArray()
         );
     }
+
+    private bool IsStudyMode() =>
+        string.Equals(_config.Mode, "study", StringComparison.OrdinalIgnoreCase);
 
     private IEnumerable<string> ProjectFiles()
     {
@@ -240,6 +376,56 @@ internal sealed class RepositoryAnalyzer
                 yield return selected;
             }
         }
+    }
+
+    private IEnumerable<string> StudySourceFiles()
+    {
+        var queue = new Queue<string>();
+        queue.Enqueue(_root);
+        while (queue.Count > 0)
+        {
+            var directory = queue.Dequeue();
+            IEnumerable<string> children;
+            try
+            {
+                children = Directory.EnumerateFileSystemEntries(directory)
+                    .OrderBy(item => item, StringComparer.Ordinal)
+                    .ToArray();
+            }
+            catch
+            {
+                continue;
+            }
+            foreach (var child in children)
+            {
+                if (Directory.Exists(child))
+                {
+                    if (!IgnoredDirectories.Contains(Path.GetFileName(child)))
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+                else if (Path.GetExtension(child).Equals(".cs", StringComparison.OrdinalIgnoreCase))
+                {
+                    yield return child;
+                }
+            }
+        }
+    }
+
+    private static IReadOnlyList<MetadataReference> StudyMetadataReferences()
+    {
+        var trusted = AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") as string;
+        if (string.IsNullOrWhiteSpace(trusted))
+        {
+            return [];
+        }
+        return trusted
+            .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
+            .Distinct(PathComparer())
+            .OrderBy(item => item, StringComparer.Ordinal)
+            .Select(path => MetadataReference.CreateFromFile(path))
+            .ToArray();
     }
 
     private async Task IndexProjectAsync(Project project)
@@ -275,7 +461,7 @@ internal sealed class RepositoryAnalyzer
                     : declaration.ExpressionBody is not null
                         ? model.GetOperation(declaration.ExpressionBody.Expression)
                         : null;
-                AddMethod(method, operation, declaration);
+                AddMethod(method, operation, model, declaration);
             }
             foreach (var declaration in root.DescendantNodes().OfType<LocalFunctionStatementSyntax>())
             {
@@ -288,12 +474,17 @@ internal sealed class RepositoryAnalyzer
                     : declaration.ExpressionBody is not null
                         ? model.GetOperation(declaration.ExpressionBody.Expression)
                         : null;
-                AddMethod(method, operation, declaration);
+                AddMethod(method, operation, model, declaration);
             }
         }
     }
 
-    private void AddMethod(IMethodSymbol method, IOperation? operation, SyntaxNode declaration)
+    private void AddMethod(
+        IMethodSymbol method,
+        IOperation? operation,
+        SemanticModel model,
+        SyntaxNode declaration
+    )
     {
         if (operation is null || declaration.SyntaxTree.FilePath is null)
         {
@@ -305,6 +496,7 @@ internal sealed class RepositoryAnalyzer
             new MethodNode(
                 key,
                 operation,
+                model,
                 Relative(declaration.SyntaxTree.FilePath),
                 declaration.GetLocation().GetLineSpan().StartLinePosition.Line + 1
             )
@@ -355,6 +547,8 @@ internal sealed class RepositoryAnalyzer
                 item.Name is "ODataController" or "ODataBaseController"
             );
             var classRoute = RouteTemplate(type.GetAttributes(), "RouteAttribute")
+                ?? StudyAttributeString(declaration.AttributeLists, "Route");
+            classRoute = classRoute
                 ?.Replace("[controller]", type.Name.Replace("Controller", ""), StringComparison.OrdinalIgnoreCase);
             var isController = isOData
                 || type.Name.EndsWith("Controller", StringComparison.Ordinal)
@@ -378,7 +572,11 @@ internal sealed class RepositoryAnalyzer
                     .ToArray();
                 foreach (var attribute in httpAttributes)
                 {
-                    var template = FirstString(attribute);
+                    var template = FirstString(attribute)
+                        ?? (IsStudyMode()
+                            && attribute.ApplicationSyntaxReference?.GetSyntax() is AttributeSyntax syntax
+                            ? StudyAttributeString(syntax)
+                            : null);
                     foreach (var verb in HttpVerbs(attribute))
                     {
                         AddApiTrigger(
@@ -388,6 +586,28 @@ internal sealed class RepositoryAnalyzer
                             AttributeLine(attribute, method),
                             "Roslyn resolved the ASP.NET HTTP attribute to this method"
                         );
+                    }
+                }
+                if (httpAttributes.Length == 0 && IsStudyMode())
+                {
+                    foreach (var attribute in method.AttributeLists.SelectMany(list => list.Attributes))
+                    {
+                        var verbs = StudyHttpVerbs(attribute).ToArray();
+                        if (verbs.Length == 0)
+                        {
+                            continue;
+                        }
+                        var template = StudyAttributeString(attribute);
+                        foreach (var verb in verbs)
+                        {
+                            AddApiTrigger(
+                                $"{verb} {JoinRoute(classRoute, template)}",
+                                symbol,
+                                file,
+                                Line(attribute),
+                                "Roslyn source syntax identified this ASP.NET HTTP attribute; external framework symbols were unavailable"
+                            );
+                        }
                     }
                 }
                 if (httpAttributes.Length == 0 && isOData && odataPrefix is not null)
@@ -414,6 +634,10 @@ internal sealed class RepositoryAnalyzer
         {
             if (model.GetOperation(syntax) is not IInvocationOperation invocation)
             {
+                if (IsStudyMode())
+                {
+                    DiscoverStudyMinimalApi(syntax, model, file);
+                }
                 continue;
             }
             DiscoverRegistration(invocation);
@@ -478,6 +702,76 @@ internal sealed class RepositoryAnalyzer
         }
     }
 
+    private void DiscoverStudyMinimalApi(
+        InvocationExpressionSyntax syntax,
+        SemanticModel model,
+        string file
+    )
+    {
+        var methodName = syntax.Expression switch
+        {
+            MemberAccessExpressionSyntax member => member.Name.Identifier.ValueText,
+            IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+            _ => "",
+        };
+        var verb = methodName switch
+        {
+            "MapGet" => "GET",
+            "MapPost" => "POST",
+            "MapPut" => "PUT",
+            "MapPatch" => "PATCH",
+            "MapDelete" => "DELETE",
+            _ => null,
+        };
+        if (verb is null)
+        {
+            return;
+        }
+        var arguments = syntax.ArgumentList.Arguments;
+        var routeArgument = arguments.FirstOrDefault(argument =>
+            model.GetConstantValue(argument.Expression) is { HasValue: true, Value: string }
+        );
+        var route = routeArgument is null
+            ? null
+            : model.GetConstantValue(routeArgument.Expression).Value as string;
+        if (route is null)
+        {
+            AddWarning("dynamic-route", $"{methodName} route is not a compile-time constant.", file, Line(syntax));
+            return;
+        }
+        IMethodSymbol? handler = null;
+        foreach (var argument in arguments.Where(argument => argument != routeArgument))
+        {
+            var operation = model.GetOperation(argument.Expression);
+            if (operation is not null)
+            {
+                handler = ResolveHandler(operation, model);
+            }
+            handler ??= model.GetSymbolInfo(argument.Expression).Symbol as IMethodSymbol;
+            if (handler is not null)
+            {
+                break;
+            }
+        }
+        if (handler is null)
+        {
+            AddWarning(
+                "unresolved-route-handler",
+                $"Study mode could not resolve the source handler for {verb} {route}.",
+                file,
+                Line(syntax)
+            );
+            return;
+        }
+        AddApiTrigger(
+            $"{verb} {JoinRoute(null, route)}",
+            handler,
+            file,
+            Line(syntax),
+            "Roslyn source syntax and available symbols identified this minimal API registration; external framework symbols were unavailable"
+        );
+    }
+
     private IMethodSymbol? ResolveHandler(IOperation operation, SemanticModel model)
     {
         operation = Unwrap(operation);
@@ -495,6 +789,7 @@ internal sealed class RepositoryAnalyzer
             var node = new MethodNode(
                 anonymous.Symbol.OriginalDefinition,
                 anonymous.Body,
+                model,
                 Relative(syntax.SyntaxTree.FilePath),
                 Line(syntax)
             );
@@ -700,9 +995,11 @@ internal sealed class RepositoryAnalyzer
         }
 
         var paths = new List<IReadOnlyList<FlowStep>>();
-        foreach (var invocation in Descendants(method.Operation)
+        var semanticInvocations = Descendants(method.Operation)
             .OfType<IInvocationOperation>()
-            .OrderBy(invocation => invocation.Syntax.SpanStart))
+            .OrderBy(invocation => invocation.Syntax.SpanStart)
+            .ToArray();
+        foreach (var invocation in semanticInvocations)
         {
             if (IsObservabilityCall(invocation.TargetMethod))
             {
@@ -788,6 +1085,76 @@ internal sealed class RepositoryAnalyzer
                 paths.AddRange(nested.Select(tail =>
                     (IReadOnlyList<FlowStep>)[callStep, .. tail]
                 ));
+            }
+        }
+        if (IsStudyMode())
+        {
+            var coveredSpans = semanticInvocations
+                .Select(invocation => invocation.Syntax.Span)
+                .ToHashSet();
+            foreach (var syntax in method.Operation.Syntax.DescendantNodesAndSelf()
+                .OfType<InvocationExpressionSyntax>()
+                .Where(syntax => !coveredSpans.Contains(syntax.Span))
+                .OrderBy(syntax => syntax.SpanStart))
+            {
+                var symbolInfo = method.Model.GetSymbolInfo(syntax);
+                var candidates = new[] { symbolInfo.Symbol }
+                    .Concat(symbolInfo.CandidateSymbols)
+                    .OfType<IMethodSymbol>()
+                    .Select(symbol => symbol.ReducedFrom ?? symbol)
+                    .GroupBy(MethodId, StringComparer.Ordinal)
+                    .Select(group => group.First())
+                    .ToArray();
+                var localTargets = candidates
+                    .Select(symbol => _methods.GetValueOrDefault(MethodId(symbol)))
+                    .Where(node => node is not null)
+                    .Cast<MethodNode>()
+                    .DistinctBy(node => MethodId(node.Symbol))
+                    .ToArray();
+                if (localTargets.Length == 1 && !visited.Contains(localTargets[0].Symbol))
+                {
+                    var target = localTargets[0];
+                    var callStep = Step(
+                        "call",
+                        MethodName(target.Symbol),
+                        MethodName(target.Symbol),
+                        target.File,
+                        target.Line,
+                        "medium",
+                        "Roslyn source symbols resolved this local call without project-system information"
+                    );
+                    var nested = PathsFrom(
+                        target,
+                        depth + 1,
+                        new HashSet<IMethodSymbol>(visited, SymbolEqualityComparer.Default)
+                        {
+                            target.Symbol,
+                        },
+                        limits
+                    );
+                    paths.AddRange(nested.Count == 0
+                        ? [[callStep]]
+                        : nested.Select(tail => (IReadOnlyList<FlowStep>)[callStep, .. tail]));
+                    continue;
+                }
+                var display = syntax.Expression.ToString();
+                if (display.Contains("Log", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                paths.Add(
+                    [
+                        Step(
+                            "inference-limit",
+                            display,
+                            $"Unresolved source-only call: {display}",
+                            Relative(syntax.SyntaxTree.FilePath),
+                            Line(syntax),
+                            "low",
+                            "Study mode could not resolve this invocation without restored external symbols or project-system information"
+                        ),
+                    ]
+                );
             }
         }
         return paths
@@ -1084,6 +1451,56 @@ internal sealed class RepositoryAnalyzer
             .Select(argument => argument.Value as string)
             .FirstOrDefault(value => value is not null);
 
+    private static IEnumerable<string> StudyHttpVerbs(AttributeSyntax attribute)
+    {
+        var name = StudyAttributeName(attribute);
+        if (name == "AcceptVerbs")
+        {
+            return attribute.ArgumentList?.Arguments
+                .Select(argument => (argument.Expression as LiteralExpressionSyntax)?.Token.ValueText)
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value!.ToUpperInvariant())
+                .ToArray() ?? [];
+        }
+        return name switch
+        {
+            "HttpGet" => ["GET"],
+            "HttpPost" => ["POST"],
+            "HttpPut" => ["PUT"],
+            "HttpPatch" => ["PATCH"],
+            "HttpDelete" => ["DELETE"],
+            _ => [],
+        };
+    }
+
+    private static string? StudyAttributeString(
+        SyntaxList<AttributeListSyntax> lists,
+        string name
+    ) => lists
+        .SelectMany(list => list.Attributes)
+        .Where(attribute => StudyAttributeName(attribute) == name)
+        .Select(StudyAttributeString)
+        .FirstOrDefault(value => value is not null);
+
+    private static string? StudyAttributeString(AttributeSyntax attribute) =>
+        attribute.ArgumentList?.Arguments
+            .Select(argument => (argument.Expression as LiteralExpressionSyntax)?.Token.ValueText)
+            .FirstOrDefault(value => value is not null);
+
+    private static string StudyAttributeName(AttributeSyntax attribute)
+    {
+        var name = attribute.Name switch
+        {
+            IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+            QualifiedNameSyntax qualified => qualified.Right.Identifier.ValueText,
+            AliasQualifiedNameSyntax alias => alias.Name.Identifier.ValueText,
+            _ => attribute.Name.ToString().Split('.').Last(),
+        };
+        return name.EndsWith("Attribute", StringComparison.Ordinal)
+            ? name[..^"Attribute".Length]
+            : name;
+    }
+
     private static string? ConstantString(IOperation operation)
     {
         operation = Unwrap(operation);
@@ -1271,7 +1688,7 @@ internal sealed class RepositoryAnalyzer
         return $"{receiver}.{invocation.TargetMethod.Name}";
     }
 
-    private static FlowStep Step(
+    private FlowStep Step(
         string kind,
         string symbol,
         string label,
@@ -1279,7 +1696,15 @@ internal sealed class RepositoryAnalyzer
         int line,
         string confidence,
         string evidence
-    ) => new(kind, symbol, label, file, Math.Max(1, line), confidence, [evidence]);
+    ) => new(
+        kind,
+        symbol,
+        label,
+        file,
+        Math.Max(1, line),
+        IsStudyMode() && confidence == "high" ? "medium" : confidence,
+        [evidence]
+    );
 
     private static int PathScore(IReadOnlyList<FlowStep> path)
     {

@@ -185,6 +185,54 @@ class OverloadService {
   assert.match(flow.steps[2].evidence[0], /string/);
 });
 
+test("study mode analyzes local source without loading or restoring projects", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/server.csproj",
+    `<Project Sdk="Unavailable.Company.Sdk/99.0.0">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "server/StudyController.cs",
+    `using Microsoft.AspNetCore.Mvc;
+using Unavailable.Company.Client;
+[Route("study")]
+public class StudyController : ControllerBase {
+  private readonly StudyService _service = new();
+  [HttpGet("{id}")]
+  public void Get(string id) { _service.Load(id); }
+}
+public class StudyService {
+  private MissingClient _client = null!;
+  public void Load(int id) { }
+  public void Load(string id) { _client.Send(id); }
+}
+`,
+  );
+
+  const analyze = () => extractRequestFlows(
+    repo.repository,
+    [service("server", "server", "C#")],
+    { mode: "study" },
+  );
+  const first = analyze();
+  const second = analyze();
+
+  assert.equal(first.analysis.mode, "study");
+  assert.equal(first.analysis.completeness, "partial");
+  assert.equal(first.generator.strategy, "roslyn-source-study");
+  assert.ok(first.warnings.some((warning) => warning.code === "study-mode-partial"));
+  assert.ok(!first.warnings.some((warning) => warning.code === "project-load-failed"));
+  assert.equal(first.flows[0].trigger.label, "GET /study/{id}");
+  assert.equal(first.flows[0].steps[2].line, 12);
+  assert.ok(first.flows[0].steps.some((step) =>
+    step.kind === "inference-limit" && step.confidence === "low"
+  ));
+  assert.deepEqual(first, second);
+});
+
 test("resolves DI calls across project references", (t) => {
   const repo = fixture(t);
   repo.write(

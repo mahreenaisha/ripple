@@ -149,7 +149,12 @@ function extractRequestFlows(repoPath, services = [], options = {}, legacyOption
   }
   const selectedServices = services.length ? services : identifyServices(rootPath);
   const analyzerOptions = legacyOptions || (
-    options && ("maxDepth" in options || "maxPathsPerTrigger" in options || "maxFlows" in options)
+    options && (
+      "mode" in options ||
+      "maxDepth" in options ||
+      "maxPathsPerTrigger" in options ||
+      "maxFlows" in options
+    )
       ? options
       : {}
   );

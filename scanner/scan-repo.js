@@ -86,7 +86,9 @@ function scanRepository(repoPath, outputPath, options = {}) {
   );
 
   // Analyze before writing so output files cannot affect the scan.
-  const requestFlows = extractRequestFlows(repoPath, services);
+  const requestFlows = extractRequestFlows(repoPath, services, {
+    mode: options.mode || "verified",
+  });
   const source = {
     ...readGitSource(repoPath),
     localPath: path.resolve(repoPath),
@@ -113,6 +115,7 @@ function scanRepository(repoPath, outputPath, options = {}) {
     name,
     slug: path.basename(outputDirectory),
     source,
+    analysis: requestFlows.analysis,
     counts,
     durationMs: Date.now() - startedAt,
   });
@@ -121,6 +124,7 @@ function scanRepository(repoPath, outputPath, options = {}) {
     outputDirectory,
     name,
     source,
+    analysis: requestFlows.analysis,
     ...counts,
   };
 }
@@ -130,7 +134,7 @@ function parseArgs(argv) {
   const options = {};
   for (let index = 2; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === "--out" || arg === "--name") {
+    if (arg === "--out" || arg === "--name" || arg === "--mode") {
       options[arg.slice(2)] = argv[++index];
     } else {
       positional.push(arg);
@@ -140,6 +144,7 @@ function parseArgs(argv) {
     repoPath: positional[0],
     out: options.out || positional[1],
     name: options.name,
+    mode: options.mode || "verified",
   };
 }
 
@@ -147,14 +152,20 @@ function runCli(argv) {
   const args = parseArgs(argv);
   if (!args.repoPath) {
     console.error(
-      "Usage: node scanner/scan-repo.js <repo-path> [--out snapshots/<name>] [--name DisplayName]",
+      "Usage: node scanner/scan-repo.js <repo-path> [--out snapshots/<name>] [--name DisplayName] [--mode verified|study]",
     );
     process.exitCode = 1;
     return;
   }
 
   try {
-    const result = scanRepository(args.repoPath, args.out, { name: args.name });
+    if (!["verified", "study"].includes(args.mode)) {
+      throw new Error("--mode must be 'verified' or 'study'");
+    }
+    const result = scanRepository(args.repoPath, args.out, {
+      name: args.name,
+      mode: args.mode,
+    });
     console.log(
       `Scan complete for ${result.name}: ${result.services} service(s), ${result.flows} request flow(s)`,
     );

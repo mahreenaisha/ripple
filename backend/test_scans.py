@@ -95,6 +95,11 @@ class ScanManagerTests(unittest.TestCase):
                 json.dumps(
                     {
                         "schema_version": "1.0.0",
+                        "analysis": {
+                            "mode": "verified",
+                            "completeness": "verified",
+                            "limitations": [],
+                        },
                         "flows": [],
                         "warnings": [],
                         "glossary": {},
@@ -103,7 +108,17 @@ class ScanManagerTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (output / "snapshot.json").write_text(
-                json.dumps({"name": "Orders", "counts": {"flows": 0}}),
+                json.dumps(
+                    {
+                        "name": "Orders",
+                        "counts": {"flows": 0},
+                        "analysis": {
+                            "mode": "verified",
+                            "completeness": "verified",
+                            "limitations": [],
+                        },
+                    }
+                ),
                 encoding="utf-8",
             )
 
@@ -139,6 +154,11 @@ class ScanManagerTests(unittest.TestCase):
             (output / "request-flows.json").write_text(
                 json.dumps(
                     {
+                        "analysis": {
+                            "mode": "verified",
+                            "completeness": "verified",
+                            "limitations": [],
+                        },
                         "flows": [],
                         "warnings": [
                             {"code": "project-load-failed", "message": "private SDK missing"}
@@ -148,7 +168,17 @@ class ScanManagerTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (output / "snapshot.json").write_text(
-                json.dumps({"counts": {"flows": 0}}), encoding="utf-8"
+                json.dumps(
+                    {
+                        "counts": {"flows": 0},
+                        "analysis": {
+                            "mode": "verified",
+                            "completeness": "verified",
+                            "limitations": [],
+                        },
+                    }
+                ),
+                encoding="utf-8",
             )
 
         with patch.object(self.manager, "_run_command", side_effect=fake_run):
@@ -162,6 +192,59 @@ class ScanManagerTests(unittest.TestCase):
         self.assertEqual(
             (previous / "request-flows.json").read_text(encoding="utf-8"), old
         )
+
+    def test_study_mode_skips_restore_and_promotes_partial_output(self):
+        commands: list[list[str]] = []
+        analysis = {
+            "mode": "study",
+            "completeness": "partial",
+            "limitations": ["External package symbols are unavailable."],
+        }
+
+        def fake_run(_job, command, _cwd):
+            commands.append(command)
+            output = Path(command[command.index("--out") + 1])
+            output.mkdir(parents=True)
+            (output / "request-flows.json").write_text(
+                json.dumps(
+                    {
+                        "analysis": analysis,
+                        "flows": [],
+                        "warnings": [{"code": "study-mode-partial"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (output / "snapshot.json").write_text(
+                json.dumps({"analysis": analysis, "counts": {"flows": 0}}),
+                encoding="utf-8",
+            )
+
+        with patch.object(self.manager, "_run_command", side_effect=fake_run):
+            started = self.manager.start(
+                str(self.repository), "Orders", None, False, "study"
+            )
+            status = wait_for_terminal(self.manager, started["id"])
+
+        self.assertEqual(status["phase"], "complete")
+        self.assertEqual(len(commands), 1)
+        self.assertEqual(commands[0][commands[0].index("--mode") + 1], "study")
+        self.assertEqual(status["result"]["analysis"]["mode"], "study")
+
+    def test_rejects_artifact_with_mismatched_analysis_mode(self):
+        output = self.root / "bad-output"
+        output.mkdir()
+        analysis = {"mode": "study", "completeness": "partial", "limitations": []}
+        (output / "request-flows.json").write_text(
+            json.dumps({"analysis": analysis, "flows": [], "warnings": []}),
+            encoding="utf-8",
+        )
+        (output / "snapshot.json").write_text(
+            json.dumps({"analysis": analysis}), encoding="utf-8"
+        )
+
+        with self.assertRaisesRegex(ScanError, "does not match"):
+            self.manager._validate_output(output, "verified")
 
     def test_restore_errors_are_visible_and_scan_is_not_started(self):
         commands = []
@@ -190,6 +273,7 @@ class ScanManagerTests(unittest.TestCase):
             slug="orders",
             solution=self.repository / "Orders.sln",
             restore_packages=True,
+            analysis_mode="verified",
             phase="scanning",
             process=process,
         )
@@ -228,7 +312,7 @@ class ScanApiTests(unittest.TestCase):
         self.assertEqual(started.status_code, 202)
         self.assertEqual(missing.status_code, 404)
         manager.start.assert_called_once_with(
-            "/code/orders", None, None, False
+            "/code/orders", None, None, False, "verified"
         )
 
     def test_cors_allows_local_ui_and_rejects_other_origins(self):

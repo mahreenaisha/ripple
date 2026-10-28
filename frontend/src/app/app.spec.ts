@@ -78,6 +78,29 @@ describe('App', () => {
     httpTesting.verify();
   });
 
+  it('keeps a partial source-only warning visible for study snapshots', () => {
+    const fixture = TestBed.createComponent(App);
+    const httpTesting = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    flushSnapshots(httpTesting, {
+      ...snapshotList,
+      current: {
+        ...snapshotList.current!,
+        analysis: {
+          mode: 'study',
+          completeness: 'partial',
+          limitations: ['External package symbols are unavailable.'],
+        },
+      },
+    });
+    flushEmptyFlows(httpTesting);
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('.study-banner')?.textContent)
+      .toContain('Study snapshot — partial source-only analysis');
+    httpTesting.verify();
+  });
+
   it('shows scan freshness and reloads flows when switching repositories', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
@@ -180,6 +203,16 @@ describe('App', () => {
     });
     fixture.detectChanges();
 
+    expect(
+      host.querySelector<HTMLInputElement>('.mode-choice input[value="study"]')?.checked,
+    ).toBe(true);
+    expect(host.querySelector<HTMLInputElement>('.restore-choice input')?.disabled).toBe(true);
+    const verifiedMode = host.querySelector<HTMLInputElement>(
+      '.mode-choice input[value="verified"]',
+    )!;
+    verifiedMode.checked = true;
+    verifiedMode.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
     expect(host.querySelector<HTMLInputElement>('.restore-choice input')?.checked).toBe(true);
     const scanButton = Array.from(
       host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'),
@@ -191,6 +224,7 @@ describe('App', () => {
       name: 'Orders',
       solution: 'Orders.sln',
       restore_packages: true,
+      analysis_mode: 'verified',
     });
     start.flush({
       id: 'job-1',
@@ -199,6 +233,7 @@ describe('App', () => {
       name: 'Orders',
       slug: 'orders',
       restore_packages: true,
+      analysis_mode: 'verified',
       logs: [],
       error: null,
       result: null,
@@ -212,6 +247,7 @@ describe('App', () => {
       name: 'Orders',
       slug: 'orders',
       restore_packages: true,
+      analysis_mode: 'verified',
       logs: ['Scan complete'],
       error: null,
       result: { snapshot: 'orders', counts: { flows: 4 }, warnings: 0 },
@@ -282,7 +318,8 @@ describe('App', () => {
       repo_path: '/home/me/orders',
       name: 'Orders',
       slug: 'orders',
-      restore_packages: true,
+      restore_packages: false,
+      analysis_mode: 'study',
       logs: [],
       error: null,
       result: null,
@@ -297,7 +334,8 @@ describe('App', () => {
       repo_path: '/home/me/orders',
       name: 'Orders',
       slug: 'orders',
-      restore_packages: true,
+      restore_packages: false,
+      analysis_mode: 'study',
       logs: ['Cancellation requested.'],
       error: null,
       result: null,
@@ -336,6 +374,12 @@ describe('App', () => {
     });
     fixture.detectChanges();
 
+    const verifiedMode = host.querySelector<HTMLInputElement>(
+      '.mode-choice input[value="verified"]',
+    )!;
+    verifiedMode.checked = true;
+    verifiedMode.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
     const scanButton = Array.from(
       host.querySelectorAll<HTMLButtonElement>('.add-repo-pop button'),
     ).find((button) => button.textContent?.trim() === 'Scan repository')!;
@@ -353,6 +397,7 @@ describe('App', () => {
       name: 'Monorepo',
       solution: null,
       restore_packages: false,
+      analysis_mode: 'verified',
     });
     request.flush({
       id: 'job-3',
@@ -361,6 +406,7 @@ describe('App', () => {
       name: 'Monorepo',
       slug: 'monorepo',
       restore_packages: false,
+      analysis_mode: 'verified',
       logs: [],
       error: null,
       result: null,

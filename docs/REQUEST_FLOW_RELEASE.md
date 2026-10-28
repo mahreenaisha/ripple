@@ -28,8 +28,10 @@ scanner fixtures:
 - evidence-backed C# queue discriminator and handler bindings.
 
 Structural evidence must come from the Roslyn analyzer. Regex-based route or
-call-name matching is not an accepted fallback when a project cannot be loaded;
-the scan must emit an actionable project-load warning instead.
+call-name matching is not an accepted fallback. Verified mode must emit an
+actionable project-load warning when a project cannot be loaded. Study mode
+must remain explicitly partial and may use only Roslyn syntax and available
+semantic symbols; it must never silently replace a failed verified scan.
 
 Other languages and frameworks are unsupported until the C# baseline is trusted
 and they have both a positive fixture and a near-miss fixture that proves the
@@ -37,6 +39,10 @@ scanner does not overmatch.
 
 ## Failure behavior
 
+- Study mode requires only readable local C# source and a .NET 10 SDK. It never
+  restores, builds, invokes MSBuild, or writes to the scanned repository.
+- Every study artifact and UI view remains visibly marked as partial and lists
+  unavailable external, generated, project-system, and runtime evidence.
 - An unreadable repository, malformed artifact, missing snapshot, invalid
   repository selection, or unavailable API produces a specific actionable
   message.

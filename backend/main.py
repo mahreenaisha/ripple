@@ -97,6 +97,7 @@ def _snapshot_summary(directory: Path) -> dict:
         "slug": directory.name,
         "name": manifest.get("name") or directory.name,
         "source": manifest.get("source"),
+        "analysis": manifest.get("analysis"),
         "counts": manifest.get("counts"),
         "durationMs": manifest.get("durationMs"),
         "has_knowledge": (KNOWLEDGE_DIR / f"{directory.name}.yaml").is_file(),
@@ -140,6 +141,7 @@ class StartScanRequest(BaseModel):
     name: str | None = None
     solution: str | None = None
     restore_packages: bool = True
+    analysis_mode: Literal["verified", "study"] = "verified"
 
 
 def _resolve_path(env_name: str, default: Path) -> Path:
@@ -278,6 +280,8 @@ def _flow_chat_prompt(context: ChatContext, flows: dict) -> str:
         "flow_id": context.flow_id,
         "step_id": context.step_id,
         "term": context.term,
+        "analysis": flows.get("analysis")
+        or {"mode": "verified", "completeness": "verified", "limitations": []},
     }
     if context.term:
         evidence["glossary"] = get_glossary_term(flows, context.term)
@@ -291,7 +295,9 @@ def _flow_chat_prompt(context: ChatContext, flows: dict) -> str:
         "the evidence below and do not invent steps. For why-questions, rely on "
         "story.summary and team_knowledge. When you use team knowledge, name its "
         "source, and say so if it is not verified. Mention when something is "
-        "static inference rather than runtime proof.\n"
+        "static inference rather than runtime proof. If analysis.mode is study, "
+        "state that the result is partial source-only analysis whenever discussing "
+        "completeness, missing calls, or unresolved behavior.\n"
         f"Evidence: {json.dumps(evidence, separators=(',', ':'))}"
     )
 
@@ -349,30 +355,37 @@ def _openai_client() -> tuple[OpenAI, str] | None:
 
 
 def _offline_flow_explanation(flows: dict, context: ChatContext) -> str:
+    analysis = flows.get("analysis") or {}
+    study_prefix = (
+        "This is a partial source-only study snapshot, so external packages, generated "
+        "code, project conditions, and runtime choices may be missing. "
+        if analysis.get("mode") == "study"
+        else ""
+    )
     if context.term:
         item = get_glossary_term(flows, context.term)
         if item:
-            return f"{item['term']}: {item['definition']}"
-        return f"The glossary has no definition for '{context.term}'."
+            return study_prefix + f"{item['term']}: {item['definition']}"
+        return study_prefix + f"The glossary has no definition for '{context.term}'."
 
     if not context.flow_id:
-        return (
+        return study_prefix + (
             "Offline mode needs a selected flow_id to explain a request flow. "
             f"The artifact contains {len(flows['flows'])} flows."
         )
     flow = get_flow(flows, context.flow_id)
     if not flow:
-        return f"The selected request flow '{context.flow_id}' was not found."
+        return study_prefix + f"The selected request flow '{context.flow_id}' was not found."
 
     if context.step_id is not None:
         step = get_step(flow, context.step_id)
         if not step:
-            return (
+            return study_prefix + (
                 f"The selected step '{context.step_id}' was not found in "
                 f"flow '{context.flow_id}'."
             )
         evidence = " ".join(step["evidence"])
-        return (
+        return study_prefix + (
             f"{step['id']} is a {step['kind']} step named "
             f"'{step['label']}'. It points to {step['file']} line "
             f"{step['line']} with {step['confidence']} confidence. "
@@ -387,7 +400,7 @@ def _offline_flow_explanation(flows: dict, context: ChatContext) -> str:
             f"{'' if fact['verified'] else ', not yet verified'}.)"
             for fact in flow.get("knowledge", [])
         )
-        return (
+        return study_prefix + (
             f"{story['summary']} {facts}".strip()
             + " This comes from static source evidence and team notes, not a runtime trace."
         )
@@ -398,7 +411,7 @@ def _offline_flow_explanation(flows: dict, context: ChatContext) -> str:
             f"{step['id']} {step['kind']} '{step['label']}' at "
             f"{step['file']} line {step['line']}"
         )
-    return (
+    return study_prefix + (
         f"Flow '{flow['id']}' starts from {flow['trigger']['label']} in "
         f"service {flow['service']}. The evidence-backed order is: "
         + "; then ".join(descriptions)
@@ -553,6 +566,7 @@ def start_scan(request: StartScanRequest):
             request.name,
             request.solution,
             request.restore_packages,
+            request.analysis_mode,
         )
     )
 

@@ -108,6 +108,7 @@ function analyzeWithRoslyn(repoPath, services, options = {}) {
       name: service.name,
       path: service.path,
     })),
+    mode: options.mode === "study" ? "study" : "verified",
     maxDepth: Number.isInteger(options.maxDepth) ? options.maxDepth : 6,
     maxPathsPerTrigger: Number.isInteger(options.maxPathsPerTrigger)
       ? options.maxPathsPerTrigger
