@@ -28,10 +28,9 @@ scanner fixtures:
 - evidence-backed C# queue discriminator and handler bindings.
 
 Structural evidence must come from the Roslyn analyzer. Regex-based route or
-call-name matching is not an accepted fallback. Verified mode must emit an
-actionable project-load warning when a project cannot be loaded. Study mode
-must remain explicitly partial and may use only Roslyn syntax and available
-semantic symbols; it must never silently replace a failed verified scan.
+call-name matching is not an accepted fallback. Source-only analysis must remain
+explicitly partial and may use only Roslyn syntax and available semantic
+symbols.
 
 Other languages and frameworks are unsupported until the C# baseline is trusted
 and they have both a positive fixture and a near-miss fixture that proves the

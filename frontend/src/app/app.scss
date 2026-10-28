@@ -227,63 +227,6 @@
   font-size: 0.75rem;
 }
 
-.mode-choice {
-  display: grid;
-  gap: 0.4rem;
-  margin: 0.2rem 0;
-  padding: 0.65rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-}
-
-.mode-choice legend {
-  padding: 0 0.25rem;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.mode-choice label {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.45rem;
-  align-items: start;
-  color: var(--text);
-  cursor: pointer;
-}
-
-.mode-choice label > span {
-  display: grid;
-  gap: 0.12rem;
-}
-
-.mode-choice small {
-  color: var(--text-subtle);
-  font-weight: 400;
-  line-height: 1.35;
-}
-
-.restore-choice {
-  grid-template-columns: auto 1fr !important;
-  align-items: start;
-  font-weight: 500 !important;
-}
-
-.restore-choice input {
-  margin-top: 0.15rem;
-}
-
-.restore-choice span {
-  display: grid;
-  gap: 0.15rem;
-}
-
-.restore-choice small {
-  color: var(--text-subtle);
-  font-weight: 400;
-  line-height: 1.35;
-}
-
 .scan-status {
   align-items: flex-start;
   flex-wrap: wrap;

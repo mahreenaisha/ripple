@@ -125,7 +125,7 @@ function glossary() {
     queue: "A compiler-resolved publish or enqueue call; downstream processing is a separate flow.",
     confidence: "High means a direct framework, compiler, or DI binding. Medium means a documented convention or a unique implementation without an explicit DI registration.",
     evidence: "The concrete syntax and symbol relationship supporting a step. It is not runtime proof.",
-    warning: "A place where the compilation, dispatch target, dynamic behavior, or output safety limit prevented a verified path.",
+    warning: "A place where unavailable symbols, dynamic behavior, or an output safety limit prevented a complete source path.",
     "inference limit": "A known call whose runtime target could not be selected safely, or a configured traversal limit.",
     tenant: "A customer or organizational boundary whose data and configuration are isolated.",
     adapter: "Code that translates between an application-facing interface and an external technology.",
@@ -150,7 +150,6 @@ function extractRequestFlows(repoPath, services = [], options = {}, legacyOption
   const selectedServices = services.length ? services : identifyServices(rootPath);
   const analyzerOptions = legacyOptions || (
     options && (
-      "mode" in options ||
       "maxDepth" in options ||
       "maxPathsPerTrigger" in options ||
       "maxFlows" in options

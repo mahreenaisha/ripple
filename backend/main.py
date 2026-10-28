@@ -139,9 +139,6 @@ class ScanPreflightRequest(BaseModel):
 class StartScanRequest(BaseModel):
     repo_path: str
     name: str | None = None
-    solution: str | None = None
-    restore_packages: bool = True
-    analysis_mode: Literal["verified", "study"] = "verified"
 
 
 def _resolve_path(env_name: str, default: Path) -> Path:
@@ -281,7 +278,7 @@ def _flow_chat_prompt(context: ChatContext, flows: dict) -> str:
         "step_id": context.step_id,
         "term": context.term,
         "analysis": flows.get("analysis")
-        or {"mode": "verified", "completeness": "verified", "limitations": []},
+        or {"mode": "study", "completeness": "partial", "limitations": []},
     }
     if context.term:
         evidence["glossary"] = get_glossary_term(flows, context.term)
@@ -564,9 +561,6 @@ def start_scan(request: StartScanRequest):
         lambda: scan_manager.start(
             request.repo_path,
             request.name,
-            request.solution,
-            request.restore_packages,
-            request.analysis_mode,
         )
     )
 

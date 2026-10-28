@@ -13,21 +13,7 @@ from typing import Callable
 
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
-IGNORED_DIRECTORIES = {
-    ".git",
-    ".idea",
-    ".vscode",
-    "bin",
-    "build",
-    "dist",
-    "generated",
-    "node_modules",
-    "obj",
-    "out",
-    "test",
-    "tests",
-}
-ACTIVE_PHASES = {"validating", "restoring", "scanning", "publishing", "cancelling"}
+ACTIVE_PHASES = {"validating", "scanning", "publishing", "cancelling"}
 MAX_LOG_LINES = 200
 
 
@@ -47,9 +33,6 @@ class ScanJob:
     repo_path: Path
     name: str
     slug: str
-    solution: Path | None
-    restore_packages: bool
-    analysis_mode: str
     phase: str = "validating"
     logs: list[str] = field(default_factory=list)
     error: str | None = None
@@ -64,8 +47,6 @@ class ScanJob:
             "repo_path": str(self.repo_path),
             "name": self.name,
             "slug": self.slug,
-            "restore_packages": self.restore_packages,
-            "analysis_mode": self.analysis_mode,
             "logs": list(self.logs),
             "error": self.error,
             "result": self.result,
@@ -99,30 +80,19 @@ class ScanManager:
     def preflight(self, repo_path: str) -> dict:
         repository = self._repository(repo_path)
         dotnet, version = self._dotnet()
-        solutions = self._solutions(repository)
-        config = self._nuget_config(repository)
         name = suggested_name(repository)
         return {
             "repo_path": str(repository),
             "name": name,
             "slug": slugify(name),
             "dotnet": {"executable": dotnet, "version": version},
-            "solutions": [str(item.relative_to(repository)) for item in solutions],
-            "nuget_config": str(config.relative_to(repository)) if config else None,
         }
 
     def start(
         self,
         repo_path: str,
         name: str | None,
-        solution: str | None,
-        restore_packages: bool,
-        analysis_mode: str = "verified",
     ) -> dict:
-        if analysis_mode not in {"verified", "study"}:
-            raise ScanError("Analysis mode must be 'verified' or 'study'.")
-        if analysis_mode == "study" and restore_packages:
-            raise ScanError("Study mode does not restore packages. Disable package restore.")
         preflight = self.preflight(repo_path)
         repository = Path(preflight["repo_path"])
         display_name = (name or preflight["name"]).strip()
@@ -131,10 +101,6 @@ class ScanManager:
         slug = slugify(display_name)
         if not SLUG_PATTERN.fullmatch(slug):
             raise ScanError("Repository name did not produce a safe snapshot identifier.")
-        selected_solution = self._selected_solution(
-            repository, solution, preflight["solutions"], restore_packages
-        )
-
         with self._lock:
             if any(job.phase in ACTIVE_PHASES for job in self._jobs.values()):
                 raise ScanError("Another repository scan is already running.", 409)
@@ -143,9 +109,6 @@ class ScanManager:
                 repo_path=repository,
                 name=display_name,
                 slug=slug,
-                solution=selected_solution,
-                restore_packages=restore_packages,
-                analysis_mode=analysis_mode,
             )
             self._jobs[job.id] = job
         threading.Thread(target=self._execute, args=(job,), daemon=True).start()
@@ -178,15 +141,6 @@ class ScanManager:
         output = staging / "output"
         try:
             staging.mkdir(parents=True, exist_ok=False)
-            if job.restore_packages:
-                self._set_phase(job, "restoring")
-                dotnet, _ = self._dotnet()
-                command = [dotnet, "restore", str(job.solution)]
-                config = self._nuget_config(job.repo_path)
-                if config:
-                    command.extend(["--configfile", str(config)])
-                self._run_command(job, command, job.repo_path)
-
             self._set_phase(job, "scanning")
             node = shutil.which("node")
             if not node:
@@ -201,13 +155,11 @@ class ScanManager:
                     str(output),
                     "--name",
                     job.name,
-                    "--mode",
-                    job.analysis_mode,
                 ],
                 self.repo_root,
             )
             self._set_phase(job, "publishing")
-            result = self._validate_output(output, job.analysis_mode)
+            result = self._validate_output(output)
             self._promote(job, output)
             with self._lock:
                 job.result = {
@@ -273,10 +225,10 @@ class ScanManager:
         if return_code != 0:
             raise ScanError(
                 f"{Path(command[0]).name} exited with status {return_code}. "
-                "Review the scan log for restore, authentication, or build errors."
+                "Review the scan log for analyzer errors."
             )
 
-    def _validate_output(self, output: Path, expected_mode: str = "verified") -> dict:
+    def _validate_output(self, output: Path) -> dict:
         flows_path = output / "request-flows.json"
         snapshot_path = output / "snapshot.json"
         try:
@@ -294,22 +246,11 @@ class ScanManager:
         snapshot_analysis = snapshot.get("analysis")
         if (
             not isinstance(analysis, dict)
-            or analysis.get("mode") != expected_mode
+            or analysis.get("mode") != "study"
             or snapshot_analysis != analysis
         ):
             raise ScanError(
-                f"Scanner output analysis mode does not match requested mode '{expected_mode}'."
-            )
-        failures = [
-            warning
-            for warning in flows["warnings"]
-            if isinstance(warning, dict) and warning.get("code") == "project-load-failed"
-        ]
-        if failures and expected_mode == "verified":
-            detail = str(failures[0].get("message") or "MSBuild could not load a project")
-            raise ScanError(
-                f"Roslyn reported {len(failures)} project-load failure(s); the previous "
-                f"snapshot was preserved. First failure: {detail}"
+                "Scanner output is not a source-only study artifact."
             )
         return {"flows": flows, "snapshot": snapshot}
 
@@ -349,68 +290,6 @@ class ScanManager:
         if not repository.is_dir():
             raise ScanError("Repository path is not a directory.")
         return repository
-
-    def _solutions(self, repository: Path) -> list[Path]:
-        root_solutions = sorted(
-            [
-                *repository.glob("*.sln"),
-                *repository.glob("*.slnx"),
-            ]
-        )
-        if root_solutions:
-            return root_solutions
-        solutions = []
-        for current, directories, files in os.walk(repository):
-            directories[:] = sorted(
-                directory
-                for directory in directories
-                if directory.lower() not in IGNORED_DIRECTORIES
-            )
-            for name in sorted(files):
-                if name.lower().endswith((".sln", ".slnx")):
-                    solutions.append(Path(current) / name)
-            if len(solutions) >= 20:
-                break
-        return solutions
-
-    def _selected_solution(
-        self,
-        repository: Path,
-        selected: str | None,
-        available: list[str],
-        required: bool,
-    ) -> Path | None:
-        if not selected:
-            if len(available) == 1:
-                selected = available[0]
-            elif required and not available:
-                raise ScanError(
-                    "Package restore is enabled, but no .sln or .slnx file was found."
-                )
-            elif required:
-                raise ScanError("Choose which solution Ripple should restore.")
-            else:
-                return None
-        candidate = (repository / selected).resolve()
-        try:
-            candidate.relative_to(repository)
-        except ValueError as error:
-            raise ScanError("Solution path escapes the selected repository.") from error
-        if not candidate.is_file() or candidate.suffix.lower() not in {".sln", ".slnx"}:
-            raise ScanError("Selected solution does not exist.")
-        return candidate
-
-    def _nuget_config(self, repository: Path) -> Path | None:
-        for item in repository.iterdir():
-            if not item.is_file() or item.name.lower() != "nuget.config":
-                continue
-            resolved = item.resolve()
-            try:
-                resolved.relative_to(repository)
-            except ValueError:
-                continue
-            return resolved
-        return None
 
     def _dotnet(self) -> tuple[str, str]:
         configured = os.environ.get("RIPPLE_DOTNET", "").strip()

@@ -34,7 +34,7 @@ def artifact() -> dict:
         "generator": {
             "name": "ripple-request-flow-scanner",
             "deterministic": True,
-            "strategy": "roslyn-semantic-analysis",
+            "strategy": "roslyn-source-study",
         },
         "limits": {"max_depth": 6, "max_paths_per_trigger": 8, "max_flows": 500},
         "flows": [

@@ -19,7 +19,7 @@ function fixture(t) {
       fs.writeFileSync(target, contents);
     },
   };
-  for (const directory of ["server", "app"]) {
+  for (const directory of ["server"]) {
     result.write(
       `${directory}/${directory}.csproj`,
       `<Project Sdk="Microsoft.NET.Sdk">
@@ -155,7 +155,7 @@ class OrdersController : ODataController {
     result.flows.map((flow) => flow.trigger.label),
     ["GET /odata/v{version}/Orders", "GET /health"],
   );
-  assert.ok(result.flows.every((flow) => flow.steps[1].confidence === "high"));
+  assert.ok(result.flows.every((flow) => flow.steps[1].confidence === "medium"));
 });
 
 test("uses overload symbols instead of matching method names", (t) => {
@@ -215,7 +215,7 @@ public class StudyService {
   const analyze = () => extractRequestFlows(
     repo.repository,
     [service("server", "server", "C#")],
-    { mode: "study" },
+    {},
   );
   const first = analyze();
   const second = analyze();
@@ -290,7 +290,7 @@ class CrossProjectController {
 
   assert.equal(flow.steps[2].symbol, "OrderService.Load");
   assert.equal(flow.steps[2].file, "core/OrderService.cs");
-  assert.equal(flow.steps[2].confidence, "high");
+  assert.equal(flow.steps[2].confidence, "medium");
   assert.match(flow.steps[2].evidence[0], /explicit \.NET DI registration/);
 });
 
@@ -463,7 +463,7 @@ private void Last() {}
   assert.equal(result.flows[0].steps.at(-1).kind, "inference-limit");
 });
 
-test("reports .NET project load failures without regex fallback", (t) => {
+test("analyzes source when the project SDK is unavailable", (t) => {
   const repo = fixture(t);
   repo.write(
     "broken/broken.csproj",
@@ -480,8 +480,10 @@ test("reports .NET project load failures without regex fallback", (t) => {
     [service("broken", "broken", "C#")],
   );
 
-  assert.equal(result.flows.length, 0);
-  assert.ok(result.warnings.some((warning) => warning.code === "project-load-failed"));
+  assert.equal(result.flows.length, 1);
+  assert.equal(result.flows[0].trigger.label, "GET /should-not-appear");
+  assert.equal(result.analysis.mode, "study");
+  assert.ok(!result.warnings.some((warning) => warning.code === "project-load-failed"));
 });
 
 test("builds a plain-English story for a background heartbeat job", (t) => {

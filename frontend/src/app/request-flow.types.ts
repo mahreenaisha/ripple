@@ -96,7 +96,7 @@ export interface RequestFlowCatalog {
   schema_version: string;
   generator: Record<string, unknown>;
   analysis?: {
-    mode: 'verified' | 'study';
+    mode: 'study';
     completeness: string;
     limitations: string[];
   };

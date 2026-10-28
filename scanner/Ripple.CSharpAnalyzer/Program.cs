@@ -2,11 +2,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.CodeAnalysis.Text;
 
@@ -41,7 +39,6 @@ catch (Exception error)
 
 internal sealed record AnalyzerConfig(
     IReadOnlyList<ServiceConfig> Services,
-    string Mode = "verified",
     int MaxDepth = 6,
     int MaxPathsPerTrigger = 8,
     int MaxFlows = 500
@@ -112,6 +109,12 @@ internal sealed record ResolvedCall(MethodNode Method, string Confidence, string
 internal sealed class RepositoryAnalyzer
 {
     private const string StudyFrameworkStubs = """
+        global using System;
+        global using System.Collections.Generic;
+        global using System.Linq;
+        global using System.Threading;
+        global using System.Threading.Tasks;
+
         namespace Microsoft.AspNetCore.Mvc
         {
             public sealed class RouteAttribute(string template) : System.Attribute { }
@@ -198,64 +201,11 @@ internal sealed class RepositoryAnalyzer
         {
             throw new DirectoryNotFoundException($"Repository path is not a directory: {root}");
         }
-        if (config.Mode is not ("verified" or "study"))
-        {
-            throw new ArgumentException("Analyzer mode must be 'verified' or 'study'.");
-        }
         _root = root;
         _config = config;
     }
 
     public async Task<AnalyzerResult> AnalyzeAsync()
-    {
-        return IsStudyMode()
-            ? await AnalyzeStudyAsync()
-            : await AnalyzeVerifiedAsync();
-    }
-
-    private async Task<AnalyzerResult> AnalyzeVerifiedAsync()
-    {
-        if (!MSBuildLocator.IsRegistered)
-        {
-            MSBuildLocator.RegisterDefaults();
-        }
-
-        using var workspace = MSBuildWorkspace.Create();
-        workspace.RegisterWorkspaceFailedHandler(eventArgs =>
-            AddWarning(
-                eventArgs.Diagnostic.Kind == WorkspaceDiagnosticKind.Failure
-                    ? "project-load-failed"
-                    : "workspace-diagnostic",
-                eventArgs.Diagnostic.Message,
-                null,
-                null
-            )
-        );
-
-        foreach (var projectFile in ProjectFiles())
-        {
-            try
-            {
-                await workspace.OpenProjectAsync(projectFile);
-            }
-            catch (Exception error)
-            {
-                AddWarning(
-                    "project-load-failed",
-                    $"Could not load {Relative(projectFile)}: {error.Message}",
-                    Relative(projectFile),
-                    1
-                );
-            }
-        }
-
-        var projects = workspace.CurrentSolution.Projects
-            .OrderBy(project => project.FilePath, StringComparer.Ordinal)
-            .ToArray();
-        return await AnalyzeProjectsAsync(projects);
-    }
-
-    private async Task<AnalyzerResult> AnalyzeStudyAsync()
     {
         using var workspace = new AdhocWorkspace();
         var projectId = ProjectId.CreateNewId("ripple-study");
@@ -319,18 +269,16 @@ internal sealed class RepositoryAnalyzer
             new GeneratorInfo(
                 "ripple-csharp-roslyn",
                 true,
-                IsStudyMode() ? "roslyn-source-study" : "roslyn-semantic-analysis"
+                "roslyn-source-study"
             ),
             new AnalysisInfo(
-                IsStudyMode() ? "study" : "verified",
-                IsStudyMode() ? "partial" : "verified",
-                IsStudyMode()
-                    ? [
-                        "External package symbols are unavailable.",
-                        "Generated sources and MSBuild conditions are unavailable.",
-                        "Runtime dependency injection and dynamic behavior remain unresolved.",
-                    ]
-                    : []
+                "study",
+                "partial",
+                [
+                    "External package symbols are unavailable.",
+                    "Generated sources and MSBuild conditions are unavailable.",
+                    "Runtime dependency injection and dynamic behavior remain unresolved.",
+                ]
             ),
             limits,
             flows,
@@ -340,42 +288,6 @@ internal sealed class RepositoryAnalyzer
                 .ThenBy(item => item.Code, StringComparer.Ordinal)
                 .ToArray()
         );
-    }
-
-    private bool IsStudyMode() =>
-        string.Equals(_config.Mode, "study", StringComparison.OrdinalIgnoreCase);
-
-    private IEnumerable<string> ProjectFiles()
-    {
-        var seen = new HashSet<string>(PathComparer());
-        foreach (var service in _config.Services.OrderBy(item => item.Path, StringComparer.Ordinal))
-        {
-            var directory = Path.GetFullPath(Path.Combine(_root, service.Path));
-            if (!IsInsideRoot(directory) || !Directory.Exists(directory))
-            {
-                AddWarning(
-                    "invalid-service-path",
-                    $"Service path is outside the repository or missing: {service.Path}",
-                    null,
-                    null
-                );
-                continue;
-            }
-            var projects = Directory.EnumerateFiles(directory, "*.csproj", SearchOption.TopDirectoryOnly)
-                .OrderBy(item => item, StringComparer.Ordinal)
-                .ToArray();
-            var selected = projects.FirstOrDefault(project =>
-                string.Equals(
-                    Path.GetFileNameWithoutExtension(project),
-                    service.Name,
-                    StringComparison.OrdinalIgnoreCase
-                )
-            ) ?? projects.FirstOrDefault();
-            if (selected is not null && seen.Add(selected))
-            {
-                yield return selected;
-            }
-        }
     }
 
     private IEnumerable<string> StudySourceFiles()
@@ -573,8 +485,7 @@ internal sealed class RepositoryAnalyzer
                 foreach (var attribute in httpAttributes)
                 {
                     var template = FirstString(attribute)
-                        ?? (IsStudyMode()
-                            && attribute.ApplicationSyntaxReference?.GetSyntax() is AttributeSyntax syntax
+                        ?? (attribute.ApplicationSyntaxReference?.GetSyntax() is AttributeSyntax syntax
                             ? StudyAttributeString(syntax)
                             : null);
                     foreach (var verb in HttpVerbs(attribute))
@@ -588,7 +499,7 @@ internal sealed class RepositoryAnalyzer
                         );
                     }
                 }
-                if (httpAttributes.Length == 0 && IsStudyMode())
+                if (httpAttributes.Length == 0)
                 {
                     foreach (var attribute in method.AttributeLists.SelectMany(list => list.Attributes))
                     {
@@ -634,10 +545,7 @@ internal sealed class RepositoryAnalyzer
         {
             if (model.GetOperation(syntax) is not IInvocationOperation invocation)
             {
-                if (IsStudyMode())
-                {
-                    DiscoverStudyMinimalApi(syntax, model, file);
-                }
+                DiscoverStudyMinimalApi(syntax, model, file);
                 continue;
             }
             DiscoverRegistration(invocation);
@@ -1087,7 +995,6 @@ internal sealed class RepositoryAnalyzer
                 ));
             }
         }
-        if (IsStudyMode())
         {
             var coveredSpans = semanticInvocations
                 .Select(invocation => invocation.Syntax.Span)
@@ -1702,7 +1609,7 @@ internal sealed class RepositoryAnalyzer
         label,
         file,
         Math.Max(1, line),
-        IsStudyMode() && confidence == "high" ? "medium" : confidence,
+        confidence == "high" ? "medium" : confidence,
         [evidence]
     );
 

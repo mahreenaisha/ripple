@@ -20,10 +20,8 @@ export interface ScannedSnapshot {
   analysis?: AnalysisInfo | null;
 }
 
-export type AnalysisMode = 'study' | 'verified';
-
 export interface AnalysisInfo {
-  mode: AnalysisMode;
+  mode: 'study';
   completeness: string;
   limitations: string[];
 }
@@ -39,13 +37,10 @@ export interface ScanPreflight {
   name: string;
   slug: string;
   dotnet: { executable: string; version: string };
-  solutions: string[];
-  nuget_config: string | null;
 }
 
 export type ScanPhase =
   | 'validating'
-  | 'restoring'
   | 'scanning'
   | 'publishing'
   | 'cancelling'
@@ -59,8 +54,6 @@ export interface ScanJob {
   repo_path: string;
   name: string;
   slug: string;
-  restore_packages: boolean;
-  analysis_mode: AnalysisMode;
   logs: string[];
   error: string | null;
   result: {
@@ -107,9 +100,6 @@ export class App implements OnInit, OnDestroy {
   protected readonly showAddRepo = signal(false);
   protected readonly repoPath = signal('');
   protected readonly scanName = signal('');
-  protected readonly analysisMode = signal<AnalysisMode>('study');
-  protected readonly restorePackages = signal(false);
-  protected readonly selectedSolution = signal('');
   protected readonly scanPreflight = signal<ScanPreflight | null>(null);
   protected readonly scanJob = signal<ScanJob | null>(null);
   protected readonly scanChecking = signal(false);
@@ -117,7 +107,6 @@ export class App implements OnInit, OnDestroy {
   protected readonly scanRunning = computed(() => {
     const phase = this.scanJob()?.phase;
     return phase === 'validating' ||
-      phase === 'restoring' ||
       phase === 'scanning' ||
       phase === 'publishing' ||
       phase === 'cancelling';
@@ -193,20 +182,6 @@ export class App implements OnInit, OnDestroy {
     this.scanName.set((event.target as HTMLInputElement).value);
   }
 
-  protected onSolutionChange(event: Event): void {
-    this.selectedSolution.set((event.target as HTMLSelectElement).value);
-  }
-
-  protected onRestoreChange(event: Event): void {
-    this.restorePackages.set((event.target as HTMLInputElement).checked);
-  }
-
-  protected onAnalysisModeChange(event: Event): void {
-    const mode = (event.target as HTMLInputElement).value as AnalysisMode;
-    this.analysisMode.set(mode);
-    this.restorePackages.set(mode === 'verified');
-  }
-
   protected preflightRepository(): void {
     const repoPath = this.repoPath().trim();
     if (!repoPath || this.scanChecking() || this.scanRunning()) {
@@ -226,9 +201,6 @@ export class App implements OnInit, OnDestroy {
           if (!this.scanName().trim()) {
             this.scanName.set(preflight.name);
           }
-          this.selectedSolution.set(
-            preflight.solutions.length === 1 ? preflight.solutions[0] : '',
-          );
           this.scanChecking.set(false);
         },
         error: (error: HttpErrorResponse) => {
@@ -248,9 +220,6 @@ export class App implements OnInit, OnDestroy {
       .post<ScanJob>('http://localhost:8000/scans', {
         repo_path: preflight.repo_path,
         name: this.scanName().trim() || preflight.name,
-        solution: this.selectedSolution() || null,
-        restore_packages: this.analysisMode() === 'verified' && this.restorePackages(),
-        analysis_mode: this.analysisMode(),
       })
       .subscribe({
         next: (job) => {

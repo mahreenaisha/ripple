@@ -62,40 +62,8 @@
             @if (scanPreflight(); as preflight) {
               <div class="scan-ready">
                 <span>.NET {{ preflight.dotnet.version }}</span>
-                <span>{{ preflight.solutions.length }} solution{{ preflight.solutions.length === 1 ? '' : 's' }}</span>
+                <span>Source-only · no build or restore</span>
               </div>
-
-              <fieldset class="mode-choice">
-                <legend>Analysis mode</legend>
-                <label>
-                  <input
-                    type="radio"
-                    name="analysis-mode"
-                    value="study"
-                    [checked]="analysisMode() === 'study'"
-                    [disabled]="scanRunning()"
-                    (change)="onAnalysisModeChange($event)"
-                  />
-                  <span>
-                    <strong>Study without build</strong>
-                    <small>Source-only and partial. No restore, build, or repository writes.</small>
-                  </span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="analysis-mode"
-                    value="verified"
-                    [checked]="analysisMode() === 'verified'"
-                    [disabled]="scanRunning()"
-                    (change)="onAnalysisModeChange($event)"
-                  />
-                  <span>
-                    <strong>Verified project analysis</strong>
-                    <small>Uses restored projects and MSBuild for stronger symbol resolution.</small>
-                  </span>
-                </label>
-              </fieldset>
 
               <label>
                 <span>Display name</span>
@@ -107,47 +75,10 @@
                 />
               </label>
 
-              @if (analysisMode() === 'verified' && preflight.solutions.length) {
-                <label>
-                  <span>Solution to restore</span>
-                  <select [value]="selectedSolution()" [disabled]="scanRunning()" (change)="onSolutionChange($event)">
-                    @if (preflight.solutions.length > 1) {
-                      <option value="">Choose a solution</option>
-                    }
-                    @for (solution of preflight.solutions; track solution) {
-                      <option [value]="solution">{{ solution }}</option>
-                    }
-                  </select>
-                </label>
-              }
-
-              <label class="restore-choice">
-                <input
-                  type="checkbox"
-                  [checked]="restorePackages()"
-                  [disabled]="scanRunning() || analysisMode() === 'study'"
-                  (change)="onRestoreChange($event)"
-                />
-                <span>
-                  Restore packages first
-                  <small>
-                    @if (analysisMode() === 'study') {
-                      Disabled in study mode.
-                    } @else {
-                      Runs dotnet restore and writes generated files under obj/.
-                    }
-                  </small>
-                </span>
-              </label>
-
               <button
                 type="button"
                 class="scan-primary"
-                [disabled]="
-                  scanRunning() ||
-                  !scanName().trim() ||
-                  (analysisMode() === 'verified' && restorePackages() && !selectedSolution())
-                "
+                [disabled]="scanRunning() || !scanName().trim()"
                 (click)="startRepositoryScan()"
               >
                 Scan repository

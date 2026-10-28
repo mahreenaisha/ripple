@@ -3,20 +3,26 @@
   "name": "DeviceAS",
   "slug": "deviceas",
   "source": {
-    "commit": "5cf83f5ce9279640e0eaac634264e52cedcc2edc",
+    "commit": "b9313b2f40e6994dd502444579e01f8d7d17560b",
     "branch": "main",
     "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
-    "committedAt": "2026-09-15T11:41:42-04:00",
-    "localPath": "/mnt/c/Users/conmais/git/company/wcc-deviceas",
-    "scannedAt": "2026-09-23T10:55:17.245Z"
+    "committedAt": "2026-10-22T17:10:33-04:00",
+    "localPath": "/home/conmais/company/wcc-deviceas",
+    "scannedAt": "2026-10-28T08:21:41.577Z"
+  },
+  "analysis": {
+    "mode": "study",
+    "completeness": "partial",
+    "limitations": [
+      "External package symbols are unavailable.",
+      "Generated sources and MSBuild conditions are unavailable.",
+      "Runtime dependency injection and dynamic behavior remain unresolved."
+    ]
   },
   "counts": {
     "services": 4,
-    "entryPoints": 459,
-    "dependencies": 456,
-    "flows": 114,
-    "nodes": 16,
-    "edges": 23
+    "entryPoints": 29,
+    "flows": 44
   },
-  "durationMs": 20384
+  "durationMs": 15614
 }

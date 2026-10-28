@@ -13,7 +13,7 @@ vi.mock('mermaid', () => ({
 
 const catalog: RequestFlowCatalog = {
   schema_version: '1.0.0',
-  generator: { strategy: 'roslyn-semantic-analysis' },
+  generator: { strategy: 'roslyn-source-study' },
   limits: { max_depth: 6 },
   warnings: [],
   glossary: {

@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 import threading
 import time
@@ -32,8 +31,6 @@ class ScanManagerTests(unittest.TestCase):
         self.repository = self.root / "orders"
         self.ripple.mkdir()
         self.repository.mkdir()
-        (self.repository / "Orders.sln").write_text("", encoding="utf-8")
-        (self.repository / "nuget.config").write_text("<configuration />", encoding="utf-8")
         self.promoted = threading.Event()
         self.manager = ScanManager(
             self.ripple,
@@ -49,151 +46,18 @@ class ScanManagerTests(unittest.TestCase):
         self.dotnet.stop()
         self.temporary.cleanup()
 
-    def test_preflight_requires_an_absolute_path_and_detects_restore_inputs(self):
+    def test_preflight_requires_absolute_path_and_checks_dotnet(self):
         with self.assertRaisesRegex(ScanError, "must be absolute"):
             self.manager.preflight("orders")
 
         result = self.manager.preflight(str(self.repository))
 
-        self.assertEqual(result["solutions"], ["Orders.sln"])
-        self.assertEqual(result["nuget_config"], "nuget.config")
         self.assertEqual(result["dotnet"]["version"], "10.0.403")
         self.assertEqual(result["slug"], "orders")
+        self.assertNotIn("solutions", result)
+        self.assertNotIn("nuget_config", result)
 
-    def test_solution_must_stay_inside_the_repository(self):
-        outside = self.root / "outside.sln"
-        outside.write_text("", encoding="utf-8")
-        with self.assertRaisesRegex(ScanError, "escapes"):
-            self.manager._selected_solution(
-                self.repository,
-                "../outside.sln",
-                ["Orders.sln"],
-                True,
-            )
-
-    def test_restore_can_be_disabled_when_no_solution_exists(self):
-        (self.repository / "Orders.sln").unlink()
-        self.assertIsNone(
-            self.manager._selected_solution(self.repository, None, [], False)
-        )
-        with self.assertRaisesRegex(ScanError, "no .sln"):
-            self.manager._selected_solution(self.repository, None, [], True)
-
-    def test_successful_job_restores_scans_promotes_and_preserves_contract(self):
-        previous = self.snapshots / "orders"
-        previous.mkdir(parents=True)
-        (previous / "request-flows.json").write_text('{"old": true}', encoding="utf-8")
-        commands: list[list[str]] = []
-
-        def fake_run(_job, command, _cwd):
-            commands.append(command)
-            if "scan-repo.js" not in " ".join(command):
-                return
-            output = Path(command[command.index("--out") + 1])
-            output.mkdir(parents=True)
-            (output / "request-flows.json").write_text(
-                json.dumps(
-                    {
-                        "schema_version": "1.0.0",
-                        "analysis": {
-                            "mode": "verified",
-                            "completeness": "verified",
-                            "limitations": [],
-                        },
-                        "flows": [],
-                        "warnings": [],
-                        "glossary": {},
-                    }
-                ),
-                encoding="utf-8",
-            )
-            (output / "snapshot.json").write_text(
-                json.dumps(
-                    {
-                        "name": "Orders",
-                        "counts": {"flows": 0},
-                        "analysis": {
-                            "mode": "verified",
-                            "completeness": "verified",
-                            "limitations": [],
-                        },
-                    }
-                ),
-                encoding="utf-8",
-            )
-
-        with patch.object(self.manager, "_run_command", side_effect=fake_run):
-            started = self.manager.start(
-                str(self.repository), "Orders", "Orders.sln", True
-            )
-            status = wait_for_terminal(self.manager, started["id"])
-
-        self.assertEqual(status["phase"], "complete")
-        self.assertTrue(self.promoted.is_set())
-        self.assertIn("--configfile", commands[0])
-        self.assertTrue(
-            json.loads(
-                (self.snapshots / "orders" / "request-flows.json").read_text(
-                    encoding="utf-8"
-                )
-            )["flows"]
-            == []
-        )
-
-    def test_project_load_failures_do_not_replace_previous_snapshot(self):
-        previous = self.snapshots / "orders"
-        previous.mkdir(parents=True)
-        old = '{"old": true}'
-        (previous / "request-flows.json").write_text(old, encoding="utf-8")
-
-        def fake_run(_job, command, _cwd):
-            if "scan-repo.js" not in " ".join(command):
-                return
-            output = Path(command[command.index("--out") + 1])
-            output.mkdir(parents=True)
-            (output / "request-flows.json").write_text(
-                json.dumps(
-                    {
-                        "analysis": {
-                            "mode": "verified",
-                            "completeness": "verified",
-                            "limitations": [],
-                        },
-                        "flows": [],
-                        "warnings": [
-                            {"code": "project-load-failed", "message": "private SDK missing"}
-                        ],
-                    }
-                ),
-                encoding="utf-8",
-            )
-            (output / "snapshot.json").write_text(
-                json.dumps(
-                    {
-                        "counts": {"flows": 0},
-                        "analysis": {
-                            "mode": "verified",
-                            "completeness": "verified",
-                            "limitations": [],
-                        },
-                    }
-                ),
-                encoding="utf-8",
-            )
-
-        with patch.object(self.manager, "_run_command", side_effect=fake_run):
-            started = self.manager.start(
-                str(self.repository), "Orders", "Orders.sln", False
-            )
-            status = wait_for_terminal(self.manager, started["id"])
-
-        self.assertEqual(status["phase"], "failed")
-        self.assertIn("previous snapshot was preserved", status["error"])
-        self.assertEqual(
-            (previous / "request-flows.json").read_text(encoding="utf-8"), old
-        )
-
-    def test_study_mode_skips_restore_and_promotes_partial_output(self):
+    def test_source_only_job_scans_and_promotes_partial_artifact(self):
         commands: list[list[str]] = []
         analysis = {
             "mode": "study",
@@ -221,49 +85,45 @@ class ScanManagerTests(unittest.TestCase):
             )
 
         with patch.object(self.manager, "_run_command", side_effect=fake_run):
-            started = self.manager.start(
-                str(self.repository), "Orders", None, False, "study"
-            )
+            started = self.manager.start(str(self.repository), "Orders")
             status = wait_for_terminal(self.manager, started["id"])
 
         self.assertEqual(status["phase"], "complete")
+        self.assertTrue(self.promoted.is_set())
         self.assertEqual(len(commands), 1)
-        self.assertEqual(commands[0][commands[0].index("--mode") + 1], "study")
+        self.assertNotIn("--mode", commands[0])
+        self.assertNotIn("restore", commands[0])
         self.assertEqual(status["result"]["analysis"]["mode"], "study")
 
-    def test_rejects_artifact_with_mismatched_analysis_mode(self):
-        output = self.root / "bad-output"
-        output.mkdir()
-        analysis = {"mode": "study", "completeness": "partial", "limitations": []}
-        (output / "request-flows.json").write_text(
-            json.dumps({"analysis": analysis, "flows": [], "warnings": []}),
-            encoding="utf-8",
-        )
-        (output / "snapshot.json").write_text(
-            json.dumps({"analysis": analysis}), encoding="utf-8"
-        )
+    def test_invalid_artifact_does_not_replace_previous_snapshot(self):
+        previous = self.snapshots / "orders"
+        previous.mkdir(parents=True)
+        old = '{"old": true}'
+        (previous / "request-flows.json").write_text(old, encoding="utf-8")
 
-        with self.assertRaisesRegex(ScanError, "does not match"):
-            self.manager._validate_output(output, "verified")
-
-    def test_restore_errors_are_visible_and_scan_is_not_started(self):
-        commands = []
-
-        def fail_restore(_job, command, _cwd):
-            commands.append(command)
-            raise ScanError("dotnet exited with status 1. Private feed authentication failed.")
-
-        with patch.object(self.manager, "_run_command", side_effect=fail_restore):
-            started = self.manager.start(
-                str(self.repository), "Orders", "Orders.sln", True
+        def fake_run(_job, command, _cwd):
+            output = Path(command[command.index("--out") + 1])
+            output.mkdir(parents=True)
+            analysis = {"mode": "legacy", "completeness": "unknown"}
+            (output / "request-flows.json").write_text(
+                json.dumps({"analysis": analysis, "flows": [], "warnings": []}),
+                encoding="utf-8",
             )
+            (output / "snapshot.json").write_text(
+                json.dumps({"analysis": analysis}), encoding="utf-8"
+            )
+
+        with patch.object(self.manager, "_run_command", side_effect=fake_run):
+            started = self.manager.start(str(self.repository), "Orders")
             status = wait_for_terminal(self.manager, started["id"])
 
         self.assertEqual(status["phase"], "failed")
-        self.assertIn("authentication", status["error"])
-        self.assertEqual(len(commands), 1)
+        self.assertIn("source-only study artifact", status["error"])
+        self.assertEqual(
+            (previous / "request-flows.json").read_text(encoding="utf-8"), old
+        )
 
-    def test_cancellation_terminates_the_active_process(self):
+    def test_cancellation_terminates_active_process(self):
         process = Mock()
         process.poll.return_value = None
         job = ScanJob(
@@ -271,9 +131,6 @@ class ScanManagerTests(unittest.TestCase):
             repo_path=self.repository,
             name="Orders",
             slug="orders",
-            solution=self.repository / "Orders.sln",
-            restore_packages=True,
-            analysis_mode="verified",
             phase="scanning",
             process=process,
         )
@@ -289,7 +146,7 @@ class ScanApiTests(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(main.app)
 
-    def test_scan_api_maps_manager_errors_and_accepts_jobs(self):
+    def test_scan_api_maps_errors_and_starts_source_only_job(self):
         manager = Mock()
         manager.preflight.return_value = {"repo_path": "/code/orders"}
         manager.start.return_value = {"id": "job-1", "phase": "validating"}
@@ -300,20 +157,14 @@ class ScanApiTests(unittest.TestCase):
                 "/scans/preflight", json={"repo_path": "/code/orders"}
             )
             started = self.client.post(
-                "/scans",
-                json={
-                    "repo_path": "/code/orders",
-                    "restore_packages": False,
-                },
+                "/scans", json={"repo_path": "/code/orders"}
             )
             missing = self.client.get("/scans/missing")
 
         self.assertEqual(preflight.status_code, 200)
         self.assertEqual(started.status_code, 202)
         self.assertEqual(missing.status_code, 404)
-        manager.start.assert_called_once_with(
-            "/code/orders", None, None, False, "verified"
-        )
+        manager.start.assert_called_once_with("/code/orders", None)
 
     def test_cors_allows_local_ui_and_rejects_other_origins(self):
         local = self.client.options(
@@ -331,7 +182,10 @@ class ScanApiTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(local.headers.get("access-control-allow-origin"), "http://localhost:4200")
+        self.assertEqual(
+            local.headers.get("access-control-allow-origin"),
+            "http://localhost:4200",
+        )
         self.assertNotIn("access-control-allow-origin", other.headers)
 
 
