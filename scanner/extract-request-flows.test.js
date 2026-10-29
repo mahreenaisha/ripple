@@ -52,6 +52,14 @@ function service(name, servicePath, language) {
   return { name, path: servicePath, language, kind: "api-service" };
 }
 
+function mapEdge(graph) {
+  const labels = new Map(graph.nodes.map((node) => [node.id, node.label]));
+  return (source, kind, target) => graph.edges.find((edge) =>
+    labels.get(edge.source) === source
+    && edge.kind === kind
+    && labels.get(edge.target) === target);
+}
+
 test("binds ASP.NET controllers through interface injection", (t) => {
   const repo = fixture(t);
   repo.write(
@@ -116,21 +124,273 @@ public async Task Load(string id) { await _repository.FindAsync(id); }
   );
   assert.equal(result.flows[0].steps.at(-1).kind, "database");
   const graph = result.architecture_graph;
-  assert.equal(graph.schema_version, "1.0.0");
-  assert.ok(graph.nodes.some((node) => node.kind === "service"));
-  assert.ok(graph.nodes.some((node) => node.kind === "entrypoint"));
-  assert.ok(graph.nodes.some((node) => node.kind === "database"));
-  assert.ok(graph.edges.some((edge) => edge.kind === "handles"));
-  const query = graph.edges.find((edge) => edge.kind === "queries");
-  assert.ok(query);
-  assert.ok(query.evidence.length > 0);
-  assert.deepEqual(query.flow_ids, [result.flows[0].id]);
+  assert.equal(graph.schema_version, "2.0.0");
+  assert.deepEqual(
+    graph.nodes.map((node) => [node.kind, node.label]),
+    [["service", "server"], ["entrypoint", "GET /api/devices/{id}"]],
+  );
+  const handles = graph.edges.find((edge) => edge.kind === "handles");
+  assert.equal(handles.evidence[0].kind, "route");
+  assert.deepEqual(handles.flow_ids, [result.flows[0].id]);
   const repeated = extractRequestFlows(
     repo.repository,
     [service("server", "server", "C#")],
     entries,
   );
   assert.deepEqual(repeated.architecture_graph, graph);
+});
+
+test("maps projects, references, packages, configuration, and SDK calls with evidence", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/server.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.0" />
+    <ProjectReference Include="../data/data.csproj" />
+  </ItemGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "server/appsettings.json",
+    `{
+  // Comments and trailing commas are allowed in appsettings files.
+  "Logging": { "Endpoint": "https://logs.example.com" },
+  "Billing": { "BaseUrl": "https://billing.example.com/v1" },
+  "Local": { "Url": "http://localhost:5000" },
+}
+`,
+  );
+  repo.write(
+    "server/OrdersController.cs",
+    `using Amazon.SQS;
+using Shop.Data;
+interface IServiceCollection { }
+interface ILogger { void LogInformation(string message); }
+interface IAmazonKinesis { Task PutRecordAsync(string stream); }
+static class ServiceCollectionExtensions {
+  public static void AddScoped<TContract, TImplementation>(this IServiceCollection services) { }
+}
+class Startup {
+  void Configure(IServiceCollection services) {
+    services.AddScoped<IOrderStore, OrderStore>();
+  }
+}
+[Route("api/orders")]
+class OrdersController(IOrderStore orders, IAmazonSQS queue, IAmazonKinesis stream, ILogger logger) {
+  [HttpPost]
+  public async Task Create(string id) {
+    // Redis would make this faster.
+    var cache = "mongodb://cache.example.com";
+    logger.LogInformation("Sent to Kafka");
+    await orders.Save(id);
+    await queue.SendMessageAsync("orders", id);
+    await stream.PutRecordAsync(cache);
+  }
+}
+`,
+  );
+  repo.write(
+    "data/data.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+  <ItemGroup><PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0" /></ItemGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "data/OrderStore.cs",
+    `using Amazon.DynamoDBv2;
+namespace Shop.Data;
+public interface IOrderStore { Task Save(string id); }
+public class OrderStore(IAmazonDynamoDB db) : IOrderStore {
+  public Task Save(string id) => db.PutItemAsync("orders", null);
+}
+`,
+  );
+  repo.write(
+    "server.Tests/server.Tests.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+  <ItemGroup><PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" /></ItemGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "server.Tests/UploadTests.cs",
+    `using Amazon.S3;
+class UploadTests(IAmazonS3 s3) { Task Run() => s3.PutObjectAsync(null); }
+`,
+  );
+
+  const scan = () => extractRequestFlows(repo.repository, [service("server", "server", "C#")]);
+  const result = scan();
+  const graph = result.architecture_graph;
+  const edge = mapEdge(graph);
+  const flow = result.flows.find((item) => item.trigger.label === "POST /api/orders");
+
+  assert.ok(flow);
+  assert.equal(graph.schema_version, "2.0.0");
+  assert.deepEqual(
+    graph.nodes.filter((node) => node.kind !== "entrypoint").map((node) => [node.kind, node.label]),
+    [
+      ["service", "server"],
+      ["library", "data"],
+      ["database", "Amazon DynamoDB"],
+      ["queue", "Amazon SQS"],
+      ["external", "billing.example.com"],
+    ],
+  );
+  assert.deepEqual(
+    edge("server", "references", "data").evidence.map((item) => [item.kind, item.file]),
+    [["project-reference", "server/server.csproj"]],
+  );
+  const publish = edge("server", "publishes", "Amazon SQS");
+  assert.equal(publish.strength, "call");
+  assert.equal(publish.resolution, "direct");
+  assert.deepEqual(publish.evidence.map((item) => [item.kind, item.file]), [
+    ["call", "server/OrdersController.cs"],
+    ["injection", "server/OrdersController.cs"],
+    ["package", "server/server.csproj"],
+  ]);
+  assert.deepEqual(publish.flow_ids, [flow.id]);
+  const query = edge("data", "queries", "Amazon DynamoDB");
+  assert.equal(query.strength, "call");
+  assert.deepEqual(query.flow_ids, [flow.id]);
+  const billing = edge("server", "calls_external", "billing.example.com");
+  assert.equal(billing.strength, "wiring");
+  assert.deepEqual(
+    billing.evidence.map((item) => [item.kind, item.file, item.symbol]),
+    [["configuration", "server/appsettings.json", "Billing.BaseUrl"]],
+  );
+  assert.deepEqual(
+    [graph.summary.services, graph.summary.libraries, graph.summary.technologies, graph.summary.call_sites],
+    [1, 1, 3, 2],
+  );
+  assert.deepEqual(graph.flows, [{ id: flow.id, label: "POST /api/orders", service: "server" }]);
+  assert.deepEqual(scan().architecture_graph, graph);
+});
+
+test("attributes registrations, listeners, and wrappers only with corroborating evidence", (t) => {
+  const repo = fixture(t);
+  repo.write(
+    "server/server.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../adapters/adapters.csproj" /></ItemGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "server/Startup.cs",
+    `using Amazon.SQS;
+using Shop.Adapters;
+class Startup {
+  void ConfigureServices(IServiceCollection services) {
+    services.AddAWSService<IAmazonSQS>();
+    services.AddFifoSqsQueueListener<OrderListener>();
+    services.AddAdapters();
+  }
+}
+class OrderListener { }
+`,
+  );
+  repo.write(
+    "server/DevicesController.cs",
+    `using Contoso.OpenSearch.Abstractions;
+using Contoso.Messaging;
+interface IGreengrassRegistrar { Task RegisterGreengrass(string device); }
+[Route("api/devices")]
+class DevicesController(IGreengrassRegistrar registrar, IEntityProvider entities, IJobQueuePublisher jobs) {
+  [HttpPost]
+  public async Task Register(string device) {
+    await registrar.RegisterGreengrass(device);
+    await entities.Query(device);
+    await jobs.EnqueueAsync(device);
+  }
+}
+`,
+  );
+  repo.write(
+    "server/Reports.cs",
+    `using Contoso.OpenSearch.Abstractions;
+class Reports(IEntityProvider entities) {
+  public Task Run() => entities.Query("all");
+}
+`,
+  );
+  repo.write(
+    "adapters/adapters.csproj",
+    `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+</Project>
+`,
+  );
+  repo.write(
+    "adapters/ServiceCollectionExtensions.cs",
+    `using Amazon.EventBridge;
+namespace Shop.Adapters;
+public static class ServiceCollectionExtensions {
+  public static IServiceCollection AddAdapters(this IServiceCollection services) {
+    services.AddSingleton<IAmazonEventBridge>(new AmazonEventBridgeClient());
+    return services;
+  }
+}
+`,
+  );
+  repo.write(
+    "adapters/EventPublisher.cs",
+    `using Amazon.EventBridge;
+namespace Shop.Adapters;
+public class EventPublisher(IAmazonEventBridge events) {
+  public Task Publish() => events.PutEventsAsync(null);
+}
+`,
+  );
+
+  const result = extractRequestFlows(repo.repository, [service("server", "server", "C#")]);
+  const graph = result.architecture_graph;
+  const edge = mapEdge(graph);
+  const flow = result.flows.find((item) => item.trigger.label === "POST /api/devices");
+
+  assert.deepEqual(
+    graph.nodes
+      .filter((node) => ["database", "queue", "external"].includes(node.kind))
+      .map((node) => node.label),
+    ["Amazon EventBridge", "Amazon SQS", "OpenSearch"],
+  );
+  const consumes = edge("server", "consumes", "Amazon SQS");
+  assert.equal(consumes.strength, "wiring");
+  assert.deepEqual(
+    consumes.evidence.map((item) => item.symbol),
+    ["AddAWSService<IAmazonSQS>", "AddFifoSqsQueueListener"],
+  );
+  const wired = edge("server", "uses", "Amazon EventBridge");
+  assert.equal(wired.strength, "wiring");
+  assert.match(
+    wired.evidence[0].reason,
+    /through ServiceCollectionExtensions\.AddAdapters \(adapters\/ServiceCollectionExtensions\.cs:\d+\)/,
+  );
+  assert.equal(edge("adapters", "publishes", "Amazon EventBridge").strength, "call");
+  const search = edge("server", "queries", "OpenSearch");
+  assert.equal(search.strength, "call");
+  assert.equal(search.resolution, "inferred");
+  assert.deepEqual(
+    search.evidence.map((item) => item.symbol),
+    ["IEntityProvider.Query", "IEntityProvider.Query"],
+  );
+  assert.match(search.evidence[0].reason, /every file that declares IEntityProvider imports Contoso\.OpenSearch\.Abstractions/);
+  assert.deepEqual(search.flow_ids, [flow.id]);
+  assert.ok(!graph.edges.some((item) => item.evidence.some((evidence) =>
+    /RegisterGreengrass|IJobQueuePublisher/.test(evidence.symbol))));
 });
 
 test("resolves minimal APIs and OData conventions with Roslyn symbols", (t) => {

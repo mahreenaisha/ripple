@@ -160,14 +160,15 @@
               <p>Trace ASP.NET API and C# queue requests from their trigger to an evidence-backed boundary.</p>
             } @else {
               <h2>Architecture map</h2>
-              <p>Services, databases, and external systems scanned from the repo</p>
+              <p>Projects in the repo and the systems their code calls</p>
             }
           </div>
           @if (activeTab() === 'map' && mapSummary(); as summary) {
             <div class="chips">
-              <span class="chip">{{ summary.nodes }} nodes</span>
-              <span class="chip">{{ summary.edges }} dependencies</span>
-              <span class="chip accent">Roslyn evidence</span>
+              <span class="chip">{{ summary.services }} {{ summary.services === 1 ? 'service' : 'services' }}</span>
+              <span class="chip">{{ summary.libraries }} {{ summary.libraries === 1 ? 'library' : 'libraries' }}</span>
+              <span class="chip">{{ summary.technologies }} {{ summary.technologies === 1 ? 'system' : 'systems' }}</span>
+              <span class="chip accent">{{ summary.call_sites }} call sites</span>
             </div>
           }
         </div>

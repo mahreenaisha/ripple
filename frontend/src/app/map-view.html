@@ -14,15 +14,33 @@
     <ul>
       <li>
         <span class="swatch"><i class="shape service"></i></span>
-        <span><strong>Service</strong> — runnable C# code in the repo</span>
+        <span><strong>Service</strong> — runnable C# project</span>
+      </li>
+      <li>
+        <span class="swatch"><i class="shape library"></i></span>
+        <span><strong>Library</strong> — shared code services reference</span>
       </li>
       <li>
         <span class="swatch"><i class="shape database"></i></span>
-        <span><strong>Database</strong> — storage reached by a request flow</span>
+        <span><strong>Database</strong> — data the code reads or writes</span>
+      </li>
+      <li>
+        <span class="swatch"><i class="shape queue"></i></span>
+        <span><strong>Queue</strong> — messages sent or received</span>
       </li>
       <li>
         <span class="swatch"><i class="shape external"></i></span>
-        <span><strong>External</strong> — queue, AWS, SaaS, or another API</span>
+        <span><strong>External</strong> — AWS, SaaS, or another API</span>
+      </li>
+      <li>
+        <span class="swatch"><i class="shape shared"></i></span>
+        <span><strong>Amber ring</strong> — used by 2+ services</span>
+      </li>
+      <li>
+        <span class="swatch lines" aria-hidden="true">
+          <i class="line call"></i><i class="line wiring"></i><i class="line declaration"></i>
+        </span>
+        <span><strong>Line</strong> — solid call, dashed wiring, dotted declared only</span>
       </li>
       <li>
         <span class="swatch sizes" aria-hidden="true"><i class="dot sm"></i><i class="dot lg"></i></span>
@@ -32,100 +50,217 @@
     <div class="legend-controls">
       <button
         type="button"
+        [class.active]="showLibraries()"
+        [attr.aria-pressed]="showLibraries()"
+        (click)="toggleLibraries()"
+      >Libraries</button>
+      <button
+        type="button"
         [class.active]="showEntrypoints()"
         [attr.aria-pressed]="showEntrypoints()"
         (click)="toggleEntrypoints()"
       >Entry points</button>
-      <button
-        type="button"
-        [class.active]="showUnresolved()"
-        [attr.aria-pressed]="showUnresolved()"
-        (click)="toggleUnresolved()"
-      >Unresolved</button>
       <button type="button" (click)="fit()">Fit</button>
     </div>
     <p class="legend-hint">Click a node or line for evidence. Background click clears focus. Drag · scroll · zoom.</p>
   </aside>
 
   @if (selectedNode(); as node) {
+    @let dependents = incoming(node);
+    @let dependencies = outgoing(node);
+    @let referenced = outgoing(node, true);
+    @let referencedBy = incoming(node, true);
+    @let entries = entryPoints(node);
+    @let nodeFlows = flows(node.kind === 'service' ? [] : node.flow_ids);
     <aside class="detail" aria-live="polite">
       <header class="detail-head">
         <div>
-          <p class="detail-kind">{{ node.kind }}</p>
+          <p class="detail-kind">{{ kindLabel(node.kind) }}</p>
           <h3>{{ node.label }}</h3>
+          @if (node.name !== node.label) {
+            <p class="detail-name">{{ node.name }}</p>
+          }
         </div>
         <button type="button" class="detail-close" aria-label="Close details" (click)="clearSelection()">×</button>
       </header>
+      @if (node.description) {
+        <p class="detail-description">{{ node.description }}</p>
+      }
       <div class="detail-meta">
-        @if (entrypointCount(node)) {
-          <span class="pill">{{ entrypointCount(node) }} entries</span>
+        @if (entries.length) {
+          <span class="pill">{{ entries.length }} {{ entries.length === 1 ? 'entry point' : 'entry points' }}</span>
         }
-        <span class="pill soft">{{ node.confidence }} confidence</span>
-        <span class="pill soft">{{ node.resolution }}</span>
+        @if (isTechnology(node)) {
+          @if (isShared(node)) {
+            <span class="pill danger">Shared by {{ usedBy(node).length }} services</span>
+          }
+          <span class="pill soft">{{ node.confidence }} confidence</span>
+          <span class="pill soft">{{ node.resolution }}</span>
+        }
       </div>
-      @if (incoming(node).length) {
+      @if (dependents.length) {
         <section class="detail-section">
-          <h4>Called by</h4>
-          <p>{{ incoming(node).join(', ') }}</p>
+          <h4>Used by</h4>
+          <div class="link-list">
+            @for (edge of preview(dependents, 'dependents'); track edge.id) {
+              <button type="button" class="link-row" (click)="focusEdge(edge)">
+                <span class="link-label">{{ nodeLabel(edge.source) }}</span>
+                <span class="tag" [class]="edge.strength">{{ strengthLabel(edge.strength) }}</span>
+              </button>
+            }
+          </div>
+          @if (dependents.length > listPreview && !isExpanded('dependents')) {
+            <button type="button" class="more" (click)="expand('dependents')">+{{ dependents.length - listPreview }} more</button>
+          }
         </section>
       }
-      @if (outgoing(node).length) {
+      @if (dependencies.length) {
         <section class="detail-section">
           <h4>Depends on</h4>
-          <p>{{ outgoing(node).join(', ') }}</p>
+          <div class="link-list">
+            @for (edge of preview(dependencies, 'dependencies'); track edge.id) {
+              <button type="button" class="link-row" (click)="focusEdge(edge)">
+                <span class="link-label">
+                  {{ nodeLabel(edge.target) }}
+                  @if (edge.via.length) {
+                    <small>via {{ edge.via.join(', ') }}</small>
+                  }
+                </span>
+                <span class="tag" [class]="edge.strength">{{ strengthLabel(edge.strength) }}</span>
+              </button>
+            }
+          </div>
+          @if (dependencies.length > listPreview && !isExpanded('dependencies')) {
+            <button type="button" class="more" (click)="expand('dependencies')">+{{ dependencies.length - listPreview }} more</button>
+          }
         </section>
       }
-      @if (node.source) {
+      @if (referenced.length) {
         <section class="detail-section">
-          <h4>Source evidence</h4>
-          <code>{{ node.source.file }}:{{ node.source.line }}</code>
-          <p>{{ node.source.symbol }}</p>
-        </section>
-      }
-      @if (node.flow_ids.length) {
-        <section class="detail-section">
-          <h4>Related request flows</h4>
-          <div class="flow-list">
-            @for (flowId of node.flow_ids; track flowId) {
-              <button type="button" class="flow-link" (click)="selectFlow(flowId)">Open flow</button>
+          <h4>References</h4>
+          <div class="link-list">
+            @for (edge of referenced; track edge.id) {
+              <button type="button" class="link-row" (click)="focusEdge(edge)">
+                <span class="link-label">{{ nodeLabel(edge.target) }}</span>
+              </button>
             }
           </div>
         </section>
       }
+      @if (referencedBy.length) {
+        <section class="detail-section">
+          <h4>Referenced by</h4>
+          <div class="link-list">
+            @for (edge of referencedBy; track edge.id) {
+              <button type="button" class="link-row" (click)="focusEdge(edge)">
+                <span class="link-label">{{ nodeLabel(edge.source) }}</span>
+              </button>
+            }
+          </div>
+        </section>
+      }
+      @if (entries.length) {
+        <section class="detail-section">
+          <h4>Entry points</h4>
+          <div class="link-list">
+            @for (entry of preview(entries, 'entries'); track $index) {
+              <button
+                type="button"
+                class="link-row"
+                [disabled]="!entry.flowId"
+                (click)="entry.flowId && selectFlow(entry.flowId)"
+              >
+                <span class="link-label mono">{{ entry.label }}</span>
+                <span class="tag">Open flow</span>
+              </button>
+            }
+          </div>
+          @if (entries.length > listPreview && !isExpanded('entries')) {
+            <button type="button" class="more" (click)="expand('entries')">+{{ entries.length - listPreview }} more</button>
+          }
+        </section>
+      }
+      @if (nodeFlows.length) {
+        <section class="detail-section">
+          <h4>Request flows that reach it</h4>
+          <div class="link-list">
+            @for (flow of preview(nodeFlows, 'flows'); track flow.id) {
+              <button type="button" class="link-row" (click)="selectFlow(flow.id)">
+                <span class="link-label mono">{{ flow.label }}</span>
+                <span class="tag">{{ serviceLabel(flow.service) }}</span>
+              </button>
+            }
+          </div>
+          @if (nodeFlows.length > listPreview && !isExpanded('flows')) {
+            <button type="button" class="more" (click)="expand('flows')">+{{ nodeFlows.length - listPreview }} more</button>
+          }
+        </section>
+      }
+      @if (node.source) {
+        <section class="detail-section">
+          <h4>{{ isTechnology(node) ? 'Clearest evidence' : 'Defined in' }}</h4>
+          <code>{{ node.source.file }}:{{ node.source.line }}</code>
+          <p>{{ node.source.symbol }}</p>
+        </section>
+      }
     </aside>
   } @else if (selectedEdge(); as edge) {
+    @let edgeFlows = flows(edge.flow_ids);
     <aside class="detail" aria-live="polite">
       <header class="detail-head">
         <div>
-          <p class="detail-kind">{{ edge.kind.replaceAll('_', ' ') }}</p>
+          <p class="detail-kind">{{ edgeTitle(edge) }}</p>
           <h3>{{ nodeLabel(edge.source) }} → {{ nodeLabel(edge.target) }}</h3>
         </div>
         <button type="button" class="detail-close" aria-label="Close details" (click)="clearSelection()">×</button>
       </header>
       <div class="detail-meta">
+        @if (edge.kind !== 'references' && edge.kind !== 'handles') {
+          <span class="pill strength" [class]="edge.strength">{{ strengthLabel(edge.strength) }}</span>
+        }
+        <span class="pill">{{ edge.evidence_count }} evidence {{ edge.evidence_count === 1 ? 'item' : 'items' }}</span>
         <span class="pill soft">{{ edge.confidence }} confidence</span>
         <span class="pill soft">{{ edge.resolution }}</span>
       </div>
+      <p class="detail-description">{{ strengthNote(edge) }}</p>
+      @if (edge.via.length) {
+        <p class="detail-description">Includes evidence from {{ edge.via.join(', ') }}, which this service references.</p>
+      }
       <section class="detail-section">
-        <h4>Source evidence</h4>
+        <h4>Evidence</h4>
         <div class="evidence-list">
-          @for (evidence of edge.evidence; track $index) {
+          @for (evidence of preview(edge.evidence, 'evidence', evidencePreview); track $index) {
             <article class="evidence">
-              <code>{{ evidence.file }}:{{ evidence.line }}</code>
+              <div class="evidence-head">
+                <span class="tag">{{ evidenceLabel(evidence) }}</span>
+                <code>{{ evidence.file }}:{{ evidence.line }}</code>
+              </div>
               <p>{{ evidence.symbol }}</p>
               <small>{{ evidence.reason }}</small>
             </article>
           }
         </div>
+        @if (edge.evidence.length > evidencePreview && !isExpanded('evidence')) {
+          <button type="button" class="more" (click)="expand('evidence')">+{{ edge.evidence.length - evidencePreview }} more</button>
+        }
+        @if (edge.evidence_count > edge.evidence.length) {
+          <p class="detail-note">Ripple found {{ edge.evidence_count }} items and kept {{ edge.evidence.length }} for this connection.</p>
+        }
       </section>
-      @if (edge.flow_ids.length) {
+      @if (edgeFlows.length) {
         <section class="detail-section">
-          <h4>Related request flows</h4>
-          <div class="flow-list">
-            @for (flowId of edge.flow_ids; track flowId) {
-              <button type="button" class="flow-link" (click)="selectFlow(flowId)">Open flow</button>
+          <h4>Request flows</h4>
+          <div class="link-list">
+            @for (flow of preview(edgeFlows, 'flows'); track flow.id) {
+              <button type="button" class="link-row" (click)="selectFlow(flow.id)">
+                <span class="link-label mono">{{ flow.label }}</span>
+                <span class="tag">Open flow</span>
+              </button>
             }
           </div>
+          @if (edgeFlows.length > listPreview && !isExpanded('flows')) {
+            <button type="button" class="more" (click)="expand('flows')">+{{ edgeFlows.length - listPreview }} more</button>
+          }
         </section>
       }
     </aside>

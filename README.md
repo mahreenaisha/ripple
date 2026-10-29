@@ -4,8 +4,8 @@
 
 Ripple is a source-only request-flow and architecture explorer for C# and
 ASP.NET Core repositories. It finds API routes and supported queue handlers,
-follows local method calls, and maps where requests reach databases, queues, or
-external systems.
+follows local method calls, and maps every project to the databases, queues,
+and external systems its code uses.
 
 Ripple is designed for studying a repository without setting up its private
 packages or running its build.
@@ -147,8 +147,11 @@ Ripple uses Roslyn syntax trees and available semantic symbols in an
 2. identifies supported ASP.NET controller and minimal API routes;
 3. identifies supported C# queue handlers;
 4. resolves local, overload-aware method calls when source evidence permits;
-5. follows calls toward meaningful boundaries; and
-6. records files, lines, confidence, and evidence for every displayed step and
+5. follows calls toward meaningful boundaries;
+6. maps every non-test project from its project and package references, its
+   configuration, and the client calls, registrations, and injections in its
+   code; and
+7. records files, lines, confidence, and evidence for every displayed step and
    Map connection.
 
 Scanning is deterministic. An LLM is never used to discover routes, assemble

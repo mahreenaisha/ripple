@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { GraphSummary } from './architecture-graph.types';
 import { ChatPanelComponent } from './chat-panel';
 import { MapViewComponent } from './map-view';
 import { RequestFlowsViewComponent } from './request-flows-view';
@@ -100,7 +101,7 @@ export class App implements OnInit, OnDestroy {
   protected readonly chatOpen = signal(false);
   protected readonly activeTab = signal<'flows' | 'map'>('flows');
   protected readonly initialFlowId = signal<string | null>(null);
-  protected readonly mapSummary = signal<{ nodes: number; edges: number } | null>(null);
+  protected readonly mapSummary = signal<GraphSummary | null>(null);
   protected readonly flowSelectionContext = signal<RequestFlowSelectionContext | null>(null);
   protected readonly snapshots = signal<SnapshotList | null>(null);
   protected readonly dataVersion = signal(0);
@@ -163,7 +164,7 @@ export class App implements OnInit, OnDestroy {
     this.dataVersion.update((version) => version + 1);
   }
 
-  protected setMapSummary(summary: { nodes: number; edges: number }): void {
+  protected setMapSummary(summary: GraphSummary): void {
     this.mapSummary.set(summary);
   }
 

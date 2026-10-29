@@ -8,7 +8,7 @@
     "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
     "committedAt": "2026-10-22T17:10:33-04:00",
     "localPath": "/home/conmais/company/wcc-deviceas",
-    "scannedAt": "2026-10-29T06:25:33.994Z"
+    "scannedAt": "2026-10-29T08:02:47.856Z"
   },
   "analysis": {
     "mode": "study",
@@ -16,7 +16,8 @@
     "limitations": [
       "External package symbols are unavailable.",
       "Generated sources and MSBuild conditions are unavailable.",
-      "Runtime dependency injection and dynamic behavior remain unresolved."
+      "Runtime dependency injection and dynamic behavior remain unresolved.",
+      "The architecture map names systems from client types, registrations, project files, and configuration; calls through unrecognized wrappers are omitted."
     ]
   },
   "artifacts": {
@@ -27,7 +28,7 @@
     },
     "architecture_graph": {
       "file": "architecture-graph.json",
-      "schema_version": "1.0.0",
+      "schema_version": "2.0.0",
       "status": "ready"
     }
   },
@@ -35,8 +36,8 @@
     "services": 4,
     "entryPoints": 29,
     "flows": 44,
-    "graphNodes": 259,
-    "graphEdges": 255
+    "graphNodes": 49,
+    "graphEdges": 76
   },
-  "durationMs": 20683
+  "durationMs": 16857
 }

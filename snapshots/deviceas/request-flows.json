@@ -10,7 +10,7 @@
       "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
       "committedAt": "2026-10-22T17:10:33-04:00",
       "localPath": "/home/conmais/company/wcc-deviceas",
-      "scannedAt": "2026-10-29T06:25:33.994Z"
+      "scannedAt": "2026-10-29T08:02:47.856Z"
     }
   },
   "analysis": {
@@ -19,7 +19,8 @@
     "limitations": [
       "External package symbols are unavailable.",
       "Generated sources and MSBuild conditions are unavailable.",
-      "Runtime dependency injection and dynamic behavior remain unresolved."
+      "Runtime dependency injection and dynamic behavior remain unresolved.",
+      "The architecture map names systems from client types, registrations, project files, and configuration; calls through unrecognized wrappers are omitted."
     ]
   },
   "limits": {
@@ -14179,10 +14180,10 @@
         },
         {
           "kind": "call",
-          "symbol": "StatusUpdateRequest.ProcessSystem",
-          "label": "StatusUpdateRequest.ProcessSystem",
+          "symbol": "StatusUpdateRequest.ProcessController",
+          "label": "StatusUpdateRequest.ProcessController",
           "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-          "line": 119,
+          "line": 203,
           "confidence": "medium",
           "evidence": [
             "Roslyn source symbols resolved this local call without project-system information"
@@ -14190,164 +14191,28 @@
         },
         {
           "kind": "call",
-          "symbol": "StatusUpdateRequest.PopulateCanonicalSampleSetsQueue",
-          "label": "StatusUpdateRequest.PopulateCanonicalSampleSetsQueue",
+          "symbol": "StatusUpdateRequest.AsComponentDTO",
+          "label": "StatusUpdateRequest.AsComponentDTO",
           "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-          "line": 556,
+          "line": 150,
           "confidence": "medium",
           "evidence": [
-            "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.PopulateCanonicalSampleSetsQueue(Status)"
+            "Roslyn source symbols resolved this local call without project-system information"
           ]
         },
         {
-          "kind": "queue",
-          "symbol": "Queue<QueuedSampleSetDto>.Enqueue",
-          "label": "queue via Queue<QueuedSampleSetDto>.Enqueue",
+          "kind": "call",
+          "symbol": "StatusUpdateRequest.PopulateCanonicalLocation",
+          "label": "StatusUpdateRequest.PopulateCanonicalLocation",
           "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-          "line": 568,
+          "line": 471,
           "confidence": "medium",
           "evidence": [
-            "Resolved queue/publisher abstraction; Roslyn symbol: System.Collections.Generic.Queue<Waters.DeviceAS.Core.BusinessLogic.DeviceData.DataTransfer.QueuedSampleSetDto>.Enqueue(Waters.DeviceAS.Core.BusinessLogic.DeviceData.DataTransfer.QueuedSampleSetDto)"
+            "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.PopulateCanonicalLocation(Location)"
           ]
         }
       ],
       "branches": [
-        [
-          {
-            "kind": "queue-trigger",
-            "symbol": "StatusUpdateRequestMessage",
-            "label": "StatusUpdateRequestMessage",
-            "file": "server/Waters.DeviceAS.Server/Queue/JobQueueMessageTypeDiscriminator.cs",
-            "line": 38,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn resolved discriminator \"StatusUpdateRequestMessage\" to StatusUpdateRequestMessage and matched the handler message type"
-            ]
-          },
-          {
-            "kind": "handler",
-            "symbol": "StatusUpdateRequest.HandleMessage",
-            "label": "StatusUpdateRequest.HandleMessage",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 55,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn matched the queue message type to this handler symbol"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.HandleMessageImpl",
-            "label": "StatusUpdateRequest.HandleMessageImpl",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 70,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.HandleMessageImpl(StatusUpdateRequestMessage, System.Threading.CancellationToken)"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.ProcessSystem",
-            "label": "StatusUpdateRequest.ProcessSystem",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 119,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn source symbols resolved this local call without project-system information"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.PopulateCanonicalSampleSetsQueue",
-            "label": "StatusUpdateRequest.PopulateCanonicalSampleSetsQueue",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 556,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.PopulateCanonicalSampleSetsQueue(Status)"
-            ]
-          },
-          {
-            "kind": "queue",
-            "symbol": "Queue<QueuedSampleSetDto>.Enqueue",
-            "label": "queue via Queue<QueuedSampleSetDto>.Enqueue",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 592,
-            "confidence": "medium",
-            "evidence": [
-              "Resolved queue/publisher abstraction; Roslyn symbol: System.Collections.Generic.Queue<Waters.DeviceAS.Core.BusinessLogic.DeviceData.DataTransfer.QueuedSampleSetDto>.Enqueue(Waters.DeviceAS.Core.BusinessLogic.DeviceData.DataTransfer.QueuedSampleSetDto)"
-            ]
-          }
-        ],
-        [
-          {
-            "kind": "queue-trigger",
-            "symbol": "StatusUpdateRequestMessage",
-            "label": "StatusUpdateRequestMessage",
-            "file": "server/Waters.DeviceAS.Server/Queue/JobQueueMessageTypeDiscriminator.cs",
-            "line": 38,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn resolved discriminator \"StatusUpdateRequestMessage\" to StatusUpdateRequestMessage and matched the handler message type"
-            ]
-          },
-          {
-            "kind": "handler",
-            "symbol": "StatusUpdateRequest.HandleMessage",
-            "label": "StatusUpdateRequest.HandleMessage",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 55,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn matched the queue message type to this handler symbol"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.HandleMessageImpl",
-            "label": "StatusUpdateRequest.HandleMessageImpl",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 70,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.HandleMessageImpl(StatusUpdateRequestMessage, System.Threading.CancellationToken)"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.ProcessController",
-            "label": "StatusUpdateRequest.ProcessController",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 203,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn source symbols resolved this local call without project-system information"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.AsComponentDTO",
-            "label": "StatusUpdateRequest.AsComponentDTO",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 150,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn source symbols resolved this local call without project-system information"
-            ]
-          },
-          {
-            "kind": "call",
-            "symbol": "StatusUpdateRequest.PopulateCanonicalLocation",
-            "label": "StatusUpdateRequest.PopulateCanonicalLocation",
-            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
-            "line": 471,
-            "confidence": "medium",
-            "evidence": [
-              "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.PopulateCanonicalLocation(Location)"
-            ]
-          }
-        ],
         [
           {
             "kind": "queue-trigger",
@@ -14687,6 +14552,142 @@
               "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.PopulateCanonicalLocation(Location)"
             ]
           }
+        ],
+        [
+          {
+            "kind": "queue-trigger",
+            "symbol": "StatusUpdateRequestMessage",
+            "label": "StatusUpdateRequestMessage",
+            "file": "server/Waters.DeviceAS.Server/Queue/JobQueueMessageTypeDiscriminator.cs",
+            "line": 38,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn resolved discriminator \"StatusUpdateRequestMessage\" to StatusUpdateRequestMessage and matched the handler message type"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "StatusUpdateRequest.HandleMessage",
+            "label": "StatusUpdateRequest.HandleMessage",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 55,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn matched the queue message type to this handler symbol"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.HandleMessageImpl",
+            "label": "StatusUpdateRequest.HandleMessageImpl",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 70,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.HandleMessageImpl(StatusUpdateRequestMessage, System.Threading.CancellationToken)"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.ProcessSystem",
+            "label": "StatusUpdateRequest.ProcessSystem",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 119,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn source symbols resolved this local call without project-system information"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.AsComponentDTO",
+            "label": "StatusUpdateRequest.AsComponentDTO",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 150,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn source symbols resolved this local call without project-system information"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.PopulateCanonicalMetadata",
+            "label": "StatusUpdateRequest.PopulateCanonicalMetadata",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 356,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn source symbols resolved this local call without project-system information"
+            ]
+          }
+        ],
+        [
+          {
+            "kind": "queue-trigger",
+            "symbol": "StatusUpdateRequestMessage",
+            "label": "StatusUpdateRequestMessage",
+            "file": "server/Waters.DeviceAS.Server/Queue/JobQueueMessageTypeDiscriminator.cs",
+            "line": 38,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn resolved discriminator \"StatusUpdateRequestMessage\" to StatusUpdateRequestMessage and matched the handler message type"
+            ]
+          },
+          {
+            "kind": "handler",
+            "symbol": "StatusUpdateRequest.HandleMessage",
+            "label": "StatusUpdateRequest.HandleMessage",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 55,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn matched the queue message type to this handler symbol"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.HandleMessageImpl",
+            "label": "StatusUpdateRequest.HandleMessageImpl",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 70,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn resolved the invocation to Waters.DeviceAS.Server.Queue.Handlers.StatusUpdating.StatusUpdateRequest.HandleMessageImpl(StatusUpdateRequestMessage, System.Threading.CancellationToken)"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.ProcessSystem",
+            "label": "StatusUpdateRequest.ProcessSystem",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 119,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn source symbols resolved this local call without project-system information"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.AsComponentDTO",
+            "label": "StatusUpdateRequest.AsComponentDTO",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 150,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn source symbols resolved this local call without project-system information"
+            ]
+          },
+          {
+            "kind": "call",
+            "symbol": "StatusUpdateRequest.StringToDateTime",
+            "label": "StatusUpdateRequest.StringToDateTime",
+            "file": "server/Waters.DeviceAS.Server/Queue/Handlers/StatusUpdating/StatusUpdateRequest.cs",
+            "line": 660,
+            "confidence": "medium",
+            "evidence": [
+              "Roslyn source symbols resolved this local call without project-system information"
+            ]
+          }
         ]
       ],
       "story": {
@@ -14716,19 +14717,10 @@
               "line": 64
             }
           ],
-          "boundaries": [
-            {
-              "kind": "queue",
-              "system": "queue",
-              "access": "send",
-              "calls": [
-                "Queue<QueuedSampleSetDto>.Enqueue"
-              ]
-            }
-          ]
+          "boundaries": []
         },
         "timing": [],
-        "summary": "Runs when DeviceAS sends a \"StatusUpdateRequestMessage\" message, outside this repo. Status update request Along the way it calls queue. You can watch it in Datadog as queue.status_update_message."
+        "summary": "Runs when DeviceAS sends a \"StatusUpdateRequestMessage\" message, outside this repo. Status update request You can watch it in Datadog as queue.status_update_message."
       }
     },
     {

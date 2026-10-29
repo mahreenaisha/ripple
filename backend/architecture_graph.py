@@ -12,22 +12,42 @@ class ArchitectureGraphError(ValueError):
     """Raised when an architecture graph is missing or invalid."""
 
 
-NODE_KINDS = {"service", "entrypoint", "database", "queue", "external", "unresolved"}
+SCHEMA_VERSION = "2.0.0"
+NODE_KINDS = {"service", "library", "entrypoint", "database", "queue", "external"}
 EDGE_KINDS = {
     "handles",
+    "references",
     "queries",
     "publishes",
     "consumes",
     "calls_external",
-    "unresolved_dependency",
+    "uses",
+}
+STRENGTH = {"call", "wiring", "declaration"}
+EVIDENCE_KINDS = {
+    "call",
+    "route",
+    "registration",
+    "injection",
+    "configuration",
+    "package",
+    "generated-client",
+    "project-reference",
 }
 CONFIDENCE = {"high", "medium", "low"}
 RESOLUTION = {"direct", "inferred", "unresolved"}
+SUMMARY_FIELDS = ("services", "libraries", "technologies", "call_sites", "evidence_items")
 
 
 def _require(value: Any, expected: type, location: str) -> Any:
     if not isinstance(value, expected):
         raise ArchitectureGraphError(f"{location} must be {expected.__name__}")
+    return value
+
+
+def _count(value: Any, location: str) -> int:
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        raise ArchitectureGraphError(f"{location} must be a non-negative integer")
     return value
 
 
@@ -56,7 +76,12 @@ def _validate_flow_ids(value: Any, location: str) -> None:
 
 def validate_architecture_graph(data: Any) -> dict:
     root = _require(data, dict, "architecture-graph")
-    if _require(root.get("schema_version"), str, "schema_version") != "1.0.0":
+    version = _require(root.get("schema_version"), str, "schema_version")
+    if version == "1.0.0":
+        raise ArchitectureGraphError(
+            "This Map was built by an older version of Ripple. Rescan the repository to rebuild it."
+        )
+    if version != SCHEMA_VERSION:
         raise ArchitectureGraphError("Unsupported architecture graph schema")
     _require(root.get("generator"), dict, "generator")
     analysis = _require(root.get("analysis"), dict, "analysis")
@@ -65,6 +90,18 @@ def validate_architecture_graph(data: Any) -> dict:
     nodes = _require(root.get("nodes"), list, "nodes")
     edges = _require(root.get("edges"), list, "edges")
     _require(root.get("warnings", []), list, "warnings")
+
+    if root.get("summary") is not None:
+        summary = _require(root["summary"], dict, "summary")
+        for field in SUMMARY_FIELDS:
+            _count(summary.get(field), f"summary.{field}")
+
+    for index, flow in enumerate(_require(root.get("flows", []), list, "flows")):
+        where = f"flows[{index}]"
+        item = _require(flow, dict, where)
+        for field in ("id", "label", "service"):
+            if not _require(item.get(field), str, f"{where}.{field}"):
+                raise ArchitectureGraphError(f"{where}.{field} must not be empty")
 
     node_ids: set[str] = set()
     for index, node in enumerate(nodes):
@@ -77,6 +114,9 @@ def validate_architecture_graph(data: Any) -> dict:
         if item.get("kind") not in NODE_KINDS:
             raise ArchitectureGraphError(f"{where}.kind is unsupported")
         _require(item.get("label"), str, f"{where}.label")
+        _require(item.get("name"), str, f"{where}.name")
+        if item.get("description") is not None:
+            _require(item["description"], str, f"{where}.description")
         if item.get("confidence") not in CONFIDENCE:
             raise ArchitectureGraphError(f"{where}.confidence is unsupported")
         if item.get("resolution") not in RESOLUTION:
@@ -99,6 +139,8 @@ def validate_architecture_graph(data: Any) -> dict:
             raise ArchitectureGraphError(f"{where} references a missing node")
         if item.get("kind") not in EDGE_KINDS:
             raise ArchitectureGraphError(f"{where}.kind is unsupported")
+        if item.get("strength") not in STRENGTH:
+            raise ArchitectureGraphError(f"{where}.strength is unsupported")
         if item.get("confidence") not in CONFIDENCE:
             raise ArchitectureGraphError(f"{where}.confidence is unsupported")
         if item.get("resolution") not in RESOLUTION:
@@ -106,10 +148,14 @@ def validate_architecture_graph(data: Any) -> dict:
         evidence = _require(item.get("evidence"), list, f"{where}.evidence")
         if not evidence:
             raise ArchitectureGraphError(f"{where}.evidence must not be empty")
+        if _count(item.get("evidence_count"), f"{where}.evidence_count") < len(evidence):
+            raise ArchitectureGraphError(f"{where}.evidence_count is smaller than its evidence")
         for evidence_index, observation in enumerate(evidence):
             evidence_where = f"{where}.evidence[{evidence_index}]"
             _validate_source(observation, evidence_where)
             _require(observation.get("reason"), str, f"{evidence_where}.reason")
+            if observation.get("kind") not in EVIDENCE_KINDS:
+                raise ArchitectureGraphError(f"{evidence_where}.kind is unsupported")
             if observation.get("confidence") not in CONFIDENCE:
                 raise ArchitectureGraphError(f"{evidence_where}.confidence is unsupported")
             if observation.get("resolution") not in RESOLUTION:

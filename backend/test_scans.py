@@ -41,11 +41,19 @@ def write_artifacts(output: Path, analysis: dict) -> None:
     (output / "architecture-graph.json").write_text(
         json.dumps(
             {
-                "schema_version": "1.0.0",
+                "schema_version": "2.0.0",
                 "generator": generator,
                 "analysis": analysis,
+                "summary": {
+                    "services": 0,
+                    "libraries": 0,
+                    "technologies": 0,
+                    "call_sites": 0,
+                    "evidence_items": 0,
+                },
                 "nodes": [],
                 "edges": [],
+                "flows": [],
                 "warnings": [],
             }
         ),
@@ -157,6 +165,7 @@ class ScanManagerTests(unittest.TestCase):
                 "id": "service-orders",
                 "kind": "service",
                 "label": "Orders",
+                "name": "Orders",
                 "confidence": "high",
                 "resolution": "direct",
                 "flow_ids": ["missing-flow"],

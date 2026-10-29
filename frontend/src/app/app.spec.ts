@@ -95,17 +95,22 @@ describe('App', () => {
     mapTab.click();
     fixture.detectChanges();
     httpTesting.expectOne('http://localhost:8000/architecture-graph').flush({
-      schema_version: '1.0.0',
+      schema_version: '2.0.0',
       analysis: { mode: 'study', completeness: 'partial' },
+      summary: { services: 2, libraries: 1, technologies: 3, call_sites: 7, evidence_items: 9 },
       nodes: [],
       edges: [],
+      flows: [],
       warnings: [],
     });
     fixture.detectChanges();
 
     const host = fixture.nativeElement as HTMLElement;
     expect(host.querySelector('.tab.active')?.textContent?.trim()).toBe('Map');
-    expect(host.textContent).toContain('Services, databases, and external systems');
+    expect(host.textContent).toContain('Projects in the repo and the systems their code calls');
+    expect(
+      Array.from(host.querySelectorAll('.chips .chip')).map((chip) => chip.textContent?.trim()),
+    ).toEqual(['2 services', '1 library', '3 systems', '7 call sites']);
     expect(host.textContent).toContain('Read the map');
     httpTesting.verify();
   });

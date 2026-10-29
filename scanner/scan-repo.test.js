@@ -30,13 +30,17 @@ function csharpRepository(t, name = "Orders.Api") {
   );
   fs.writeFileSync(
     path.join(repository, "src", name, "OrdersController.cs"),
-    `using Microsoft.AspNetCore.Mvc;
+    `using Amazon.DynamoDBv2;
+using Microsoft.AspNetCore.Mvc;
 public interface IOrderRepository { Task Save(); }
 [Route("api/orders")]
-public class OrdersController : ControllerBase {
+public class OrdersController(IAmazonDynamoDB db) : ControllerBase {
   private readonly IOrderRepository _repository;
   [HttpPost]
-  public async Task Create() { await _repository.Save(); }
+  public async Task Create() {
+    await _repository.Save();
+    await db.PutItemAsync("orders", null);
+  }
 }
 `,
   );
@@ -90,15 +94,19 @@ test("writes request-flow, architecture-graph, and snapshot artifacts", (t) => {
   assert.equal(artifact.flows[0].trigger.label, "POST /api/orders");
   assert.match(manifest.source.commit, /^[0-9a-f]{40}$/);
   assert.equal(artifact.generator.source.commit, manifest.source.commit);
-  assert.equal(graph.schema_version, "1.0.0");
+  assert.equal(graph.schema_version, "2.0.0");
   assert.deepEqual(graph.analysis, artifact.analysis);
   assert.deepEqual(graph.generator.source, manifest.source);
   assert.equal(manifest.counts.graphNodes, graph.nodes.length);
   assert.equal(manifest.counts.graphEdges, graph.edges.length);
-  assert.ok(graph.nodes.some((node) => node.kind === "service"));
-  assert.ok(graph.nodes.some((node) => node.kind === "entrypoint"));
-  assert.ok(graph.nodes.some((node) => node.kind === "database"));
+  assert.deepEqual(
+    graph.nodes.map((node) => [node.kind, node.label]),
+    [["service", "Orders.Api"], ["database", "Amazon DynamoDB"], ["entrypoint", "POST /api/orders"]],
+  );
+  assert.equal(graph.summary.call_sites, 1);
+  assert.deepEqual(graph.flows.map((flow) => flow.label), ["POST /api/orders"]);
   assert.ok(graph.edges.every((edge) => edge.evidence.length > 0));
+  assert.ok(graph.edges.every((edge) => edge.evidence_count >= edge.evidence.length));
 });
 
 test("ignores repositories without executable C# projects", (t) => {
