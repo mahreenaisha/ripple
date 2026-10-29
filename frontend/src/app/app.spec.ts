@@ -61,7 +61,7 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('shows request flows as the only product surface', () => {
+  it('opens request flows by default and offers the evidence-backed Map', () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
@@ -73,9 +73,39 @@ describe('App', () => {
     const host = fixture.nativeElement as HTMLElement;
     expect(host.textContent).toContain('Request Flow Explorer');
     expect(host.textContent).toContain('No matching flows');
-    expect(host.querySelector('.tabs')).toBeNull();
-    expect(host.textContent).not.toContain('Architecture map');
+    expect(host.querySelector('.tabs')).not.toBeNull();
+    expect(host.querySelector('.tab.active')?.textContent?.trim()).toBe('Flows');
+    expect(host.textContent).toContain('Map');
     expect(host.textContent).not.toContain('Change impact');
+    httpTesting.verify();
+  });
+
+  it('loads the architecture graph only when the Map tab is opened', () => {
+    const fixture = TestBed.createComponent(App);
+    const httpTesting = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    flushSnapshots(httpTesting);
+    flushEmptyFlows(httpTesting);
+    fixture.detectChanges();
+    httpTesting.expectNone('http://localhost:8000/architecture-graph');
+
+    const mapTab = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),
+    ).find((button) => button.textContent?.trim() === 'Map')!;
+    mapTab.click();
+    fixture.detectChanges();
+    httpTesting.expectOne('http://localhost:8000/architecture-graph').flush({
+      schema_version: '1.0.0',
+      analysis: { mode: 'study', completeness: 'partial' },
+      nodes: [],
+      edges: [],
+      warnings: [],
+    });
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('.tab.active')?.textContent?.trim()).toBe('Map');
+    expect(host.textContent).toContain('Request-reachable · Roslyn evidence');
     httpTesting.verify();
   });
 

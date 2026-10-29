@@ -18,6 +18,26 @@
   </div>
 
   <div class="nav-actions">
+    <nav class="tabs" aria-label="Product views">
+      <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab() === 'flows'"
+        [attr.aria-current]="activeTab() === 'flows' ? 'page' : null"
+        (click)="activeTab.set('flows')"
+      >
+        Flows
+      </button>
+      <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab() === 'map'"
+        [attr.aria-current]="activeTab() === 'map' ? 'page' : null"
+        (click)="activeTab.set('map')"
+      >
+        Map
+      </button>
+    </nav>
     @if (snapshots(); as list) {
       <div class="repo">
         <label class="repo-switch">
@@ -134,8 +154,13 @@
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Request Flow Explorer</h2>
-            <p>Trace ASP.NET API and C# queue requests from their trigger to an evidence-backed boundary.</p>
+            @if (activeTab() === 'flows') {
+              <h2>Request Flow Explorer</h2>
+              <p>Trace ASP.NET API and C# queue requests from their trigger to an evidence-backed boundary.</p>
+            } @else {
+              <h2>Architecture Map</h2>
+              <p>See how request-reachable C# services connect to databases, queues, and external systems.</p>
+            }
           </div>
         </div>
         @if (snapshots()?.current?.analysis?.mode === 'study') {
@@ -145,7 +170,14 @@
           </div>
         }
         <div class="panel-body">
-          <app-request-flows-view (selectionContext)="setFlowSelectionContext($event)" />
+          @if (activeTab() === 'flows') {
+            <app-request-flows-view
+              [initialFlowId]="initialFlowId()"
+              (selectionContext)="setFlowSelectionContext($event)"
+            />
+          } @else {
+            <app-map-view (openFlow)="showFlow($event)" />
+          }
         </div>
       </section>
     </main>

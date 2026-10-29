@@ -87,6 +87,13 @@ function scanRepository(repoPath, outputPath, options = {}) {
 
   // Analyze before writing so output files cannot affect the scan.
   const requestFlows = extractRequestFlows(repoPath, services);
+  const architectureGraph = requestFlows.architecture_graph;
+  if (!architectureGraph || !Array.isArray(architectureGraph.nodes) ||
+      !Array.isArray(architectureGraph.edges)) {
+    throw new Error("Roslyn analyzer did not produce a valid architecture graph.");
+  }
+  const requestFlowArtifact = { ...requestFlows };
+  delete requestFlowArtifact.architecture_graph;
   const source = {
     ...readGitSource(repoPath),
     localPath: path.resolve(repoPath),
@@ -97,6 +104,8 @@ function scanRepository(repoPath, outputPath, options = {}) {
     services: services.length,
     entryPoints: requestFlows.flows.filter((flow) => flow.trigger.kind === "api").length,
     flows: requestFlows.flows.length,
+    graphNodes: architectureGraph.nodes.length,
+    graphEdges: architectureGraph.edges.length,
   };
 
   fs.mkdirSync(outputDirectory, { recursive: true });
@@ -104,16 +113,38 @@ function scanRepository(repoPath, outputPath, options = {}) {
     fs.rmSync(path.join(outputDirectory, artifact), { force: true });
   }
   writeJson(outputDirectory, "request-flows.json", {
-    ...requestFlows,
+    ...requestFlowArtifact,
     generator: { ...requestFlows.generator, source },
+  });
+  writeJson(outputDirectory, "architecture-graph.json", {
+    ...architectureGraph,
+    generator: { ...requestFlows.generator, source },
+    analysis: requestFlows.analysis,
+    limits: {
+      max_nodes: 500,
+      max_edges: 2000,
+      max_evidence_per_edge: 50,
+    },
   });
 
   writeJson(outputDirectory, "snapshot.json", {
-    schema_version: 1,
+    schema_version: 2,
     name,
     slug: slugify(name),
     source,
     analysis: requestFlows.analysis,
+    artifacts: {
+      request_flows: {
+        file: "request-flows.json",
+        schema_version: requestFlows.schema_version,
+        status: "ready",
+      },
+      architecture_graph: {
+        file: "architecture-graph.json",
+        schema_version: architectureGraph.schema_version,
+        status: "ready",
+      },
+    },
     counts,
     durationMs: Date.now() - startedAt,
   });

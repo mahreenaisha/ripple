@@ -1,9 +1,11 @@
 # Ripple
 
-Ripple is a source-only request-flow explorer for C# and ASP.NET Core
-repositories. It finds API routes and supported queue handlers, follows local
-method calls, and shows where a request reaches a database, queue, or external
-system.
+![Ripple request-flow explorer](ripple.gif)
+
+Ripple is a source-only request-flow and architecture explorer for C# and
+ASP.NET Core repositories. It finds API routes and supported queue handlers,
+follows local method calls, and maps where requests reach databases, queues, or
+external systems.
 
 Ripple is designed for studying a repository without setting up its private
 packages or running its build.
@@ -131,6 +133,7 @@ node scanner/scan-repo.js /absolute/path/to/repository \
 Each snapshot contains:
 
 ```text
+architecture-graph.json
 request-flows.json
 snapshot.json
 ```
@@ -145,10 +148,11 @@ Ripple uses Roslyn syntax trees and available semantic symbols in an
 3. identifies supported C# queue handlers;
 4. resolves local, overload-aware method calls when source evidence permits;
 5. follows calls toward meaningful boundaries; and
-6. records files, lines, confidence, and evidence for every displayed step.
+6. records files, lines, confidence, and evidence for every displayed step and
+   Map connection.
 
 Scanning is deterministic. An LLM is never used to discover routes, assemble
-paths, rank paths, or generate diagrams.
+paths, rank paths, or assemble the architecture Map.
 
 Every snapshot is marked as a **partial source-only analysis** because external
 package symbols, generated code, MSBuild conditions, runtime dependency
@@ -188,7 +192,7 @@ Never commit `.env` or API keys.
 ```text
 backend/                 FastAPI API and scan jobs
 frontend/                Angular application
-scanner/                 Roslyn request-flow analyzer
+scanner/                 Roslyn request-flow and architecture analyzer
 snapshots/<repo>/        Generated repository snapshots
 knowledge/<repo>.yaml    Optional team knowledge
 docs/                    Engineering and release notes

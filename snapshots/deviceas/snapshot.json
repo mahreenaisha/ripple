@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "name": "DeviceAS",
   "slug": "deviceas",
   "source": {
@@ -8,7 +8,7 @@
     "remote": "git@github.com:WatersConnectCloud/wcc-deviceas.git",
     "committedAt": "2026-10-22T17:10:33-04:00",
     "localPath": "/home/conmais/company/wcc-deviceas",
-    "scannedAt": "2026-10-28T08:21:41.577Z"
+    "scannedAt": "2026-10-29T06:25:33.994Z"
   },
   "analysis": {
     "mode": "study",
@@ -19,10 +19,24 @@
       "Runtime dependency injection and dynamic behavior remain unresolved."
     ]
   },
+  "artifacts": {
+    "request_flows": {
+      "file": "request-flows.json",
+      "schema_version": "1.0.0",
+      "status": "ready"
+    },
+    "architecture_graph": {
+      "file": "architecture-graph.json",
+      "schema_version": "1.0.0",
+      "status": "ready"
+    }
+  },
   "counts": {
     "services": 4,
     "entryPoints": 29,
-    "flows": 44
+    "flows": 44,
+    "graphNodes": 259,
+    "graphEdges": 255
   },
-  "durationMs": 15614
+  "durationMs": 20683
 }

@@ -22,6 +22,47 @@ def wait_for_terminal(manager: ScanManager, job_id: str) -> dict:
     raise AssertionError("scan job did not finish")
 
 
+def write_artifacts(output: Path, analysis: dict) -> None:
+    source = {"commit": "abc123", "branch": "main"}
+    generator = {"source": source}
+    (output / "request-flows.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "generator": generator,
+                "analysis": analysis,
+                "flows": [],
+                "warnings": [{"code": "study-mode-partial"}],
+                "glossary": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (output / "architecture-graph.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "generator": generator,
+                "analysis": analysis,
+                "nodes": [],
+                "edges": [],
+                "warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (output / "snapshot.json").write_text(
+        json.dumps(
+            {
+                "analysis": analysis,
+                "source": source,
+                "counts": {"flows": 0, "graphNodes": 0, "graphEdges": 0},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 class ScanManagerTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -69,20 +110,7 @@ class ScanManagerTests(unittest.TestCase):
             commands.append(command)
             output = Path(command[command.index("--out") + 1])
             output.mkdir(parents=True)
-            (output / "request-flows.json").write_text(
-                json.dumps(
-                    {
-                        "analysis": analysis,
-                        "flows": [],
-                        "warnings": [{"code": "study-mode-partial"}],
-                    }
-                ),
-                encoding="utf-8",
-            )
-            (output / "snapshot.json").write_text(
-                json.dumps({"analysis": analysis, "counts": {"flows": 0}}),
-                encoding="utf-8",
-            )
+            write_artifacts(output, analysis)
 
         with patch.object(self.manager, "_run_command", side_effect=fake_run):
             started = self.manager.start(str(self.repository), "Orders")
@@ -105,23 +133,44 @@ class ScanManagerTests(unittest.TestCase):
             output = Path(command[command.index("--out") + 1])
             output.mkdir(parents=True)
             analysis = {"mode": "legacy", "completeness": "unknown"}
-            (output / "request-flows.json").write_text(
-                json.dumps({"analysis": analysis, "flows": [], "warnings": []}),
-                encoding="utf-8",
-            )
-            (output / "snapshot.json").write_text(
-                json.dumps({"analysis": analysis}), encoding="utf-8"
-            )
+            write_artifacts(output, analysis)
 
         with patch.object(self.manager, "_run_command", side_effect=fake_run):
             started = self.manager.start(str(self.repository), "Orders")
             status = wait_for_terminal(self.manager, started["id"])
 
         self.assertEqual(status["phase"], "failed")
-        self.assertIn("source-only study artifact", status["error"])
+        self.assertIn("source-only study analysis", status["error"])
         self.assertEqual(
             (previous / "request-flows.json").read_text(encoding="utf-8"), old
         )
+
+    def test_rejects_graph_references_to_unavailable_flows(self):
+        output = self.root / "output"
+        output.mkdir()
+        analysis = {"mode": "study", "completeness": "partial"}
+        write_artifacts(output, analysis)
+        graph_path = output / "architecture-graph.json"
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+        graph["nodes"] = [
+            {
+                "id": "service-orders",
+                "kind": "service",
+                "label": "Orders",
+                "confidence": "high",
+                "resolution": "direct",
+                "flow_ids": ["missing-flow"],
+                "source": None,
+            }
+        ]
+        graph_path.write_text(json.dumps(graph), encoding="utf-8")
+        snapshot_path = output / "snapshot.json"
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        snapshot["counts"]["graphNodes"] = 1
+        snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
+
+        with self.assertRaisesRegex(ScanError, "unavailable request flow"):
+            self.manager._validate_output(output)
 
     def test_cancellation_terminates_active_process(self):
         process = Mock()

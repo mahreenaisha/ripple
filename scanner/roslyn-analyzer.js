@@ -107,6 +107,8 @@ function analyzeWithRoslyn(repoPath, services, options = {}) {
     services: services.map((service) => ({
       name: service.name,
       path: service.path,
+      kind: service.kind,
+      entryFile: service.entry_file,
     })),
     maxDepth: Number.isInteger(options.maxDepth) ? options.maxDepth : 6,
     maxPathsPerTrigger: Number.isInteger(options.maxPathsPerTrigger)

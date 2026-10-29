@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChatPanelComponent } from './chat-panel';
+import { MapViewComponent } from './map-view';
 import { RequestFlowsViewComponent } from './request-flows-view';
 import { RequestFlowSelectionContext } from './request-flow.types';
 
@@ -18,6 +19,10 @@ export interface ScannedSnapshot {
   durationMs?: number | null;
   has_knowledge?: boolean;
   analysis?: AnalysisInfo | null;
+  capabilities?: {
+    flows?: { status: string; reason?: string };
+    map?: { status: string; reason?: string };
+  };
 }
 
 export interface AnalysisInfo {
@@ -84,7 +89,7 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
 }
 
 @Component({
-  imports: [RequestFlowsViewComponent, ChatPanelComponent],
+  imports: [RequestFlowsViewComponent, MapViewComponent, ChatPanelComponent],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -93,6 +98,8 @@ export class App implements OnInit, OnDestroy {
   private readonly http = inject(HttpClient);
 
   protected readonly chatOpen = signal(false);
+  protected readonly activeTab = signal<'flows' | 'map'>('flows');
+  protected readonly initialFlowId = signal<string | null>(null);
   protected readonly flowSelectionContext = signal<RequestFlowSelectionContext | null>(null);
   protected readonly snapshots = signal<SnapshotList | null>(null);
   protected readonly dataVersion = signal(0);
@@ -149,6 +156,12 @@ export class App implements OnInit, OnDestroy {
     this.flowSelectionContext.set(context);
   }
 
+  protected showFlow(flowId: string): void {
+    this.initialFlowId.set(flowId);
+    this.activeTab.set('flows');
+    this.dataVersion.update((version) => version + 1);
+  }
+
   protected toggleChat(): void {
     this.chatOpen.update((open) => !open);
   }
@@ -165,6 +178,7 @@ export class App implements OnInit, OnDestroy {
         next: (list) => {
           this.snapshots.set(list);
           this.flowSelectionContext.set(null);
+          this.initialFlowId.set(null);
           this.dataVersion.update((version) => version + 1);
           this.switching.set(false);
         },

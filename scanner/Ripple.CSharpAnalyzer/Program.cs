@@ -44,7 +44,12 @@ internal sealed record AnalyzerConfig(
     int MaxFlows = 500
 );
 
-internal sealed record ServiceConfig(string Name, string Path);
+internal sealed record ServiceConfig(
+    string Name,
+    string Path,
+    string Kind = "application",
+    string? EntryFile = null
+);
 
 internal sealed record AnalyzerResult(
     string SchemaVersion,
@@ -52,6 +57,7 @@ internal sealed record AnalyzerResult(
     AnalysisInfo Analysis,
     LimitInfo Limits,
     IReadOnlyList<Flow> Flows,
+    ArchitectureGraph ArchitectureGraph,
     IReadOnlyList<AnalyzerWarning> Warnings
 );
 
@@ -105,6 +111,78 @@ internal sealed record RouteTrigger(
 
 internal sealed record Boundary(string Kind, string Label, string Confidence, string Evidence);
 internal sealed record ResolvedCall(MethodNode Method, string Confidence, string Evidence);
+internal sealed record GraphSource(string File, int Line, string Symbol);
+internal sealed record GraphEvidence(
+    string File,
+    int Line,
+    string Symbol,
+    string Reason,
+    string Confidence,
+    string Resolution
+);
+internal sealed record GraphNode(
+    string Id,
+    string Kind,
+    string Label,
+    string? Service,
+    string Confidence,
+    string Resolution,
+    GraphSource? Source,
+    IReadOnlyList<string> FlowIds
+);
+internal sealed record GraphEdge(
+    string Id,
+    string Source,
+    string Target,
+    string Kind,
+    string Confidence,
+    string Resolution,
+    IReadOnlyList<GraphEvidence> Evidence,
+    IReadOnlyList<string> FlowIds
+);
+internal sealed record ArchitectureGraph(
+    string SchemaVersion,
+    IReadOnlyList<GraphNode> Nodes,
+    IReadOnlyList<GraphEdge> Edges,
+    IReadOnlyList<AnalyzerWarning> Warnings
+);
+internal sealed class GraphNodeAccumulator(
+    string id,
+    string kind,
+    string label,
+    string? service,
+    string confidence,
+    string resolution,
+    GraphSource? source
+)
+{
+    public string Id { get; } = id;
+    public string Kind { get; } = kind;
+    public string Label { get; } = label;
+    public string? Service { get; } = service;
+    public string Confidence { get; set; } = confidence;
+    public string Resolution { get; } = resolution;
+    public GraphSource? Source { get; } = source;
+    public HashSet<string> FlowIds { get; } = new(StringComparer.Ordinal);
+}
+internal sealed class GraphEdgeAccumulator(
+    string id,
+    string source,
+    string target,
+    string kind,
+    string confidence,
+    string resolution
+)
+{
+    public string Id { get; } = id;
+    public string Source { get; } = source;
+    public string Target { get; } = target;
+    public string Kind { get; } = kind;
+    public string Confidence { get; set; } = confidence;
+    public string Resolution { get; } = resolution;
+    public List<GraphEvidence> Evidence { get; } = [];
+    public HashSet<string> FlowIds { get; } = new(StringComparer.Ordinal);
+}
 
 internal sealed class RepositoryAnalyzer
 {
@@ -263,7 +341,31 @@ internal sealed class RepositoryAnalyzer
             Math.Max(1, _config.MaxPathsPerTrigger),
             Math.Max(1, _config.MaxFlows)
         );
-        var flows = BuildFlows(limits);
+        var graphLimits = new LimitInfo(
+            limits.MaxDepth,
+            Math.Max(32, limits.MaxPathsPerTrigger),
+            Math.Max(5000, limits.MaxFlows)
+        );
+        var graphFlows = BuildFlows(graphLimits);
+        var flows = graphFlows
+            .Take(limits.MaxFlows)
+            .Select(flow => flow with
+            {
+                Branches = flow.Branches?
+                    .Take(Math.Max(0, limits.MaxPathsPerTrigger - 1))
+                    .ToArray(),
+            })
+            .ToArray();
+        if (graphFlows.Count > flows.Length)
+        {
+            AddWarning(
+                "flow-cap-reached",
+                $"Output stopped at the configured maximum of {limits.MaxFlows} flows.",
+                null,
+                null
+            );
+        }
+        var architectureGraph = BuildArchitectureGraph(graphFlows);
         return new AnalyzerResult(
             "1.0.0",
             new GeneratorInfo(
@@ -282,6 +384,7 @@ internal sealed class RepositoryAnalyzer
             ),
             limits,
             flows,
+            architectureGraph,
             _warnings
                 .OrderBy(item => item.File, StringComparer.Ordinal)
                 .ThenBy(item => item.Line)
@@ -784,6 +887,332 @@ internal sealed class RepositoryAnalyzer
                 );
             }
         }
+    }
+
+    private ArchitectureGraph BuildArchitectureGraph(IReadOnlyList<Flow> flows)
+    {
+        const int maxNodes = 500;
+        const int maxEdges = 2000;
+        const int maxEvidencePerEdge = 50;
+        var nodes = new Dictionary<string, GraphNodeAccumulator>(StringComparer.Ordinal);
+        var edges = new Dictionary<string, GraphEdgeAccumulator>(StringComparer.Ordinal);
+        var serviceIds = new Dictionary<string, string>(StringComparer.Ordinal);
+        var warnings = new List<AnalyzerWarning>();
+
+        GraphNodeAccumulator AddNode(
+            string id,
+            string kind,
+            string label,
+            string? service,
+            string confidence,
+            string resolution,
+            GraphSource? source,
+            string? flowId = null
+        )
+        {
+            if (!nodes.TryGetValue(id, out var node))
+            {
+                node = new GraphNodeAccumulator(
+                    id,
+                    kind,
+                    label,
+                    service,
+                    confidence,
+                    resolution,
+                    source
+                );
+                nodes[id] = node;
+            }
+            else if (ConfidenceRank(confidence) > ConfidenceRank(node.Confidence))
+            {
+                node.Confidence = confidence;
+            }
+            if (flowId is not null)
+            {
+                node.FlowIds.Add(flowId);
+            }
+            return node;
+        }
+
+        void AddEdge(
+            string source,
+            string target,
+            string kind,
+            string confidence,
+            string resolution,
+            GraphEvidence evidence,
+            string flowId
+        )
+        {
+            var id = GraphId("edge", $"{source}\0{kind}\0{target}");
+            if (!edges.TryGetValue(id, out var edge))
+            {
+                edge = new GraphEdgeAccumulator(
+                    id,
+                    source,
+                    target,
+                    kind,
+                    confidence,
+                    resolution
+                );
+                edges[id] = edge;
+            }
+            else if (ConfidenceRank(confidence) > ConfidenceRank(edge.Confidence))
+            {
+                edge.Confidence = confidence;
+            }
+            edge.FlowIds.Add(flowId);
+            if (edge.Evidence.Count < maxEvidencePerEdge
+                && !edge.Evidence.Any(item =>
+                    item.File == evidence.File
+                    && item.Line == evidence.Line
+                    && item.Symbol == evidence.Symbol
+                    && item.Reason == evidence.Reason
+                ))
+            {
+                edge.Evidence.Add(evidence);
+            }
+        }
+
+        foreach (var service in _config.Services
+            .OrderBy(item => item.Path, StringComparer.Ordinal)
+            .ThenBy(item => item.Name, StringComparer.Ordinal))
+        {
+            var id = GraphId("service", $"{service.Path}\0{service.Name}");
+            serviceIds[service.Name] = id;
+            var sourceFile = service.EntryFile ?? service.Path;
+            AddNode(
+                id,
+                "service",
+                service.Name,
+                service.Name,
+                "medium",
+                "direct",
+                new GraphSource(sourceFile, 1, service.Kind)
+            );
+        }
+
+        foreach (var flow in flows.OrderBy(item => item.Id, StringComparer.Ordinal))
+        {
+            if (!serviceIds.TryGetValue(flow.Service, out var serviceId))
+            {
+                serviceId = GraphId("service", flow.Service);
+                serviceIds[flow.Service] = serviceId;
+                AddNode(
+                    serviceId,
+                    "service",
+                    flow.Service,
+                    flow.Service,
+                    "low",
+                    "unresolved",
+                    null
+                );
+            }
+            var serviceNode = nodes[serviceId];
+            serviceNode.FlowIds.Add(flow.Id);
+            var triggerStep = flow.Steps[0];
+            var entrypointId = GraphId(
+                "entrypoint",
+                $"{serviceId}\0{flow.Trigger.Kind}\0{flow.Trigger.Label}"
+            );
+            AddNode(
+                entrypointId,
+                "entrypoint",
+                flow.Trigger.Label,
+                flow.Service,
+                triggerStep.Confidence,
+                "direct",
+                new GraphSource(triggerStep.File, triggerStep.Line, triggerStep.Symbol),
+                flow.Id
+            );
+            AddEdge(
+                entrypointId,
+                serviceId,
+                "handles",
+                triggerStep.Confidence,
+                "direct",
+                EvidenceFor(triggerStep, "Roslyn linked this trigger to its source handler"),
+                flow.Id
+            );
+
+            var paths = new List<IReadOnlyList<FlowStep>> { flow.Steps };
+            if (flow.Branches is not null)
+            {
+                paths.AddRange(flow.Branches);
+            }
+            foreach (var step in paths
+                .SelectMany(path => path)
+                .OrderBy(item => item.File, StringComparer.Ordinal)
+                .ThenBy(item => item.Line)
+                .ThenBy(item => item.Symbol, StringComparer.Ordinal))
+            {
+                if (step.Kind is "database" or "queue" or "external")
+                {
+                    var boundaryLabel = BoundaryNodeLabel(step);
+                    var boundaryId = GraphId(
+                        step.Kind,
+                        $"{step.Kind}\0{NormalizeGraphKey(boundaryLabel)}"
+                    );
+                    AddNode(
+                        boundaryId,
+                        step.Kind,
+                        boundaryLabel,
+                        null,
+                        step.Confidence,
+                        "inferred",
+                        new GraphSource(step.File, step.Line, step.Symbol),
+                        flow.Id
+                    );
+                    AddEdge(
+                        serviceId,
+                        boundaryId,
+                        step.Kind switch
+                        {
+                            "database" => "queries",
+                            "queue" => "publishes",
+                            _ => "calls_external",
+                        },
+                        step.Confidence,
+                        "inferred",
+                        EvidenceFor(step, string.Join(" ", step.Evidence), "inferred"),
+                        flow.Id
+                    );
+                }
+                else if (step.Kind == "inference-limit")
+                {
+                    var unresolvedId = GraphId(
+                        "unresolved",
+                        $"{serviceId}\0{step.Symbol}\0{step.File}"
+                    );
+                    AddNode(
+                        unresolvedId,
+                        "unresolved",
+                        step.Label,
+                        flow.Service,
+                        "low",
+                        "unresolved",
+                        new GraphSource(step.File, step.Line, step.Symbol),
+                        flow.Id
+                    );
+                    AddEdge(
+                        serviceId,
+                        unresolvedId,
+                        "unresolved_dependency",
+                        "low",
+                        "unresolved",
+                        EvidenceFor(step, string.Join(" ", step.Evidence)),
+                        flow.Id
+                    );
+                }
+            }
+        }
+
+        var orderedNodes = nodes.Values
+            .OrderBy(item => GraphNodeOrder(item.Kind))
+            .ThenBy(item => item.Label, StringComparer.Ordinal)
+            .ThenBy(item => item.Id, StringComparer.Ordinal)
+            .Take(maxNodes)
+            .ToArray();
+        var includedNodeIds = orderedNodes.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
+        var orderedEdges = edges.Values
+            .Where(item => includedNodeIds.Contains(item.Source) && includedNodeIds.Contains(item.Target))
+            .OrderBy(item => item.Source, StringComparer.Ordinal)
+            .ThenBy(item => item.Kind, StringComparer.Ordinal)
+            .ThenBy(item => item.Target, StringComparer.Ordinal)
+            .Take(maxEdges)
+            .ToArray();
+        if (nodes.Count > orderedNodes.Length || edges.Count > orderedEdges.Length)
+        {
+            warnings.Add(
+                new AnalyzerWarning(
+                    "graph-cap-reached",
+                    $"Architecture graph was limited to {maxNodes} nodes and {maxEdges} edges.",
+                    null,
+                    null
+                )
+            );
+        }
+        return new ArchitectureGraph(
+            "1.0.0",
+            orderedNodes.Select(item => new GraphNode(
+                item.Id,
+                item.Kind,
+                item.Label,
+                item.Service,
+                item.Confidence,
+                item.Resolution,
+                item.Source,
+                item.FlowIds.OrderBy(id => id, StringComparer.Ordinal).ToArray()
+            )).ToArray(),
+            orderedEdges.Select(item => new GraphEdge(
+                item.Id,
+                item.Source,
+                item.Target,
+                item.Kind,
+                item.Confidence,
+                item.Resolution,
+                item.Evidence
+                    .OrderBy(evidence => evidence.File, StringComparer.Ordinal)
+                    .ThenBy(evidence => evidence.Line)
+                    .ThenBy(evidence => evidence.Symbol, StringComparer.Ordinal)
+                    .ToArray(),
+                item.FlowIds.OrderBy(id => id, StringComparer.Ordinal).ToArray()
+            )).ToArray(),
+            warnings
+        );
+    }
+
+    private static GraphEvidence EvidenceFor(
+        FlowStep step,
+        string reason,
+        string resolution = "direct"
+    ) =>
+        new(
+            step.File,
+            step.Line,
+            step.Symbol,
+            reason,
+            step.Confidence,
+            step.Kind == "inference-limit" ? "unresolved" : resolution
+        );
+
+    private static string BoundaryNodeLabel(FlowStep step)
+    {
+        var marker = step.Label.IndexOf(" via ", StringComparison.OrdinalIgnoreCase);
+        var label = marker > 0 ? step.Label[..marker] : step.Label;
+        if (label.Equals("queue", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Queue";
+        }
+        return label.Length == 0
+            ? step.Kind
+            : char.ToUpperInvariant(label[0]) + label[1..];
+    }
+
+    private static string NormalizeGraphKey(string value) =>
+        string.Concat(value
+            .ToLowerInvariant()
+            .Where(character => char.IsLetterOrDigit(character) || character is ':' or '/' or '.'));
+
+    private static int GraphNodeOrder(string kind) => kind switch
+    {
+        "service" => 0,
+        "database" or "queue" or "external" => 1,
+        "entrypoint" => 2,
+        _ => 3,
+    };
+
+    private static int ConfidenceRank(string confidence) => confidence switch
+    {
+        "high" => 3,
+        "medium" => 2,
+        _ => 1,
+    };
+
+    private static string GraphId(string prefix, string key)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(key));
+        return $"{prefix}-{Convert.ToHexString(bytes).ToLowerInvariant()[..12]}";
     }
 
     private IReadOnlyList<Flow> BuildFlows(LimitInfo limits)

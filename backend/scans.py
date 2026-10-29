@@ -11,6 +11,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
+from architecture_graph import ArchitectureGraphError, validate_architecture_graph
+from request_flows import RequestFlowError, validate_request_flows
+
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 ACTIVE_PHASES = {"validating", "scanning", "publishing", "cancelling"}
@@ -165,7 +168,10 @@ class ScanManager:
                 job.result = {
                     "snapshot": job.slug,
                     "counts": result["snapshot"].get("counts") or {},
-                    "warnings": len(result["flows"].get("warnings") or []),
+                    "warnings": (
+                        len(result["flows"].get("warnings") or [])
+                        + len(result["graph"].get("warnings") or [])
+                    ),
                     "analysis": result["flows"].get("analysis"),
                 }
                 job.phase = "complete"
@@ -230,29 +236,52 @@ class ScanManager:
 
     def _validate_output(self, output: Path) -> dict:
         flows_path = output / "request-flows.json"
+        graph_path = output / "architecture-graph.json"
         snapshot_path = output / "snapshot.json"
         try:
             flows = json.loads(flows_path.read_text(encoding="utf-8"))
+            graph = json.loads(graph_path.read_text(encoding="utf-8"))
             snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         except FileNotFoundError as error:
             raise ScanError(f"Scanner did not produce {error.filename}.") from error
         except json.JSONDecodeError as error:
             raise ScanError(f"Scanner produced invalid JSON: {error}.") from error
-        if not isinstance(flows.get("flows"), list) or not isinstance(
-            flows.get("warnings"), list
-        ):
-            raise ScanError("Scanner output does not match the request-flow contract.")
+        try:
+            validate_request_flows(flows)
+            validate_architecture_graph(graph)
+        except (RequestFlowError, ArchitectureGraphError) as error:
+            raise ScanError(f"Scanner output is invalid: {error}") from error
         analysis = flows.get("analysis")
         snapshot_analysis = snapshot.get("analysis")
         if (
             not isinstance(analysis, dict)
             or analysis.get("mode") != "study"
             or snapshot_analysis != analysis
+            or graph.get("analysis") != analysis
         ):
             raise ScanError(
                 "Scanner output is not a source-only study artifact."
             )
-        return {"flows": flows, "snapshot": snapshot}
+        flow_source = (flows.get("generator") or {}).get("source")
+        graph_source = (graph.get("generator") or {}).get("source")
+        if flow_source != graph_source or flow_source != snapshot.get("source"):
+            raise ScanError("Scanner artifacts do not describe the same source revision.")
+        counts = snapshot.get("counts") or {}
+        if (
+            counts.get("flows") != len(flows["flows"])
+            or counts.get("graphNodes") != len(graph["nodes"])
+            or counts.get("graphEdges") != len(graph["edges"])
+        ):
+            raise ScanError("Scanner snapshot counts do not match its artifacts.")
+        flow_ids = {flow["id"] for flow in flows["flows"]}
+        graph_flow_ids = {
+            flow_id
+            for item in [*graph["nodes"], *graph["edges"]]
+            for flow_id in item["flow_ids"]
+        }
+        if not graph_flow_ids.issubset(flow_ids):
+            raise ScanError("Architecture graph references an unavailable request flow.")
+        return {"flows": flows, "graph": graph, "snapshot": snapshot}
 
     def _promote(self, job: ScanJob, output: Path) -> None:
         self.snapshots_dir.mkdir(parents=True, exist_ok=True)

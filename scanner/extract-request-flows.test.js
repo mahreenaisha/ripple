@@ -115,6 +115,22 @@ public async Task Load(string id) { await _repository.FindAsync(id); }
     ],
   );
   assert.equal(result.flows[0].steps.at(-1).kind, "database");
+  const graph = result.architecture_graph;
+  assert.equal(graph.schema_version, "1.0.0");
+  assert.ok(graph.nodes.some((node) => node.kind === "service"));
+  assert.ok(graph.nodes.some((node) => node.kind === "entrypoint"));
+  assert.ok(graph.nodes.some((node) => node.kind === "database"));
+  assert.ok(graph.edges.some((edge) => edge.kind === "handles"));
+  const query = graph.edges.find((edge) => edge.kind === "queries");
+  assert.ok(query);
+  assert.ok(query.evidence.length > 0);
+  assert.deepEqual(query.flow_ids, [result.flows[0].id]);
+  const repeated = extractRequestFlows(
+    repo.repository,
+    [service("server", "server", "C#")],
+    entries,
+  );
+  assert.deepEqual(repeated.architecture_graph, graph);
 });
 
 test("resolves minimal APIs and OData conventions with Roslyn symbols", (t) => {

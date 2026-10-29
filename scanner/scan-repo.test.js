@@ -55,7 +55,7 @@ test("parses focused scan arguments and repository names", () => {
   );
 });
 
-test("writes only request-flow and snapshot artifacts", (t) => {
+test("writes request-flow, architecture-graph, and snapshot artifacts", (t) => {
   const { repository, output } = csharpRepository(t);
   fs.mkdirSync(output, { recursive: true });
   fs.writeFileSync(path.join(output, "architecture.svg"), "stale");
@@ -73,8 +73,15 @@ test("writes only request-flow and snapshot artifacts", (t) => {
   const artifact = JSON.parse(
     fs.readFileSync(path.join(output, "request-flows.json"), "utf8"),
   );
+  const graph = JSON.parse(
+    fs.readFileSync(path.join(output, "architecture-graph.json"), "utf8"),
+  );
 
-  assert.deepEqual(files, ["request-flows.json", "snapshot.json"]);
+  assert.deepEqual(files, [
+    "architecture-graph.json",
+    "request-flows.json",
+    "snapshot.json",
+  ]);
   assert.equal(result.services, 1);
   assert.equal(result.flows, 1);
   assert.equal(artifact.generator.strategy, "roslyn-source-study");
@@ -83,6 +90,15 @@ test("writes only request-flow and snapshot artifacts", (t) => {
   assert.equal(artifact.flows[0].trigger.label, "POST /api/orders");
   assert.match(manifest.source.commit, /^[0-9a-f]{40}$/);
   assert.equal(artifact.generator.source.commit, manifest.source.commit);
+  assert.equal(graph.schema_version, "1.0.0");
+  assert.deepEqual(graph.analysis, artifact.analysis);
+  assert.deepEqual(graph.generator.source, manifest.source);
+  assert.equal(manifest.counts.graphNodes, graph.nodes.length);
+  assert.equal(manifest.counts.graphEdges, graph.edges.length);
+  assert.ok(graph.nodes.some((node) => node.kind === "service"));
+  assert.ok(graph.nodes.some((node) => node.kind === "entrypoint"));
+  assert.ok(graph.nodes.some((node) => node.kind === "database"));
+  assert.ok(graph.edges.every((edge) => edge.evidence.length > 0));
 });
 
 test("ignores repositories without executable C# projects", (t) => {

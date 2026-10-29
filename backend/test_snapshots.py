@@ -62,6 +62,10 @@ class SnapshotApiTests(unittest.TestCase):
         self.assertEqual([item["slug"] for item in body["snapshots"]], ["deviceas", "tenancyas"])
         self.assertEqual(body["current"]["name"], "DeviceAS")
         self.assertEqual(body["current"]["source"]["commit"], "abc1234def")
+        self.assertEqual(
+            body["current"]["capabilities"]["map"]["status"],
+            "missing",
+        )
 
     def test_switching_changes_the_active_snapshot_and_rejects_unknown_names(self):
         switched = self.client.post("/snapshots/active", json={"slug": "tenancyas"})

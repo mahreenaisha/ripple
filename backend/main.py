@@ -10,6 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from pydantic import BaseModel
 
+from architecture_graph import (
+    ArchitectureGraphError,
+    architecture_graph_catalog,
+    load_architecture_graph,
+)
 from knowledge import (
     KnowledgeError,
     add_fact,
@@ -93,6 +98,26 @@ def _snapshot_summary(directory: Path) -> dict:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             manifest = {}
+    graph_path = directory / "architecture-graph.json"
+    if graph_path.is_file():
+        try:
+            graph = load_architecture_graph(graph_path)
+            map_capability = {
+                "status": "ready",
+                "schema_version": graph["schema_version"],
+            }
+        except ArchitectureGraphError as exc:
+            map_capability = {"status": "invalid", "reason": str(exc)}
+    elif (directory / "graph.json").is_file():
+        map_capability = {
+            "status": "legacy",
+            "reason": "Rescan this repository to create an evidence-backed Map.",
+        }
+    else:
+        map_capability = {
+            "status": "missing",
+            "reason": "Rescan this repository to create its Map.",
+        }
     return {
         "slug": directory.name,
         "name": manifest.get("name") or directory.name,
@@ -101,6 +126,10 @@ def _snapshot_summary(directory: Path) -> dict:
         "counts": manifest.get("counts"),
         "durationMs": manifest.get("durationMs"),
         "has_knowledge": (KNOWLEDGE_DIR / f"{directory.name}.yaml").is_file(),
+        "capabilities": {
+            "flows": {"status": "ready"},
+            "map": map_capability,
+        },
     }
 
 
@@ -172,6 +201,17 @@ def _load_request_flows() -> dict:
     except RequestFlowError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     return attach_knowledge(flows, _load_knowledge())
+
+
+def _load_architecture_graph() -> dict:
+    path = _resolve_path(
+        "ARCHITECTURE_GRAPH_PATH",
+        _snapshot_file("architecture-graph.json"),
+    )
+    try:
+        return load_architecture_graph(path)
+    except ArchitectureGraphError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 def _strip_markdown(text: str) -> str:
@@ -423,6 +463,7 @@ def root():
         "service": "ripple-request-flows",
         "endpoints": [
             "/request-flows",
+            "/architecture-graph",
             "/request-flows/{flow_id}",
             "/request-flows/{flow_id}/mermaid",
             "/knowledge",
@@ -441,6 +482,11 @@ def root():
 @app.get("/request-flows")
 def get_request_flow_catalog():
     return request_flow_catalog(_load_request_flows())
+
+
+@app.get("/architecture-graph")
+def get_architecture_graph():
+    return architecture_graph_catalog(_load_architecture_graph())
 
 
 @app.get("/knowledge")

@@ -98,6 +98,7 @@ def request_flow_catalog(data: dict) -> dict:
     return {
         "schema_version": data["schema_version"],
         "generator": copy.deepcopy(data.get("generator") or {}),
+        "analysis": copy.deepcopy(data.get("analysis") or {}),
         "limits": copy.deepcopy(data.get("limits") or {}),
         "flows": [_public_flow(flow) for flow in data["flows"]],
         "warnings": copy.deepcopy(data.get("warnings") or []),
