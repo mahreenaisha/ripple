@@ -124,7 +124,6 @@ function analyzeWithRoslyn(repoPath, services, options = {}) {
       {
         encoding: "utf8",
         stdio: ["ignore", "pipe", "pipe"],
-        timeout: options.timeoutMs || 120000,
         maxBuffer: 128 * 1024 * 1024,
         env: {
           ...process.env,
