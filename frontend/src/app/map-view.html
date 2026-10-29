@@ -1,99 +1,133 @@
-<div class="map-shell">
-  <div class="map-toolbar">
-    <span class="map-scope">Request-reachable · Roslyn evidence</span>
-    <div class="map-actions">
+@if (loading()) {
+  <div class="map-state"><span class="spinner" aria-hidden="true"></span>Loading graph…</div>
+} @else if (error(); as message) {
+  <div class="map-state">
+    <strong>Map is not ready</strong>
+    <p>{{ message }}</p>
+    <button type="button" (click)="load()">Try again</button>
+  </div>
+} @else {
+  <div #graphCanvas class="canvas" aria-label="Architecture graph"></div>
+
+  <aside class="legend">
+    <p class="legend-title">Read the map</p>
+    <ul>
+      <li>
+        <span class="swatch"><i class="shape service"></i></span>
+        <span><strong>Service</strong> — runnable C# code in the repo</span>
+      </li>
+      <li>
+        <span class="swatch"><i class="shape database"></i></span>
+        <span><strong>Database</strong> — storage reached by a request flow</span>
+      </li>
+      <li>
+        <span class="swatch"><i class="shape external"></i></span>
+        <span><strong>External</strong> — queue, AWS, SaaS, or another API</span>
+      </li>
+      <li>
+        <span class="swatch sizes" aria-hidden="true"><i class="dot sm"></i><i class="dot lg"></i></span>
+        <span><strong>Size</strong> — number of evidenced connections</span>
+      </li>
+    </ul>
+    <div class="legend-controls">
       <button
         type="button"
         [class.active]="showEntrypoints()"
         [attr.aria-pressed]="showEntrypoints()"
         (click)="toggleEntrypoints()"
-      >
-        Entry points
-      </button>
+      >Entry points</button>
       <button
         type="button"
         [class.active]="showUnresolved()"
         [attr.aria-pressed]="showUnresolved()"
         (click)="toggleUnresolved()"
-      >
-        Unresolved
-      </button>
+      >Unresolved</button>
       <button type="button" (click)="fit()">Fit</button>
     </div>
-  </div>
+    <p class="legend-hint">Click a node or line for evidence. Background click clears focus. Drag · scroll · zoom.</p>
+  </aside>
 
-  <div class="map-main">
-    @if (loading()) {
-      <div class="map-state"><span class="spinner" aria-hidden="true"></span>Loading Map…</div>
-    } @else if (error(); as message) {
-      <div class="map-state">
-        <strong>Map is not ready</strong>
-        <p>{{ message }}</p>
-        <button type="button" (click)="load()">Try again</button>
+  @if (selectedNode(); as node) {
+    <aside class="detail" aria-live="polite">
+      <header class="detail-head">
+        <div>
+          <p class="detail-kind">{{ node.kind }}</p>
+          <h3>{{ node.label }}</h3>
+        </div>
+        <button type="button" class="detail-close" aria-label="Close details" (click)="clearSelection()">×</button>
+      </header>
+      <div class="detail-meta">
+        @if (entrypointCount(node)) {
+          <span class="pill">{{ entrypointCount(node) }} entries</span>
+        }
+        <span class="pill soft">{{ node.confidence }} confidence</span>
+        <span class="pill soft">{{ node.resolution }}</span>
       </div>
-    } @else {
-      <div #graphCanvas class="map-canvas" aria-label="Architecture graph"></div>
-    }
-
-    <aside class="map-detail" aria-live="polite">
-      @if (selectedNode(); as node) {
-        <span class="kind">{{ node.kind }}</span>
-        <h3>{{ node.label }}</h3>
-        <dl>
-          <div><dt>Confidence</dt><dd>{{ node.confidence }}</dd></div>
-          <div><dt>Resolution</dt><dd>{{ node.resolution }}</dd></div>
-        </dl>
-        @if (node.source) {
-          <section>
-            <strong>Source</strong>
-            <code>{{ node.source.file }}:{{ node.source.line }}</code>
-            <span>{{ node.source.symbol }}</span>
-          </section>
-        }
-        @if (node.flow_ids.length) {
-          <section>
-            <strong>Related flows</strong>
+      @if (incoming(node).length) {
+        <section class="detail-section">
+          <h4>Called by</h4>
+          <p>{{ incoming(node).join(', ') }}</p>
+        </section>
+      }
+      @if (outgoing(node).length) {
+        <section class="detail-section">
+          <h4>Depends on</h4>
+          <p>{{ outgoing(node).join(', ') }}</p>
+        </section>
+      }
+      @if (node.source) {
+        <section class="detail-section">
+          <h4>Source evidence</h4>
+          <code>{{ node.source.file }}:{{ node.source.line }}</code>
+          <p>{{ node.source.symbol }}</p>
+        </section>
+      }
+      @if (node.flow_ids.length) {
+        <section class="detail-section">
+          <h4>Related request flows</h4>
+          <div class="flow-list">
             @for (flowId of node.flow_ids; track flowId) {
-              <button type="button" class="flow-link" (click)="selectFlow(flowId)">
-                Open {{ flowId }}
-              </button>
+              <button type="button" class="flow-link" (click)="selectFlow(flowId)">Open flow</button>
             }
-          </section>
-        }
-      } @else if (selectedEdge(); as edge) {
-        <span class="kind">{{ edge.kind.replaceAll('_', ' ') }}</span>
-        <h3>{{ nodeLabel(edge.source) }} → {{ nodeLabel(edge.target) }}</h3>
-        <dl>
-          <div><dt>Confidence</dt><dd>{{ edge.confidence }}</dd></div>
-          <div><dt>Resolution</dt><dd>{{ edge.resolution }}</dd></div>
-        </dl>
-        <section>
-          <strong>Evidence</strong>
+          </div>
+        </section>
+      }
+    </aside>
+  } @else if (selectedEdge(); as edge) {
+    <aside class="detail" aria-live="polite">
+      <header class="detail-head">
+        <div>
+          <p class="detail-kind">{{ edge.kind.replaceAll('_', ' ') }}</p>
+          <h3>{{ nodeLabel(edge.source) }} → {{ nodeLabel(edge.target) }}</h3>
+        </div>
+        <button type="button" class="detail-close" aria-label="Close details" (click)="clearSelection()">×</button>
+      </header>
+      <div class="detail-meta">
+        <span class="pill soft">{{ edge.confidence }} confidence</span>
+        <span class="pill soft">{{ edge.resolution }}</span>
+      </div>
+      <section class="detail-section">
+        <h4>Source evidence</h4>
+        <div class="evidence-list">
           @for (evidence of edge.evidence; track $index) {
             <article class="evidence">
               <code>{{ evidence.file }}:{{ evidence.line }}</code>
-              <span>{{ evidence.symbol }}</span>
-              <p>{{ evidence.reason }}</p>
+              <p>{{ evidence.symbol }}</p>
+              <small>{{ evidence.reason }}</small>
             </article>
           }
-        </section>
-        @if (edge.flow_ids.length) {
-          <section>
-            <strong>Related flows</strong>
-            @for (flowId of edge.flow_ids; track flowId) {
-              <button type="button" class="flow-link" (click)="selectFlow(flowId)">
-                Open {{ flowId }}
-              </button>
-            }
-          </section>
-        }
-      } @else {
-        <div class="detail-empty">
-          <strong>Select a node or connection</strong>
-          <p>Inspect its source evidence, confidence, and related request flows.</p>
-          <small>Entrypoints and unresolved calls are hidden by default to keep the overview readable.</small>
         </div>
+      </section>
+      @if (edge.flow_ids.length) {
+        <section class="detail-section">
+          <h4>Related request flows</h4>
+          <div class="flow-list">
+            @for (flowId of edge.flow_ids; track flowId) {
+              <button type="button" class="flow-link" (click)="selectFlow(flowId)">Open flow</button>
+            }
+          </div>
+        </section>
       }
     </aside>
-  </div>
-</div>
+  }
+}

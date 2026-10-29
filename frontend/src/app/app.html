@@ -18,26 +18,6 @@
   </div>
 
   <div class="nav-actions">
-    <nav class="tabs" aria-label="Product views">
-      <button
-        type="button"
-        class="tab"
-        [class.active]="activeTab() === 'flows'"
-        [attr.aria-current]="activeTab() === 'flows' ? 'page' : null"
-        (click)="activeTab.set('flows')"
-      >
-        Flows
-      </button>
-      <button
-        type="button"
-        class="tab"
-        [class.active]="activeTab() === 'map'"
-        [attr.aria-current]="activeTab() === 'map' ? 'page' : null"
-        (click)="activeTab.set('map')"
-      >
-        Map
-      </button>
-    </nav>
     @if (snapshots(); as list) {
       <div class="repo">
         <label class="repo-switch">
@@ -132,6 +112,27 @@
       </div>
     }
 
+    <nav class="tabs" aria-label="Product views">
+      <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab() === 'map'"
+        [attr.aria-current]="activeTab() === 'map' ? 'page' : null"
+        (click)="activeTab.set('map')"
+      >
+        Map
+      </button>
+      <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab() === 'flows'"
+        [attr.aria-current]="activeTab() === 'flows' ? 'page' : null"
+        (click)="activeTab.set('flows')"
+      >
+        Flows
+      </button>
+    </nav>
+
     <button
       type="button"
       class="chat-toggle"
@@ -158,10 +159,17 @@
               <h2>Request Flow Explorer</h2>
               <p>Trace ASP.NET API and C# queue requests from their trigger to an evidence-backed boundary.</p>
             } @else {
-              <h2>Architecture Map</h2>
-              <p>See how request-reachable C# services connect to databases, queues, and external systems.</p>
+              <h2>Architecture map</h2>
+              <p>Services, databases, and external systems scanned from the repo</p>
             }
           </div>
+          @if (activeTab() === 'map' && mapSummary(); as summary) {
+            <div class="chips">
+              <span class="chip">{{ summary.nodes }} nodes</span>
+              <span class="chip">{{ summary.edges }} dependencies</span>
+              <span class="chip accent">Roslyn evidence</span>
+            </div>
+          }
         </div>
         @if (snapshots()?.current?.analysis?.mode === 'study') {
           <div class="study-banner" role="status">
@@ -176,7 +184,10 @@
               (selectionContext)="setFlowSelectionContext($event)"
             />
           } @else {
-            <app-map-view (openFlow)="showFlow($event)" />
+            <app-map-view
+              (openFlow)="showFlow($event)"
+              (graphLoaded)="setMapSummary($event)"
+            />
           }
         </div>
       </section>

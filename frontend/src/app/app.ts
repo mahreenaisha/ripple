@@ -100,6 +100,7 @@ export class App implements OnInit, OnDestroy {
   protected readonly chatOpen = signal(false);
   protected readonly activeTab = signal<'flows' | 'map'>('flows');
   protected readonly initialFlowId = signal<string | null>(null);
+  protected readonly mapSummary = signal<{ nodes: number; edges: number } | null>(null);
   protected readonly flowSelectionContext = signal<RequestFlowSelectionContext | null>(null);
   protected readonly snapshots = signal<SnapshotList | null>(null);
   protected readonly dataVersion = signal(0);
@@ -162,6 +163,10 @@ export class App implements OnInit, OnDestroy {
     this.dataVersion.update((version) => version + 1);
   }
 
+  protected setMapSummary(summary: { nodes: number; edges: number }): void {
+    this.mapSummary.set(summary);
+  }
+
   protected toggleChat(): void {
     this.chatOpen.update((open) => !open);
   }
@@ -179,6 +184,7 @@ export class App implements OnInit, OnDestroy {
           this.snapshots.set(list);
           this.flowSelectionContext.set(null);
           this.initialFlowId.set(null);
+          this.mapSummary.set(null);
           this.dataVersion.update((version) => version + 1);
           this.switching.set(false);
         },
@@ -294,6 +300,8 @@ export class App implements OnInit, OnDestroy {
         this.snapshots.set(list);
         if (reloadFlows) {
           this.flowSelectionContext.set(null);
+          this.initialFlowId.set(null);
+          this.mapSummary.set(null);
           this.dataVersion.update((version) => version + 1);
         }
       },

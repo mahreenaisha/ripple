@@ -29,6 +29,7 @@ import {
 })
 export class MapViewComponent implements OnInit, OnDestroy {
   @Output() readonly openFlow = new EventEmitter<string>();
+  @Output() readonly graphLoaded = new EventEmitter<{ nodes: number; edges: number }>();
   @ViewChild('graphCanvas') private set graphCanvas(
     element: ElementRef<HTMLDivElement> | undefined,
   ) {
@@ -65,6 +66,21 @@ export class MapViewComponent implements OnInit, OnDestroy {
         next: (graph) => {
           this.graph.set(graph);
           this.loading.set(false);
+          const visibleIds = new Set(
+            graph.nodes
+              .filter(
+                (node) =>
+                  node.kind !== 'entrypoint' && node.kind !== 'unresolved',
+              )
+              .map((node) => node.id),
+          );
+          this.graphLoaded.emit({
+            nodes: visibleIds.size,
+            edges: graph.edges.filter(
+              (edge) =>
+                visibleIds.has(edge.source) && visibleIds.has(edge.target),
+            ).length,
+          });
           this.render();
         },
         error: (error: HttpErrorResponse) => {
@@ -93,12 +109,42 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.cy?.fit(undefined, 48);
   }
 
+  protected clearSelection(): void {
+    this.selectedNode.set(null);
+    this.selectedEdge.set(null);
+    this.cy?.elements().removeClass('highlighted').removeClass('dimmed');
+  }
+
   protected selectFlow(flowId: string): void {
     this.openFlow.emit(flowId);
   }
 
   protected nodeLabel(nodeId: string): string {
     return this.graph()?.nodes.find((node) => node.id === nodeId)?.label ?? nodeId;
+  }
+
+  protected incoming(node: ArchitectureNode): string[] {
+    return this.relatedNodes(node.id, 'target');
+  }
+
+  protected outgoing(node: ArchitectureNode): string[] {
+    return this.relatedNodes(node.id, 'source');
+  }
+
+  protected entrypointCount(node: ArchitectureNode): number {
+    const graph = this.graph();
+    if (!graph || node.kind !== 'service') {
+      return 0;
+    }
+    const entrypoints = new Set(
+      graph.nodes.filter((item) => item.kind === 'entrypoint').map((item) => item.id),
+    );
+    return graph.edges.filter(
+      (edge) =>
+        edge.kind === 'handles' &&
+        edge.target === node.id &&
+        entrypoints.has(edge.source),
+    ).length;
   }
 
   private render(): void {
@@ -122,37 +168,61 @@ export class MapViewComponent implements OnInit, OnDestroy {
     const visibleEdges = graph.edges.filter(
       (edge) => visibleIds.has(edge.source) && visibleIds.has(edge.target),
     );
+    const degree = new Map(visibleNodes.map((node) => [node.id, 0]));
+    for (const edge of visibleEdges) {
+      degree.set(edge.source, (degree.get(edge.source) ?? 0) + 1);
+      degree.set(edge.target, (degree.get(edge.target) ?? 0) + 1);
+    }
+    const degrees = [...degree.values()];
+    const degreeMin = Math.min(...degrees);
+    const degreeMax = Math.max(...degrees);
     const elements: ElementDefinition[] = [
       ...visibleNodes.map((node) => ({
         group: 'nodes' as const,
-        data: { ...node },
+        data: { ...node, volume: degree.get(node.id) ?? 0 },
       })),
       ...visibleEdges.map((edge) => ({
         group: 'edges' as const,
-        data: { ...edge, label: edge.kind.replaceAll('_', ' ') },
+        data: {
+          ...edge,
+          edgeType: edge.kind,
+          color: EDGE_COLORS[edge.kind] ?? '#5b6b82',
+        },
       })),
     ];
     this.cy = cytoscape({
       container,
       elements,
-      style: MAP_STYLE,
+      style: mapStyle(degreeMin, degreeMin === degreeMax ? degreeMin + 1 : degreeMax),
       layout: {
         name: 'cose',
-        animate: false,
-        padding: 48,
+        animate: true,
+        animationDuration: 900,
+        padding: 72,
         nodeRepulsion: () => 9000,
-        idealEdgeLength: () => 130,
+        idealEdgeLength: () => 150,
+        nodeOverlap: 28,
+        gravity: 0.35,
       },
       minZoom: 0.25,
-      maxZoom: 2.2,
+      maxZoom: 1.3,
     });
+    this.cy.one('layoutstop', () => this.cy?.fit(undefined, 72));
     this.cy.on('tap', 'node', (event) => {
+      const neighborhood = event.target.closedNeighborhood();
+      this.cy!.elements().addClass('dimmed').removeClass('highlighted');
+      neighborhood.removeClass('dimmed').addClass('highlighted');
       this.selectedNode.set(
         graph.nodes.find((node) => node.id === event.target.id()) ?? null,
       );
       this.selectedEdge.set(null);
     });
     this.cy.on('tap', 'edge', (event) => {
+      this.cy!.elements().addClass('dimmed').removeClass('highlighted');
+      event.target
+        .add(event.target.connectedNodes())
+        .removeClass('dimmed')
+        .addClass('highlighted');
       this.selectedEdge.set(
         graph.edges.find((edge) => edge.id === event.target.id()) ?? null,
       );
@@ -160,44 +230,80 @@ export class MapViewComponent implements OnInit, OnDestroy {
     });
     this.cy.on('tap', (event) => {
       if (event.target === this.cy) {
-        this.selectedNode.set(null);
-        this.selectedEdge.set(null);
+        this.clearSelection();
       }
     });
   }
+
+  private relatedNodes(
+    nodeId: string,
+    direction: 'source' | 'target',
+  ): string[] {
+    const graph = this.graph();
+    if (!graph) {
+      return [];
+    }
+    const related = graph.edges
+      .filter((edge) => edge[direction] === nodeId)
+      .map((edge) =>
+        this.nodeLabel(direction === 'source' ? edge.target : edge.source),
+      );
+    return [...new Set(related)].sort();
+  }
 }
 
-const MAP_STYLE: Array<StylesheetStyle | StylesheetCSS> = [
+const EDGE_COLORS: Record<string, string> = {
+  handles: '#2f6fed',
+  queries: '#1f8a5b',
+  publishes: '#c45c26',
+  consumes: '#7c3aed',
+  calls_external: '#c45c26',
+  unresolved_dependency: '#5b6b82',
+};
+
+function mapStyle(
+  degreeMin: number,
+  degreeMax: number,
+): Array<StylesheetStyle | StylesheetCSS> {
+  return [
   {
     selector: 'node',
     style: {
       label: 'data(label)',
       color: '#f3f6f8',
-      'font-family': 'IBM Plex Sans, Segoe UI, sans-serif',
-      'font-size': 11,
+      'font-family': 'IBM Plex Sans, sans-serif',
+      'font-size': 13,
+      'font-weight': 600,
       'text-wrap': 'wrap',
       'text-max-width': '120px',
-      'text-valign': 'center',
+      'text-valign': 'bottom',
       'text-halign': 'center',
-      width: 120,
-      height: 48,
+      'text-margin-y': 8,
+      'text-outline-width': 3,
+      'text-outline-color': '#090b0e',
+      'min-zoomed-font-size': 9,
+      width: `mapData(volume, ${degreeMin}, ${degreeMax}, 38, 82)`,
+      height: `mapData(volume, ${degreeMin}, ${degreeMax}, 38, 82)`,
       shape: 'round-rectangle',
-      'background-color': '#2f75b5',
-      'border-width': 1.5,
-      'border-color': '#78b8ee',
+      'background-color': '#176b87',
+      'background-opacity': 0.95,
+      'border-width': 2,
+      'border-color': '#6db4d5',
+      'transition-property': 'opacity, border-color, border-width, overlay-opacity',
+      'transition-duration': 220,
     },
   },
   {
     selector: 'node[kind = "database"]',
-    style: { shape: 'barrel', 'background-color': '#278766', 'border-color': '#78ddbd' },
+    style: { shape: 'barrel', 'background-color': '#17694f', 'border-color': '#78ddbd' },
   },
   {
     selector: 'node[kind = "queue"], node[kind = "external"]',
-    style: { shape: 'hexagon', 'background-color': '#785a9e', 'border-color': '#b9a4ff' },
+    style: { shape: 'hexagon', 'background-color': '#8a734b', 'border-color': '#d2bf95' },
   },
   {
     selector: 'node[kind = "entrypoint"]',
-    style: { shape: 'ellipse', width: 54, height: 54, 'font-size': 9 },
+    style: { shape: 'ellipse', 'background-color': '#2f6fed', 'border-color': '#8db2ff' },
   },
   {
     selector: 'node[kind = "unresolved"]',
@@ -210,18 +316,40 @@ const MAP_STYLE: Array<StylesheetStyle | StylesheetCSS> = [
   {
     selector: 'edge',
     style: {
-      width: 1.8,
-      'line-color': '#84919d',
-      'target-arrow-color': '#84919d',
+      width: 2,
+      opacity: 0.82,
+      'line-color': 'data(color)',
+      'target-arrow-color': 'data(color)',
       'target-arrow-shape': 'triangle',
+      'arrow-scale': 0.85,
       'curve-style': 'bezier',
-      label: 'data(label)',
-      color: '#b2bdc7',
-      'font-size': 8,
-      'text-background-color': '#11171d',
-      'text-background-opacity': 0.85,
-      'text-background-padding': '3px',
+      'transition-property': 'opacity, line-color, width',
+      'transition-duration': 200,
     },
+  },
+  {
+    selector: 'edge[edgeType = "unresolved_dependency"]',
+    style: { 'line-style': 'dashed' },
+  },
+  {
+    selector: '.highlighted',
+    style: { opacity: 1, 'z-index': 999 },
+  },
+  {
+    selector: 'node.highlighted',
+    style: {
+      'overlay-color': '#36c49a',
+      'overlay-opacity': 0.22,
+      'overlay-padding': 8,
+    },
+  },
+  {
+    selector: 'edge.highlighted',
+    style: { width: 4, opacity: 1 },
+  },
+  {
+    selector: '.dimmed',
+    style: { opacity: 0.12 },
   },
   {
     selector: ':selected',
@@ -232,4 +360,5 @@ const MAP_STYLE: Array<StylesheetStyle | StylesheetCSS> = [
       'border-width': 3,
     },
   },
-];
+  ];
+}

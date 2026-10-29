@@ -105,7 +105,8 @@ describe('App', () => {
 
     const host = fixture.nativeElement as HTMLElement;
     expect(host.querySelector('.tab.active')?.textContent?.trim()).toBe('Map');
-    expect(host.textContent).toContain('Request-reachable · Roslyn evidence');
+    expect(host.textContent).toContain('Services, databases, and external systems');
+    expect(host.textContent).toContain('Read the map');
     httpTesting.verify();
   });
 
