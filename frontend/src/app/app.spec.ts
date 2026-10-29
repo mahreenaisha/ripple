@@ -121,7 +121,7 @@ describe('App', () => {
     httpTesting.verify();
   });
 
-  it('should place Explore before the existing tabs and open Flows', async () => {
+  it('shows the architecture tabs and opens Flows', async () => {
     const fixture = TestBed.createComponent(App);
     const httpTesting = TestBed.inject(HttpTestingController);
 
@@ -134,7 +134,7 @@ describe('App', () => {
     const tabLabels = Array.from(
       (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),
     ).map((tab) => tab.textContent?.trim());
-    expect(tabLabels).toEqual(['Explore', 'Map', 'Flows', 'Snapshot', 'Impact']);
+    expect(tabLabels).toEqual(['Map', 'Flows', 'Snapshot', 'Impact']);
 
     const flowsTab = Array.from(
       (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.tab'),
